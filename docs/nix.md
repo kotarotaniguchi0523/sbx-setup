@@ -10,9 +10,9 @@
 
 - `flake.nix`
   - devShell（nixpkgs）: `nodejs_24` `go` `git` `gh` `curl` `jq` `lefthook` `betterleaks`（Linux は `docker-client`）
-  - `bundle`（サンドボックスイメージに入れる CLI 一式）:
-    - nixpkgs: `uv` `mise` `gh` `apm-cli`(microsoft/apm) `pnpm` `agent-browser` `jq` `ripgrep` `fd` `typos` `lefthook` `betterleaks`
-    - 自前導出（nixpkgs に無い）: `waza` `ax` `sisakulint` `mo`(k1LoW)
+  - `bundle`（サンドボックスイメージに入れる CLI 一式。base イメージが提供する `uv`/`gh`/`jq`/`ripgrep`/`node`/`npm` は**含めない**）:
+    - nixpkgs: `mise` `apm-cli`(microsoft/apm) `nodejs_24` `pnpm` `agent-browser` `fd` `typos` `lefthook` `betterleaks`
+    - 自前導出（nixpkgs に無い）: `mo`(k1LoW) `waza` `ax`（`sisakulint` は dev/CI のみ）
       - リリース資産を `sha256` 付き `fetchurl` で取得
   - 例外（**npm 固定版**）: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`
     - これらの npm パッケージは自己完結せず実行時依存（`minisearch`/`commander` 等）を import するため tarball ラップでは動作せず、Nix 化しない（nixpkgs の `opencode` は別プロジェクト v1）
