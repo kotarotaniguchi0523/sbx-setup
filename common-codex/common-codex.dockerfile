@@ -30,6 +30,10 @@ RUN set -eux; \
     rm -f /tmp/store.tar /tmp/bundle-path; \
     uv --version; mise --version; gh --version | head -1; pnpm --version; mo -version; node --version; npm --version
 
+# npm 12 (latest) on top of the Nix-provided Node 24 LTS (see common-opencode).
+RUN npm install -g npm@12.2.0 \
+ && node --version && npm --version
+
 # npm-only CLIs, fully pinned via package-lock.json (see common-opencode).
 COPY tools/npm/cli /opt/npm-cli
 RUN cd /opt/npm-cli \

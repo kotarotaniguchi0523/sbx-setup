@@ -30,6 +30,12 @@ RUN set -eux; \
     rm -f /tmp/store.tar /tmp/bundle-path; \
     uv --version; mise --version; gh --version | head -1; pnpm --version; mo -version; node --version; npm --version
 
+# npm 12 (latest) on top of the Nix-provided Node 24 LTS, which satisfies npm
+# 12's engine requirement (>= 24.15). Installed from the registry; Renovate
+# tracks the version.
+RUN npm install -g npm@12.2.0 \
+ && node --version && npm --version
+
 # npm-only CLIs, fully pinned via package-lock.json (npm ci, integrity-checked).
 # Their npm packages are not self-contained (they import runtime deps such as
 # minisearch / commander), so they are not in the Nix bundle.

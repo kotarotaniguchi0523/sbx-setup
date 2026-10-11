@@ -178,7 +178,7 @@ lefthook install
 - devShell: `nodejs_24` / `go` / `git` / `gh` / `curl` / `jq` / `lefthook` / `betterleaks`（Linux は `docker-client`）
 - `bundle`（イメージに入れる CLI 一式）: nixpkgs の `uv` `mise` `gh` `apm-cli` `pnpm` `agent-browser` ほか ＋ 自前導出 `waza` `ax` `sisakulint` `mo`
 - `nix build .#bundle`（個別は `.#waza` `.#ax` `.#sisakulint`）
-- ※ npm 固定版の例外: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`（npm パッケージが自己完結しないため）。`tools/npm/*/package.json` ＋ `package-lock.json` を **`npm ci`** で導入。**Node 24 LTS とその同梱 npm（11.19.0）も Nix 管理**（integrity 付き完全固定、Renovate が lock ごと更新）
+- ※ npm 固定版の例外: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`（npm パッケージが自己完結しないため）。`tools/npm/*/package.json` ＋ `package-lock.json` を **`npm ci`** で導入。**Node 24 LTS は Nix 管理**、**npm は `12.2.0`（最新）をレジストリから導入**（npm 12 は nixpkgs 未収録のため。Renovate が追従）
 - `.github/workflows/nix.yml` が検証、`.github/workflows/nix-lock.yml` が `flake.lock` を生成（PR）
 - `.github/workflows/nix-tools-update.yml` が `flake.nix` の固定 CLI（waza/ax/sisakulint）の version＋hash を更新（PR）
 - Renovate が `flake.lock`（nixpkgs）を追従。固定 CLI のハッシュは Renovate では再計算できないため専用ワークフローが担当
