@@ -1,0 +1,81 @@
+name: skills-audit
+
+# Scheduled (not per-commit) security audit of the converted agent skills.
+#
+# SkillSpector runs its LLM semantic analysis through the OpenCode CLI
+# (`opencode_cli` provider). That provider accepts only OpenCode 1.18.33, so CI
+# installs that version here; the sandbox images keep OpenCode v2. If no LLM
+# credential is configured, the scan runs static-only.
+#
+# Known/accepted findings are suppressed by tools/skillspector-baseline.yaml, so
+# re-scans surface only NEW issues. Findings are uploaded to GitHub Code
+# Scanning (SARIF). All actions are pinned to commit SHAs.
+
+# Trigger policy (decided): scheduled weekly + manual only — NOT on every push
+# or PR. Skill content changes at most weekly (the daily pstack-update PR is
+# reviewed before merge), the LLM pass costs tokens, and the baseline means only
+# NEW issues matter, so a weekly cadence is enough.
+on:
+  schedule:
+    - cron: "0 0 * * 1" # Mondays 00:00 UTC = 09:00 JST
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  skillspector:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      # SkillSpector's opencode_cli provider accepts only OpenCode 1.18.33.
+      # Do not bump this version (see docs: opencode_cli fails closed otherwise).
+      - name: Install OpenCode CLI 1.18.33 (CI only)
+        run: npm install -g opencode-ai@1.18.33
+
+      # Pinned release; Renovate keeps this version updated.
+      - name: Install SkillSpector
+        run: pip install "git+https://github.com/nvidia/skillspector.git@v2.12.0"
+
+      - name: Scan skills
+        env:
+          # Set one of these repository secrets to enable LLM analysis.
+          # opencode_cli reads the model provider credential from the environment.
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=(scan pstack-opencode --baseline tools/skillspector-baseline.yaml
+                --format sarif --output skillspector.sarif)
+          if [ -n "${OPENAI_API_KEY:-}" ] || [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+            echo "SkillSpector: LLM semantic analysis via opencode_cli"
+            SKILLSPECTOR_PROVIDER=opencode_cli skillspector "${args[@]}"
+          else
+            echo "::warning::No LLM credential set; running SkillSpector static-only"
+            skillspector "${args[@]}" --no-llm
+          fi
+
+      - name: Upload SARIF to Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          sarif_file: skillspector.sarif
+          category: skillspector
