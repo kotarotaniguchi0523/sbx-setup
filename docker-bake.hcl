@@ -14,7 +14,7 @@ target "opencode" {
 }
 
 target "codex" {
-  context    = "./common-codex"
-  dockerfile = "common-codex.yaml"
+  context    = "."
+  dockerfile = "common-codex/common-codex.yaml"
   tags       = ["common-codex:dev"]
 }

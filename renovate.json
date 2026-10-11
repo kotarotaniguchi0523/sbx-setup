@@ -14,10 +14,11 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "npm globals installed in the kit Dockerfiles",
+      "description": "npm CLI version pinned in the kit Dockerfiles",
       "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
-      "matchStrings": ["npm install -g (?<depName>@[\\w./-]+|[a-z0-9-]+)"],
-      "datasourceTemplate": "npm"
+      "matchStrings": ["npm install -g npm@(?<currentValue>[\\w.-]+)"],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "npm"
     },
     {
       "customType": "regex",
@@ -50,23 +51,6 @@
       "matchStrings": ["(?<currentValue>[\\d.]+)"],
       "datasourceTemplate": "golang-version",
       "depNameTemplate": "golang"
-    },
-    {
-      "customType": "regex",
-      "description": "waza pinned in the kit Dockerfiles",
-      "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
-      "matchStrings": ["ARG WAZA_VERSION=(?<currentValue>[\\d.]+)"],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "microsoft/waza",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "description": "ax pinned in the kit Dockerfiles",
-      "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
-      "matchStrings": ["ARG AX_VERSION=(?<currentValue>[\\d.]+)"],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "yusukebe/ax"
     }
   ],
   "packageRules": [

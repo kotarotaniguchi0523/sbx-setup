@@ -1,0 +1,10 @@
+{
+  "name": "sbx-common-cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "npm-only CLIs for the sbx common images (cf, difit)",
+  "dependencies": {
+    "cf": "1.0.0-beta.14",
+    "difit": "5.0.12"
+  }
+}

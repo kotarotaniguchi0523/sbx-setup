@@ -1,42 +1,65 @@
-# ---- build the pinned CLIs with Nix (reproducible, hash-verified) ----------
-# waza / ax come from ./flake.nix as fixed-output derivations (release assets
-# pinned by sha256), so the image no longer runs `curl | bash` for them.
+# ---- build the CLI toolchain with Nix (reproducible, hash-verified) --------
+# uv, mise, gh, apm, mo, pnpm, agent-browser, jq, ripgrep, fd, typos, lefthook,
+# betterleaks, waza, ax and Node 24 LTS (+ its npm) all come from ./flake.nix.
+# The bundle closure is copied into the image so no npm -g / brew / curl|bash
+# installers run (cf / difit / opencode stay on npm; see below).
 FROM nixos/nix@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c AS tools
 WORKDIR /src
 COPY flake.nix flake.lock ./
 RUN set -eux; \
-    mkdir -p /out; \
-    nix --extra-experimental-features "nix-command flakes" build --no-link --print-out-paths .#waza > /tmp/waza.path; \
-    cp "$(cat /tmp/waza.path)/bin/waza" /out/waza; \
-    nix --extra-experimental-features "nix-command flakes" build --no-link --print-out-paths .#ax > /tmp/ax.path; \
-    cp "$(cat /tmp/ax.path)/bin/ax" /out/ax; \
-    chmod 0755 /out/waza /out/ax
+    nix --extra-experimental-features "nix-command flakes" build .#bundle -o /out/bundle; \
+    readlink -f /out/bundle > /out/bundle-path; \
+    nix-store -qR /out/bundle | while read -r p; do printf '%s\n' "${p#/}"; done > /out/closure.txt; \
+    cd / && tar -cf /out/store.tar --files-from=/out/closure.txt
 
 FROM docker/sandbox-templates:opencode@sha256:b3b69aa5148a20d1c0e3ec4d5db2975b8b9d6830d46d50a93fd766aec7d6668b
 
 USER root
 RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
- && rm -rf /var/lib/apt/lists/* \
- && npm install -g cf difit pnpm agent-browser
+ && rm -rf /var/lib/apt/lists/*
 
-# OpenCode v2 (beta). The base image ships v1 (opencode-ai); replace it so the
-# `opencode` entrypoint runs v2. https://opencode.ai/v2
-RUN npm uninstall -g opencode-ai && npm install -g @opencode/cli
+# CLI toolchain from the Nix bundle (Node 24 LTS + its bundled npm): unpack the
+# store closure and link every binary onto PATH.
+COPY --from=tools /out/store.tar /tmp/store.tar
+COPY --from=tools /out/bundle-path /tmp/bundle-path
+RUN set -eux; \
+    tar -xf /tmp/store.tar -C /; \
+    bundle="$(cat /tmp/bundle-path)"; \
+    for f in "$bundle"/bin/*; do ln -sf "$f" "/usr/local/bin/$(basename "$f")"; done; \
+    rm -f /tmp/store.tar /tmp/bundle-path; \
+    uv --version; mise --version; gh --version | head -1; pnpm --version; mo --version; node --version; npm --version
 
-# waza / ax from the Nix build stage (pinned + hash-verified). ax is dynamically
-# linked, so it is smoke-tested here where the glibc loader exists.
-COPY --from=tools /out/waza /usr/local/bin/waza
-COPY --from=tools /out/ax /usr/local/bin/ax
-RUN waza --version && ax --version
+# npm 12 (latest) on top of the Nix-provided Node 24 LTS, which satisfies npm
+# 12's engine requirement (>= 24.15). Installed from the registry; Renovate
+# tracks the version.
+RUN npm install -g npm@12.2.0 \
+ && node --version && npm --version
+
+# npm-only CLIs, fully pinned via package-lock.json (npm ci, integrity-checked).
+# Their npm packages are not self-contained (they import runtime deps such as
+# minisearch / commander), so they are not in the Nix bundle.
+#   cf    = Cloudflare's new CLI (cloudflare/cf)
+#   difit = yoshiko-pg/difit
+COPY tools/npm/cli /opt/npm-cli
+RUN cd /opt/npm-cli \
+ && npm ci --omit=dev \
+ && for f in node_modules/.bin/*; do ln -sf "/opt/npm-cli/$f" "/usr/local/bin/$(basename "$f")"; done \
+ && cf --version && difit --help >/dev/null
+
+# opencode = v2 @opencode/cli (nixpkgs ships a different v1 project).
+COPY tools/npm/opencode /opt/npm-opencode
+RUN npm uninstall -g opencode-ai \
+ && cd /opt/npm-opencode \
+ && npm ci --omit=dev \
+ && for f in node_modules/.bin/*; do ln -sf "/opt/npm-opencode/$f" "/usr/local/bin/$(basename "$f")"; done \
+ && opencode --version
+
+# The /nix dir was created root-owned when we unpacked the bundle closure; give
+# the agent ownership so the single-user Nix install below can proceed.
+RUN chown -R agent:agent /nix
 
 USER agent
-
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
- && curl https://mise.run | sh
-
-RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
- && /home/linuxbrew/.linuxbrew/bin/brew install k1LoW/tap/mo gh apm
 
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 
