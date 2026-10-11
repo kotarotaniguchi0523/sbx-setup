@@ -5,5 +5,8 @@
   "description": "OpenCode v2 CLI for the sbx common image",
   "dependencies": {
     "@opencode/cli": "2.0.26"
+  },
+  "allowScripts": {
+    "@opencode/cli": true
   }
 }
