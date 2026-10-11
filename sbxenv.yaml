@@ -1,0 +1,47 @@
+schemaVersion: "1"
+
+# Common sbx environment. One command builds the template images (the pstack
+# conversion runs inside the opencode image build) and creates the sandbox:
+#
+#   OpenCode:
+#     sbx env run sbx-setup/sbxenv.yaml --name common-opencode \
+#       --env-arg workspace=C:\Users\r02ta\projects
+#
+#   Codex:
+#     sbx env run sbx-setup/sbxenv.yaml --name common-codex \
+#       --env-arg agent=codex --env-arg template=common-codex:dev \
+#       --env-arg workspace=C:\Users\r02ta\projects
+#
+# lifecycle.initialize runs on the host before the sandbox is created, so the
+# build + load happen as part of the same command. sbx has no build verb and
+# its runtime does not share the host Docker image store, so the images are
+# built with buildx, exported with `docker image save`, and imported with
+# `sbx template load`.
+
+args:
+  agent:
+    default: opencode
+    enum: [opencode, codex]
+  template:
+    default: common-opencode:dev
+  workspace:
+    default: "."
+    description: Host directory to mount as the sandbox workspace
+
+agent: ${{ env.args.agent }}
+workspace: ${{ env.args.workspace }}
+
+sandboxOptions:
+  template: ${{ env.args.template }}
+  pullPolicy: never
+  skills: off
+
+lifecycle:
+  initialize:
+    - name: Build templates (parallel via bake; opencode conversion runs inside)
+      command: docker buildx bake
+      workdir: ${{ env.fileDir }}
+    - name: Save templates (single tar)
+      command: docker image save common-opencode:dev common-codex:dev -o "${{ env.fileDir }}/templates.tar"
+    - name: Load templates into sbx (single tar)
+      command: sbx template load "${{ env.fileDir }}/templates.tar"

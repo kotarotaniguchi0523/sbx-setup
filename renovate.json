@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "schedule:weekly", "helpers:pinGitHubActionDigests"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "npm globals installed in the kit Dockerfiles",
+      "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
+      "matchStrings": ["npm install -g (?<depName>@[\\w./-]+|[a-z0-9-]+)"],
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "description": "Base sandbox-template image",
+      "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
+      "matchStrings": ["docker/sandbox-templates:(?<currentValue>[\\w.-]+)"],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "docker/sandbox-templates"
+    },
+    {
+      "customType": "regex",
+      "description": "Repomix used by the converter",
+      "fileMatch": ["(^|/)tools/convert\\.mjs$"],
+      "matchStrings": ["repomix@(?<currentValue>[\\w.-]+)"],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "repomix"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["@opencode/cli"],
+      "prPriority": 10
+    }
+  ]
+}

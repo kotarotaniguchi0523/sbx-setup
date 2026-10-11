@@ -1,0 +1,32 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: "3"
+kind: workload
+displayName: Common OpenCode
+description: OpenCode with common CLI tools (cf, mo, difit, gh, uv, mise, nix)
+
+capabilities:
+  - type: com.docker.sandbox/sbx@1
+  - type: com.docker.sandbox/network-policy@1
+    config:
+      runtime:
+        allow:
+          - api.cloudflare.com:443
+          - github.com:443
+          - api.github.com:443
+          - uploads.github.com:443
+          - raw.githubusercontent.com:443
+          - objects.githubusercontent.com:443
+          - codeload.github.com:443
+  - type: com.docker.sandbox/credential@1
+    description: GitHub API access for gh
+    optional: true
+    config:
+      service: github
+      phase: runtime
+      apiKey:
+        name: GH_TOKEN
+        proxyManaged: true
+        inject:
+          - { domain: api.github.com, header: Authorization, format: "Bearer %s" }
+          - { domain: uploads.github.com, header: Authorization, format: "Bearer %s" }
+          - { domain: github.com, header: Authorization, format: "Bearer %s" }

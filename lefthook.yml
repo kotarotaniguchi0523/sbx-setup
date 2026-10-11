@@ -1,0 +1,15 @@
+# Git hooks (managed by Lefthook). Install once with: lefthook install
+# Secret scanning uses Betterleaks, the Gitleaks successor
+# (https://github.com/betterleaks/betterleaks).
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: betterleaks (staged)
+      run: betterleaks git --staged
+
+pre-push:
+  parallel: true
+  jobs:
+    - name: betterleaks (history)
+      run: betterleaks git

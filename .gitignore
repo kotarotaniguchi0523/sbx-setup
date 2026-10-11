@@ -1,0 +1,4 @@
+# Generated artifacts (never commit)
+.cache/
+*.tar
+pstack-opencode/.apm/
