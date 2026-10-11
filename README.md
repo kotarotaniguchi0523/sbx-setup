@@ -161,12 +161,21 @@ lefthook install
 - 手動実行: `node tools/sisakulint.mjs -fix dry-run`（差分確認）/ `-fix on`（自動修正）/ `-init`（設定生成）
 - ignore ポリシー: `tools/sisakulint.ignore`
 
-## CI / Renovate
+## CI / セキュリティ / 依存更新
 
-- `.github/workflows/build.yml` … 両テンプレートをビルドし ghcr へ push
-- `.github/workflows/sisakulint.yml` … 公式 `sisakulint-action`（SHA ピン・`fail-on: high`・SARIF を Code Scanning へ）
-- `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins/pstack` の更新を検知し、再生成して PR を作成
-- `renovate.json` … 本家 pstack・base イメージ・npm・sisakulint・Go を追従。GitHub Actions は全 SHA ピン（`helpers:pinGitHubActionDigests`）
+- `.github/workflows/build.yml` … opencode / codex を **matrix で並列**ビルド。集約ジョブ `build` が必須チェック。PR はビルドのみ、main はビルド＋ghcr push（**provenance + SBOM** 付き）
+- `.github/workflows/sisakulint.yml` … GH Actions の SAST（`fail-on: high`）。SARIF は自前生成し `codeql-action` v4 で Code Scanning へ
+- `.github/workflows/nix.yml` … `flake.nix` の devShell を検証
+- `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins/pstack` の更新を検知し PR を作成
+- `renovate.json` … Dependabot alerts 連携（`vulnerabilityAlerts`）／**非メジャーを1PRに集約**／Actions を `GitHub Actions` でまとめ／**リリース後3日待ってから PR**（`minimumReleaseAge: "3 days"` + `internalChecksFilter: strict`）。security 修正のみ即時
+- base イメージは **digest ピン**。pstack / base / npm / sisakulint / Go / waza / ax を追従
+- 署名: コミットは **SSH 署名**（`gpg.format=ssh`）。GitHub の Signing Key に `id_ed25519.pub` を登録すると Verified 表示
+
+## Nix
+
+`flake.nix` にこのリポジトリの開発ツール一式（nodejs / go / gh / curl / jq / lefthook / betterleaks ほか）を devShell として定義。`nix develop` で入る。
+nixpkgs でピンできないもの（Go / sisakulint / waza / ax）は `tools/*.version` と Dockerfile の `ARG` で管理。
+※ Windows は Nix 非対応のため WSL 等が必要（CI と Linux/macOS で利用）。`flake.lock` は Nix 環境で `nix flake lock` を実行して生成。
 
 ## 更新
 

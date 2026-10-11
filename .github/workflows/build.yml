@@ -20,6 +20,7 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write # build provenance attestations
 
 jobs:
   image:
@@ -59,6 +60,8 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: ${{ github.event_name == 'push' }}
+          provenance: ${{ github.event_name == 'push' }}
+          sbom: ${{ github.event_name == 'push' }}
           tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:dev
           cache-from: type=gha,scope=${{ matrix.scope }}
           cache-to: type=gha,mode=max,scope=${{ matrix.scope }}

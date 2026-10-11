@@ -1,4 +1,4 @@
-FROM docker/sandbox-templates:codex
+FROM docker/sandbox-templates:codex@sha256:a68b972a59148c6359ade441387159033f6d196d48aef9dda06d2d4bb26eb41e
 
 USER root
 RUN apt-get update \
