@@ -132,6 +132,7 @@
               gh
               apm-cli
               mo
+              nodejs_24
               pnpm
               agent-browser
               jq

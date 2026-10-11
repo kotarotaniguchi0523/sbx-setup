@@ -1,7 +1,8 @@
 # ---- build the CLI toolchain with Nix (reproducible, hash-verified) --------
-# uv, mise, gh, apm, mo, cf, difit, pnpm, agent-browser, jq, ripgrep, fd, typos,
-# lefthook, betterleaks, waza, ax all come from ./flake.nix. The bundle closure
-# is copied into the image so no npm -g / brew / curl|bash installers run.
+# uv, mise, gh, apm, mo, pnpm, agent-browser, jq, ripgrep, fd, typos, lefthook,
+# betterleaks, waza, ax and Node 24 LTS (+ its npm) all come from ./flake.nix.
+# The bundle closure is copied into the image so no npm -g / brew / curl|bash
+# installers run (cf / difit / opencode stay on npm; see below).
 FROM nixos/nix@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c AS tools
 WORKDIR /src
 COPY flake.nix flake.lock ./
@@ -18,12 +19,8 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
  && rm -rf /var/lib/apt/lists/*
 
-# Pin the npm CLI itself (it runs `npm ci`). Matches the version that generated
-# tools/npm/*/package-lock.json. Tracked by Renovate.
-RUN npm install -g npm@11.13.0
-
-# CLI toolchain from the Nix bundle: unpack the store closure and link every
-# binary onto PATH.
+# CLI toolchain from the Nix bundle (Node 24 LTS + its bundled npm): unpack the
+# store closure and link every binary onto PATH.
 COPY --from=tools /out/store.tar /tmp/store.tar
 COPY --from=tools /out/bundle-path /tmp/bundle-path
 RUN set -eux; \
@@ -31,7 +28,7 @@ RUN set -eux; \
     bundle="$(cat /tmp/bundle-path)"; \
     for f in "$bundle"/bin/*; do ln -sf "$f" "/usr/local/bin/$(basename "$f")"; done; \
     rm -f /tmp/store.tar /tmp/bundle-path; \
-    uv --version; mise --version; gh --version | head -1; pnpm --version; mo -version
+    uv --version; mise --version; gh --version | head -1; pnpm --version; mo -version; node --version; npm --version
 
 # npm-only CLIs, fully pinned via package-lock.json (npm ci, integrity-checked).
 # Their npm packages are not self-contained (they import runtime deps such as

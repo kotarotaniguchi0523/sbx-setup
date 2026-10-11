@@ -17,7 +17,7 @@
   - 例外（**npm 固定版**）: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`
     - これらの npm パッケージは自己完結せず実行時依存（`minisearch`/`commander` 等）を import するため tarball ラップでは動作せず、Nix 化しない（nixpkgs の `opencode` は別プロジェクト v1）
     - **完全固定**は `tools/npm/cli`（cf, difit）と `tools/npm/opencode`（@opencode/cli）の `package.json` ＋ `package-lock.json` を **`npm ci`**（integrity 付き）で導入。Renovate が lock ごと更新
-    - **npm CLI 本体**も `npm install -g npm@11.13.0` で固定（lock を生成した版と一致、Renovate 追従）
+    - **Node 24 LTS と npm も Nix 管理**: bundle に `nodejs_24`（24.21.0）を含め、その node と同梱の **npm 11.19.0** を使用（`npm install -g npm@…` はしない。npm 12 は nixpkgs 未収録で、Node 24 LTS 同梱は 11 系）
   - イメージは `nix build .#bundle` の**クロージャを tar 化して `COPY`** し、`/usr/local/bin` にリンク（`npm -g` / `brew` / `curl\|bash` を撤去）
 - `.github/workflows/nix.yml` … flake の検証＋パッケージの実ビルド
 - `.github/workflows/nix-lock.yml` … `flake.lock`（nixpkgs のピン）を生成して PR
