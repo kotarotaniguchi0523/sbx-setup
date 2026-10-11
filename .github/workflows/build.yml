@@ -4,12 +4,11 @@ name: build
 # The opencode image runs the pstack conversion inside its build.
 # Consumers pull with: sbx run --template ghcr.io/<owner>/common-opencode:dev
 #
-# The two images build in parallel: a matrix fans out to one runner each, then a
-# small aggregator job named `build` gates the result. Keeping the aggregator is
-# what lets branch protection require a single, stable "build" status check.
-#
-# Runs on every pull request (build only, no push) and on push to main (build +
-# push). All actions are pinned to commit SHAs (Renovate keeps them updated).
+# The images only build when build-relevant paths change; a `changes` job detects
+# that and a small aggregator job named `build` always runs, so the required
+# "build" status check is always reported (GitHub blocks PRs whose required check
+# is never reported). The two images build in parallel (matrix -> one runner
+# each). All actions are pinned to commit SHAs (Renovate keeps them updated).
 
 on:
   push:
@@ -27,8 +26,33 @@ permissions:
   id-token: write # build provenance attestations
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      build: ${{ steps.filter.outputs.build }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        with:
+          filters: |
+            build:
+              - 'common-opencode/**'
+              - 'common-codex/**'
+              - 'pstack-opencode/**'
+              - 'tools/**'
+              - 'flake.nix'
+              - 'flake.lock'
+              - 'docker-bake.hcl'
+              - '.github/workflows/build.yml'
+
   image:
     name: image (${{ matrix.name }})
+    needs: changes
+    if: needs.changes.outputs.build == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -72,14 +96,18 @@ jobs:
 
   # Aggregator so the required status check stays a single, stable "build".
   build:
-    needs: [image]
+    needs: [changes, image]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if any image build failed
+      - name: Evaluate result
         run: |
-          if [ "${{ needs.image.result }}" != "success" ]; then
-            echo "::error::image builds: ${{ needs.image.result }}"
-            exit 1
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ needs.changes.outputs.build }}" = "true" ]; then
+            if [ "${{ needs.image.result }}" != "success" ]; then
+              echo "::error::image builds: ${{ needs.image.result }}"
+              exit 1
+            fi
+            echo "images built"
+          else
+            echo "no build-relevant changes; image build skipped"
           fi
-          echo "all images built"
