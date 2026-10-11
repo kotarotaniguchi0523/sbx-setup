@@ -1,7 +1,7 @@
 name: pstack-opencode
 version: 0.1.0
 description: pstack (poteto's agent skills) converted for OpenCode. Generated from cursor/plugins/pstack.
-author: r02ta
+author: sbx-common
 targets: [opencode]
 includes: auto
 dependencies:
