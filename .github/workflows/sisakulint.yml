@@ -23,6 +23,10 @@ on:
       - ".github/sisakulint.yaml"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   security-events: write # upload SARIF to Code Scanning
