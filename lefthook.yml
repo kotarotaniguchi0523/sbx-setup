@@ -1,12 +1,18 @@
 # Git hooks (managed by Lefthook). Install once with: lefthook install
-# Secret scanning uses Betterleaks, the Gitleaks successor
-# (https://github.com/betterleaks/betterleaks).
+#
+#   pre-commit : secret scan (Betterleaks) + GitHub Actions security lint
+#                (sisakulint). sisakulint is installed repo-locally into
+#                .tools/ by tools/sisakulint.mjs — nothing is installed globally.
+#   pre-push   : secret scan over the full history (Betterleaks).
 
 pre-commit:
   parallel: true
   jobs:
     - name: betterleaks (staged)
       run: betterleaks git --staged
+    - name: sisakulint
+      glob: ".github/workflows/*.{yml,yaml}"
+      run: node tools/sisakulint.mjs
 
 pre-push:
   parallel: true

@@ -24,6 +24,22 @@
       "matchStrings": ["repomix@(?<currentValue>[\\w.-]+)"],
       "datasourceTemplate": "npm",
       "depNameTemplate": "repomix"
+    },
+    {
+      "customType": "regex",
+      "description": "sisakulint pinned in tools/sisakulint.version",
+      "fileMatch": ["(^|/)tools/sisakulint\\.version$"],
+      "matchStrings": ["(?<currentValue>[\\d.]+)"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "sisaku-security/sisakulint"
+    },
+    {
+      "customType": "regex",
+      "description": "Portable Go pinned in tools/golang.version",
+      "fileMatch": ["(^|/)tools/golang\\.version$"],
+      "matchStrings": ["(?<currentValue>[\\d.]+)"],
+      "datasourceTemplate": "golang-version",
+      "depNameTemplate": "golang"
     }
   ],
   "packageRules": [

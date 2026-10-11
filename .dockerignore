@@ -1,4 +1,6 @@
 pstack-opencode/.cache
 pstack-opencode/.apm
 .cache
+.tools
+.git
 *.tar

@@ -1,0 +1,8 @@
+# Rule names (regex, one per line) that sisakulint should ignore for this repo.
+# Comments (#) and blank lines are skipped. This is a repo-wide policy applied by
+# tools/sisakulint.mjs (pass -ignore yourself to override).
+#
+# deprecated-node-runtime: raised *inside* the pinned composite action
+#   sisaku-security/sisakulint-action (it ships github/codeql-action/upload-sarif
+#   on node20). The fix belongs to the action maintainer, not to our workflows.
+deprecated-node-runtime

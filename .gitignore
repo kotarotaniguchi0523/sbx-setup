@@ -1,3 +1,6 @@
 # Generated artifacts (never commit)
 .cache/
 *.tar
+
+# Repo-local toolchain (sisakulint + portable Go)
+.tools/

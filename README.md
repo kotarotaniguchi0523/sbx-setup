@@ -135,6 +135,39 @@ context7 の API キーは平文保存を避け、`sbx secret set` を使う。
 sbx secret set github --command "gh auth token"
 ```
 
+## ローカルの安全チェック（Git hooks）
+
+初回のみ `lefthook install` で hooks を有効化する。**ホスト側のみ**で動作し、テンプレートイメージには含めない。
+
+```bat
+winget install --exact --id evilmartians.lefthook --accept-package-agreements
+winget install --exact --id Betterleaks.Betterleaks --accept-package-agreements
+lefthook install
+```
+
+- **pre-commit**
+  - `betterleaks git --staged` … ステージ済みのシークレット漏洩を検査（Gitleaks 作者による後継スキャナ）。
+  - `node tools/sisakulint.mjs` … `.github/workflows/**` を変更したときだけ GitHub Actions のセキュリティ解析（OWASP CI/CD Top 10・SAST・taint 解析）。
+- **pre-push**
+  - `betterleaks git` … リポジトリ全履歴を検査。
+
+### sisakulint は repo 限定で導入
+
+`node tools/sisakulint.mjs` は初回実行時に**`.tools/`（gitignore）内だけ**に導入する。グローバルには何も入れない。
+
+- Go が無ければポータブル Go（`tools/golang.version`）を `.tools/go` へダウンロード
+- `go install .../sisakulint@v<tools/sisakulint.version>` で `.tools/bin` にビルド
+- バージョンは Renovate が更新（`tools/sisakulint.version` / `tools/golang.version`）
+- 手動実行: `node tools/sisakulint.mjs -fix dry-run`（差分確認）/ `-fix on`（自動修正）/ `-init`（設定生成）
+- ignore ポリシー: `tools/sisakulint.ignore`
+
+## CI / Renovate
+
+- `.github/workflows/build.yml` … 両テンプレートをビルドし ghcr へ push
+- `.github/workflows/sisakulint.yml` … 公式 `sisakulint-action`（SHA ピン・`fail-on: high`・SARIF を Code Scanning へ）
+- `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins/pstack` の更新を検知し、再生成して PR を作成
+- `renovate.json` … 本家 pstack・base イメージ・npm・sisakulint・Go を追従。GitHub Actions は全 SHA ピン（`helpers:pinGitHubActionDigests`）
+
 ## 更新
 
 - 本家 pstack 更新: `sbx env run ...`（initialize のビルド内で再取得・再変換）
