@@ -8,7 +8,8 @@ name: build
 # that and a small aggregator job named `build` always runs, so the required
 # "build" status check is always reported (GitHub blocks PRs whose required check
 # is never reported). The two images build in parallel (matrix -> one runner
-# each). All actions are pinned to commit SHAs (Renovate keeps them updated).
+# each). A registry cache in GHCR keeps the large Nix-store layers warm. All
+# actions are pinned to commit SHAs (Renovate keeps them updated).
 
 on:
   push:
@@ -76,7 +77,6 @@ jobs:
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
-        if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -91,8 +91,14 @@ jobs:
           provenance: ${{ github.event_name == 'push' }}
           sbom: ${{ github.event_name == 'push' }}
           tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:dev
-          cache-from: type=gha,scope=${{ matrix.scope }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.scope }}
+          # Registry cache lives in GHCR (no GHA size limit, which was evicting
+          # the large Nix-store layer); GHA cache stays as a secondary.
+          cache-from: |
+            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:buildcache
+            type=gha,scope=${{ matrix.scope }}
+          cache-to: |
+            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:buildcache,mode=max
+            type=gha,mode=max,scope=${{ matrix.scope }}
 
   # Aggregator so the required status check stays a single, stable "build".
   build:
