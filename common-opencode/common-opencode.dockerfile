@@ -1,3 +1,17 @@
+# ---- build the pinned CLIs with Nix (reproducible, hash-verified) ----------
+# waza / ax come from ./flake.nix as fixed-output derivations (release assets
+# pinned by sha256), so the image no longer runs `curl | bash` for them.
+FROM nixos/nix@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c AS tools
+WORKDIR /src
+COPY flake.nix flake.lock ./
+RUN set -eux; \
+    mkdir -p /out; \
+    nix --extra-experimental-features "nix-command flakes" build --no-link --print-out-paths .#waza > /tmp/waza.path; \
+    cp "$(cat /tmp/waza.path)/bin/waza" /out/waza; \
+    nix --extra-experimental-features "nix-command flakes" build --no-link --print-out-paths .#ax > /tmp/ax.path; \
+    cp "$(cat /tmp/ax.path)/bin/ax" /out/ax; \
+    chmod 0755 /out/waza /out/ax
+
 FROM docker/sandbox-templates:opencode@sha256:b3b69aa5148a20d1c0e3ec4d5db2975b8b9d6830d46d50a93fd766aec7d6668b
 
 USER root
@@ -10,28 +24,16 @@ RUN apt-get update \
 # `opencode` entrypoint runs v2. https://opencode.ai/v2
 RUN npm uninstall -g opencode-ai && npm install -g @opencode/cli
 
-# waza: fetch the pinned release binary + checksums directly. The upstream
-# install.sh queries api.github.com unauthenticated, which is rate-limited
-# (HTTP 403) on shared CI runners, so we do not use it here.
-ARG WAZA_VERSION=0.38.10
-RUN set -eux; \
-    warch="$(dpkg --print-architecture)"; \
-    base="https://github.com/microsoft/waza/releases/download/v${WAZA_VERSION}"; \
-    curl -fSL -o "/tmp/waza-linux-${warch}" "${base}/waza-linux-${warch}"; \
-    curl -fSL -o /tmp/waza-checksums.txt "${base}/checksums.txt"; \
-    (cd /tmp && grep "waza-linux-${warch}" waza-checksums.txt | sha256sum -c -); \
-    install -m 0755 "/tmp/waza-linux-${warch}" /usr/local/bin/waza; \
-    rm -f "/tmp/waza-linux-${warch}" /tmp/waza-checksums.txt
+# waza / ax from the Nix build stage (pinned + hash-verified). ax is dynamically
+# linked, so it is smoke-tested here where the glibc loader exists.
+COPY --from=tools /out/waza /usr/local/bin/waza
+COPY --from=tools /out/ax /usr/local/bin/ax
+RUN waza --version && ax --version
 
 USER agent
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
  && curl https://mise.run | sh
-
-# ax: pinned release (the installer honours AX_VERSION, which must keep the v).
-ARG AX_VERSION=0.1.25
-RUN export AX_VERSION="v${AX_VERSION}"; \
-    curl -fsSL https://ax.yusuke.run/install | sh
 
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
  && /home/linuxbrew/.linuxbrew/bin/brew install k1LoW/tap/mo gh apm

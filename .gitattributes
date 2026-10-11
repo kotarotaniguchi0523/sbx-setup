@@ -1,0 +1,8 @@
+# The repo is built on Linux (Docker / Nix / CI) and read by tools that break on
+# CRLF (Nix installPhase strings, shell commands). Keep text files LF.
+* text=auto eol=lf
+
+# Binary
+*.png binary
+*.tar binary
+*.gz binary
