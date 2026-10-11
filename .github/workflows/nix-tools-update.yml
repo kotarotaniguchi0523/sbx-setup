@@ -1,0 +1,50 @@
+name: nix-tools-update
+
+# Refresh the pinned CLI versions/hashes in flake.nix (waza / ax / sisakulint).
+# Renovate handles flake.lock (nixpkgs); Renovate cannot recompute fixed-output
+# hashes, so this workflow owns those pins instead.
+
+on:
+  schedule:
+    - cron: "23 3 * * 1" # Mondays 03:23 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false # do not cancel an in-flight PR creation
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      - name: Update pinned CLI tools in flake.nix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node tools/nix-tools-update.mjs
+
+      - name: Open a pull request if flake.nix changed
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          branch: chore/nix-tools-update
+          delete-branch: true
+          title: "chore: update pinned Nix CLI tools"
+          commit-message: "chore: update pinned Nix CLI tools"
+          body: |
+            Automated update of the `waza` / `ax` / `sisakulint` pins in
+            `flake.nix` (versions + release-asset sha256 from each project's
+            `checksums.txt`). Validated by the `nix` workflow.
+          add-paths: |
+            flake.nix
