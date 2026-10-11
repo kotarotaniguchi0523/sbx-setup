@@ -29,17 +29,24 @@ RUN set -eux; \
     rm -f /tmp/store.tar /tmp/bundle-path; \
     uv --version; mise --version; gh --version | head -1; pnpm --version; mo -version
 
-# npm-only CLIs. Their npm packages are not self-contained (they import runtime
-# deps such as minisearch / commander), so they are not in the Nix bundle and
-# are installed at pinned exact versions instead (Renovate tracks them).
-#   cf       = Cloudflare's new CLI (cloudflare/cf)
-#   difit    = yoshiko-pg/difit
-#   opencode = v2 @opencode/cli (nixpkgs ships a different v1 project)
-RUN npm install -g cf@1.0.0-beta.14 \
- && npm install -g difit@5.0.12 \
- && npm uninstall -g opencode-ai \
- && npm install -g @opencode/cli@2.0.26 \
+# npm-only CLIs, fully pinned via package-lock.json (npm ci, integrity-checked).
+# Their npm packages are not self-contained (they import runtime deps such as
+# minisearch / commander), so they are not in the Nix bundle.
+#   cf    = Cloudflare's new CLI (cloudflare/cf)
+#   difit = yoshiko-pg/difit
+COPY tools/npm/cli /opt/npm-cli
+RUN cd /opt/npm-cli \
+ && npm ci --omit=dev \
+ && for f in node_modules/.bin/*; do ln -sf "/opt/npm-cli/$f" "/usr/local/bin/$(basename "$f")"; done \
  && cf --version && difit --help >/dev/null
+
+# opencode = v2 @opencode/cli (nixpkgs ships a different v1 project).
+COPY tools/npm/opencode /opt/npm-opencode
+RUN npm uninstall -g opencode-ai \
+ && cd /opt/npm-opencode \
+ && npm ci --omit=dev \
+ && for f in node_modules/.bin/*; do ln -sf "/opt/npm-opencode/$f" "/usr/local/bin/$(basename "$f")"; done \
+ && opencode --version
 
 USER agent
 

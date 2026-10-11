@@ -18,9 +18,11 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
  && rm -rf /var/lib/apt/lists/*
 
-# npm-only CLIs (see common-opencode for the rationale): pinned exact versions.
-RUN npm install -g cf@1.0.0-beta.14 \
- && npm install -g difit@5.0.12 \
+# npm-only CLIs, fully pinned via package-lock.json (see common-opencode).
+COPY tools/npm/cli /opt/npm-cli
+RUN cd /opt/npm-cli \
+ && npm ci --omit=dev \
+ && for f in node_modules/.bin/*; do ln -sf "/opt/npm-cli/$f" "/usr/local/bin/$(basename "$f")"; done \
  && cf --version && difit --help >/dev/null
 
 # CLI toolchain from the Nix bundle: unpack the store closure and link every

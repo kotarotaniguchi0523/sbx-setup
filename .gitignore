@@ -4,3 +4,6 @@
 
 # Repo-local toolchain (sisakulint + portable Go)
 .tools/
+
+# npm installs used to generate lockfiles (never commit)
+tools/npm/**/node_modules/

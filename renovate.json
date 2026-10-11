@@ -14,13 +14,6 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "npm globals installed in the kit Dockerfiles",
-      "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
-      "matchStrings": ["npm install -g (?<depName>@?[\\w./-]+)@(?<currentValue>[\\w.-]+)"],
-      "datasourceTemplate": "npm"
-    },
-    {
-      "customType": "regex",
       "description": "Base sandbox-template image",
       "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
       "matchStrings": ["docker/sandbox-templates:(?<currentValue>[\\w.-]+)"],
