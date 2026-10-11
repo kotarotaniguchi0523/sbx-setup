@@ -41,11 +41,11 @@ RUN cd /opt/npm-cli \
  && for f in node_modules/.bin/*; do ln -sf "/opt/npm-cli/$f" "/usr/local/bin/$(basename "$f")"; done \
  && cf --version && difit --help >/dev/null
 
-USER agent
-
 # The /nix dir was created root-owned when we unpacked the bundle closure; give
 # the agent ownership so the single-user Nix install below can proceed.
-RUN chown agent:agent /nix
+RUN chown -R agent:agent /nix
+
+USER agent
 
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 

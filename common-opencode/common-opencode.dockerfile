@@ -55,11 +55,11 @@ RUN npm uninstall -g opencode-ai \
  && for f in node_modules/.bin/*; do ln -sf "/opt/npm-opencode/$f" "/usr/local/bin/$(basename "$f")"; done \
  && opencode --version
 
-USER agent
-
 # The /nix dir was created root-owned when we unpacked the bundle closure; give
 # the agent ownership so the single-user Nix install below can proceed.
-RUN chown agent:agent /nix
+RUN chown -R agent:agent /nix
+
+USER agent
 
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 
