@@ -1,8 +1,13 @@
 name: sisakulint
 
 # Security-focused static analysis for .github/workflows/ (OWASP Top 10 CI/CD
-# risks). Findings are uploaded to GitHub Code Scanning. Actions are pinned to
+# risks). Findings are rendered as inline PR annotations. Actions are pinned to
 # commit SHAs.
+#
+# NOTE: upload-sarif is disabled because the pinned sisakulint-action uploads a
+# SARIF file that omits the "results" array when there are no findings, which
+# GitHub Code Scanning rejects ("Invalid SARIF. Missing 'results' array").
+# Re-enable it (plus permissions.security-events: write) once the action is fixed.
 
 on:
   pull_request:
@@ -18,7 +23,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write # upload SARIF to Code Scanning
 
 jobs:
   scan:
@@ -32,5 +36,5 @@ jobs:
       - uses: sisaku-security/sisakulint-action@8bfb3391a591a44a73b59acac86f8644112e383f # v1.0.0
         with:
           fail-on: high
-          upload-sarif: true
+          upload-sarif: false
           args: -ignore deprecated-node-runtime
