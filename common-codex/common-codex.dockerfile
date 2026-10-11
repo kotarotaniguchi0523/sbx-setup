@@ -6,14 +6,27 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/* \
  && npm install -g cf difit pnpm agent-browser
 
-RUN curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
+# waza: fetch the pinned release binary + checksums directly. The upstream
+# install.sh queries api.github.com unauthenticated, which is rate-limited
+# (HTTP 403) on shared CI runners, so we do not use it here.
+ARG WAZA_VERSION=0.38.10
+RUN set -eux; \
+    warch="$(dpkg --print-architecture)"; \
+    base="https://github.com/microsoft/waza/releases/download/v${WAZA_VERSION}"; \
+    curl -fSL -o "/tmp/waza-linux-${warch}" "${base}/waza-linux-${warch}"; \
+    curl -fSL -o /tmp/waza-checksums.txt "${base}/checksums.txt"; \
+    (cd /tmp && grep "waza-linux-${warch}" waza-checksums.txt | sha256sum -c -); \
+    install -m 0755 "/tmp/waza-linux-${warch}" /usr/local/bin/waza; \
+    rm -f "/tmp/waza-linux-${warch}" /tmp/waza-checksums.txt
 
 USER agent
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
  && curl https://mise.run | sh
 
-RUN curl -fsSL https://ax.yusuke.run/install | sh
+# ax: pinned release (the installer honours AX_VERSION).
+ARG AX_VERSION=0.1.25
+RUN AX_VERSION="v${AX_VERSION}" curl -fsSL https://ax.yusuke.run/install | sh
 
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
  && /home/linuxbrew/.linuxbrew/bin/brew install k1LoW/tap/mo gh apm

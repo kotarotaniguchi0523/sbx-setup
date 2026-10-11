@@ -171,7 +171,8 @@ lefthook install
 ## 更新
 
 - 本家 pstack 更新: `sbx env run ...`（initialize のビルド内で再取得・再変換）
-- explainer / yomiyasu / agent-browser / ax / waza / apm-usage: 再ビルドで `main` を再取得
+- explainer / yomiyasu / agent-browser / apm-usage: 再ビルドで `main` を再取得
+- waza / ax: Dockerfile の `ARG WAZA_VERSION` / `ARG AX_VERSION` で固定（Renovate が更新。waza は CI のレート制限回避のためリリース資産を直接取得）
 - `pstack-opencode` はビルド内生成のため `apm update` の対象外（再ビルドで更新）
 
 ## 未検証・注意
