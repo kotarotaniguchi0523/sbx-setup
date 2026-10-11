@@ -1,0 +1,10 @@
+# Personal-info patterns checked by tools/pii-check.mjs (one JavaScript regex per
+# line; blank lines and # comments are ignored). Keep these specific so upstream
+# or example content does not trip them.
+C:\\Users\\[^\\\s"']+
+r02ta
+r02takako
+taniguchikotaro
+h29taniguchi
+KOTARO-ARKVEST
+outlook\.jp
