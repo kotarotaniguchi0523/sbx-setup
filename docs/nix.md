@@ -10,8 +10,14 @@
 
 - `flake.nix`
   - devShell（nixpkgs）: `nodejs_24` `go` `git` `gh` `curl` `jq` `lefthook` `betterleaks`（Linux は `docker-client`）
-  - パッケージ（nixpkgs に無い CLI を固定導出として定義）: `waza` / `ax` / `sisakulint`
-    - リリース資産を `sha256` 付き `fetchurl` で取得（各プロジェクトの `checksums.txt` と一致）
+  - `bundle`（サンドボックスイメージに入れる CLI 一式）:
+    - nixpkgs: `uv` `mise` `gh` `apm-cli`(microsoft/apm) `pnpm` `agent-browser` `jq` `ripgrep` `fd` `typos` `lefthook` `betterleaks`
+    - 自前導出（nixpkgs に無い）: `waza` `ax` `sisakulint` `mo`(k1LoW)
+      - リリース資産を `sha256` 付き `fetchurl` で取得
+  - 例外（**npm 固定版**）: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`
+    - これらの npm パッケージは自己完結せず実行時依存（`minisearch`/`commander` 等）を import するため、
+      tarball ラップでは動作せず Nix 化しない（nixpkgs の `opencode` は別プロジェクト v1）
+  - イメージは `nix build .#bundle` の**クロージャを tar 化して `COPY`** し、`/usr/local/bin` にリンク（`npm -g` / `brew` / `curl\|bash` を撤去）
 - `.github/workflows/nix.yml` … flake の検証＋パッケージの実ビルド
 - `.github/workflows/nix-lock.yml` … `flake.lock`（nixpkgs のピン）を生成して PR
 - `.github/workflows/nix-tools-update.yml`（＋`tools/nix-tools-update.mjs`）… `flake.nix` の waza / ax / sisakulint の version＋hash を更新して PR

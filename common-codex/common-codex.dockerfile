@@ -1,36 +1,40 @@
+# ---- build the CLI toolchain with Nix (reproducible, hash-verified) --------
+# uv, mise, gh, apm, mo, cf, difit, pnpm, agent-browser, jq, ripgrep, fd, typos,
+# lefthook, betterleaks, waza, ax all come from ./flake.nix. The bundle closure
+# is copied into the image so no npm -g / brew / curl|bash installers run.
+FROM nixos/nix@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c AS tools
+WORKDIR /src
+COPY flake.nix flake.lock ./
+RUN set -eux; \
+    nix --extra-experimental-features "nix-command flakes" build .#bundle -o /out/bundle; \
+    readlink -f /out/bundle > /out/bundle-path; \
+    nix-store -qR /out/bundle | while read -r p; do printf '%s\n' "${p#/}"; done > /out/closure.txt; \
+    cd / && tar -cf /out/store.tar --files-from=/out/closure.txt
+
 FROM docker/sandbox-templates:codex@sha256:a68b972a59148c6359ade441387159033f6d196d48aef9dda06d2d4bb26eb41e
 
 USER root
 RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
- && rm -rf /var/lib/apt/lists/* \
- && npm install -g cf difit pnpm agent-browser
+ && rm -rf /var/lib/apt/lists/*
 
-# waza: fetch the pinned release binary + checksums directly. The upstream
-# install.sh queries api.github.com unauthenticated, which is rate-limited
-# (HTTP 403) on shared CI runners, so we do not use it here.
-ARG WAZA_VERSION=0.38.10
+# npm-only CLIs (see common-opencode for the rationale): pinned exact versions.
+RUN npm install -g cf@1.0.0-beta.14 \
+ && npm install -g difit@5.0.12 \
+ && cf --version && difit --help >/dev/null
+
+# CLI toolchain from the Nix bundle: unpack the store closure and link every
+# binary onto PATH.
+COPY --from=tools /out/store.tar /tmp/store.tar
+COPY --from=tools /out/bundle-path /tmp/bundle-path
 RUN set -eux; \
-    warch="$(dpkg --print-architecture)"; \
-    base="https://github.com/microsoft/waza/releases/download/v${WAZA_VERSION}"; \
-    curl -fSL -o "/tmp/waza-linux-${warch}" "${base}/waza-linux-${warch}"; \
-    curl -fSL -o /tmp/waza-checksums.txt "${base}/checksums.txt"; \
-    (cd /tmp && grep "waza-linux-${warch}" waza-checksums.txt | sha256sum -c -); \
-    install -m 0755 "/tmp/waza-linux-${warch}" /usr/local/bin/waza; \
-    rm -f "/tmp/waza-linux-${warch}" /tmp/waza-checksums.txt
+    tar -xf /tmp/store.tar -C /; \
+    bundle="$(cat /tmp/bundle-path)"; \
+    for f in "$bundle"/bin/*; do ln -sf "$f" "/usr/local/bin/$(basename "$f")"; done; \
+    rm -f /tmp/store.tar /tmp/bundle-path; \
+    uv --version; mise --version; gh --version | head -1; pnpm --version; mo -version
 
 USER agent
-
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
- && curl https://mise.run | sh
-
-# ax: pinned release (the installer honours AX_VERSION, which must keep the v).
-ARG AX_VERSION=0.1.25
-RUN export AX_VERSION="v${AX_VERSION}"; \
-    curl -fsSL https://ax.yusuke.run/install | sh
-
-RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
- && /home/linuxbrew/.linuxbrew/bin/brew install k1LoW/tap/mo gh apm
 
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 

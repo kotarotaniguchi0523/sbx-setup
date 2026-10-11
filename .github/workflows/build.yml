@@ -40,8 +40,8 @@ jobs:
             image: common-opencode
             scope: opencode
           - name: codex
-            context: ./common-codex
-            file: ./common-codex/common-codex.yaml
+            context: .
+            file: common-codex/common-codex.yaml
             image: common-codex
             scope: codex
     steps:
