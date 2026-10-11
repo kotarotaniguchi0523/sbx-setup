@@ -1,4 +1,4 @@
-FROM docker/sandbox-templates:opencode
+FROM docker/sandbox-templates:opencode@sha256:b3b69aa5148a20d1c0e3ec4d5db2975b8b9d6830d46d50a93fd766aec7d6668b
 
 USER root
 RUN apt-get update \
