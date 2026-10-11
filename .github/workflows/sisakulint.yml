@@ -1,13 +1,15 @@
 name: sisakulint
 
 # Security-focused static analysis for .github/workflows/ (OWASP Top 10 CI/CD
-# risks). Findings are rendered as inline PR annotations. Actions are pinned to
-# commit SHAs.
+# risks). Runs the repo-local sisakulint (same tool as the pre-commit hook),
+# renders findings as inline annotations, uploads SARIF to Code Scanning with
+# codeql-action v4, and fails on high/critical findings.
 #
-# NOTE: upload-sarif is disabled because the pinned sisakulint-action uploads a
-# SARIF file that omits the "results" array when there are no findings, which
-# GitHub Code Scanning rejects ("Invalid SARIF. Missing 'results' array").
-# Re-enable it (plus permissions.security-events: write) once the action is fixed.
+# The SARIF upload runs only when there are results: the pinned sisakulint-action
+# additionally emits an empty SARIF file (no "results" array) on a clean run,
+# which Code Scanning rejects.
+#
+# All actions are pinned to commit SHAs (Renovate keeps them updated).
 
 on:
   pull_request:
@@ -23,6 +25,7 @@ on:
 
 permissions:
   contents: read
+  security-events: write # upload SARIF to Code Scanning
 
 jobs:
   scan:
@@ -33,6 +36,32 @@ jobs:
         with:
           persist-credentials: false
 
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      # Repo-local sisakulint (installs itself under .tools/). Emits SARIF.
+      - name: Generate SARIF
+        id: sarif
+        shell: bash
+        run: |
+          node tools/sisakulint.mjs -format "{{sarif .}}" > sisakulint.sarif || true
+          if jq -e '(.runs[0].results // []) | length > 0' sisakulint.sarif >/dev/null 2>&1; then
+            echo "has_results=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_results=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload SARIF to Code Scanning
+        if: steps.sarif.outputs.has_results == 'true'
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          sarif_file: sisakulint.sarif
+          category: sisakulint
+
+      # Policy gate + inline annotations. SARIF upload is left to the step above
+      # (this action's own upload uses the deprecated CodeQL v3 and rejects empty
+      # results).
       - uses: sisaku-security/sisakulint-action@8bfb3391a591a44a73b59acac86f8644112e383f # v1.0.0
         with:
           fail-on: high
