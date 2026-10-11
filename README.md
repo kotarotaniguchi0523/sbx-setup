@@ -179,7 +179,8 @@ lefthook install
 - パッケージ（nixpkgs に無いもの）: `waza` / `ax` / `sisakulint` を **sha256 固定の導出**として定義
 - `nix develop` で devShell、`nix build .#waza .#ax .#sisakulint` で各 CLI
 - `.github/workflows/nix.yml` が検証、`.github/workflows/nix-lock.yml` が `flake.lock` を生成（PR）
-- 以後 Renovate が `flake.lock`（nixpkgs）を追従
+- `.github/workflows/nix-tools-update.yml` が `flake.nix` の固定 CLI（waza/ax/sisakulint）の version＋hash を更新（PR）
+- Renovate が `flake.lock`（nixpkgs）を追従。固定 CLI のハッシュは Renovate では再計算できないため専用ワークフローが担当
 
 方針と **sbx への影響**は [`docs/nix.md`](docs/nix.md) を参照。
 ※ Windows は Nix 非対応（WSL 等が必要）。開発機では `tools/*.version` ＋ winget を併用。

@@ -102,6 +102,12 @@
       "groupSlug": "kit-cli-tools"
     },
     {
+      "description": "Group nixpkgs / flake.lock updates (Renovate nix manager)",
+      "matchManagers": ["nix"],
+      "groupName": "nixpkgs",
+      "groupSlug": "nixpkgs"
+    },
+    {
       "matchPackageNames": ["@opencode/cli"],
       "prPriority": 10
     }

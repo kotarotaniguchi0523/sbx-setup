@@ -14,7 +14,15 @@
     - リリース資産を `sha256` 付き `fetchurl` で取得（各プロジェクトの `checksums.txt` と一致）
 - `.github/workflows/nix.yml` … flake の検証＋パッケージの実ビルド
 - `.github/workflows/nix-lock.yml` … `flake.lock`（nixpkgs のピン）を生成して PR
-- 以後 Renovate が `flake.lock` を追従（`minimumReleaseAge` 3日も適用）
+- `.github/workflows/nix-tools-update.yml`（＋`tools/nix-tools-update.mjs`）… `flake.nix` の waza / ax / sisakulint の version＋hash を更新して PR
+
+### 依存更新の分担
+
+| 対象 | 担当 |
+|---|---|
+| `flake.lock`（nixpkgs） | **Renovate**（nix manager）＋ `nix-lock` |
+| `flake.nix` の固定 CLI（waza / ax / sisakulint） | **`nix-tools-update`**（Renovate は固定出力ハッシュを再計算できないため） |
+| `tools/*.version` / Dockerfile の `ARG` | **Renovate** |
 
 ## セキュリティ上の線引き
 
