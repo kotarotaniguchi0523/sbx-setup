@@ -8,8 +8,13 @@ name: skills-audit
 # credential is configured, the scan runs static-only.
 #
 # Known/accepted findings are suppressed by tools/skillspector-baseline.yaml, so
-# re-scans surface only NEW issues. Findings are uploaded to GitHub Code
-# Scanning (SARIF). All actions are pinned to commit SHAs.
+# re-scans surface only NEW issues.
+#
+# Results are persisted OUTSIDE CI:
+#   - the SARIF report is committed to the `audit/skills` branch (dated files),
+#   - a human-readable summary goes to the job summary,
+#   - the SARIF is also uploaded to GitHub Code Scanning.
+# All actions are pinned to commit SHAs.
 
 # Trigger policy (decided): scheduled weekly + manual only — NOT on every push
 # or PR. Skill content changes at most weekly (the daily pstack-update PR is
@@ -25,8 +30,8 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
-  security-events: write
+  contents: write # commit the report to the audit/skills branch
+  security-events: write # upload SARIF to Code Scanning
 
 jobs:
   skillspector:
@@ -46,7 +51,7 @@ jobs:
           python-version: "3.12"
 
       # SkillSpector's opencode_cli provider accepts only OpenCode 1.18.33.
-      # Do not bump this version (see docs: opencode_cli fails closed otherwise).
+      # Do not bump this version (opencode_cli fails closed otherwise).
       - name: Install OpenCode CLI 1.18.33 (CI only)
         run: npm install -g opencode-ai@1.18.33
 
@@ -71,6 +76,57 @@ jobs:
           else
             echo "::warning::No LLM credential set; running SkillSpector static-only"
             skillspector "${args[@]}" --no-llm
+          fi
+
+      - name: Summarise
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## SkillSpector skill audit"
+            echo
+            if [ -f skillspector.sarif ]; then
+              echo "Results: $(jq '[.runs[].results[]?] | length' skillspector.sarif)"
+              echo
+              jq -r '.runs[].results[]? | "- [" + (.level // "?") + "] " + (.ruleId // "?") + " " + (.locations[0].physicalLocation.artifactLocation.uri // "")' skillspector.sarif | head -100 || true
+            else
+              echo "No report produced."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Persist outside CI: append a dated report to the audit/skills branch.
+      - name: Save report to the audit/skills branch
+        if: always()
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git fetch origin audit/skills:refs/heads/audit/skills 2>/dev/null; then
+            git switch audit/skills
+          else
+            git switch --orphan audit/skills
+          fi
+
+          stamp="$(date -u +%Y%m%d-%H%M)"
+          mkdir -p audit/skills
+          cp skillspector.sarif "audit/skills/skillspector-${stamp}.sarif"
+          {
+            echo "# SkillSpector audit ${stamp} (UTC)"
+            echo
+            jq -r '.runs[].results[]? | "- [" + (.level // "?") + "] " + (.ruleId // "?") + " " + (.locations[0].physicalLocation.artifactLocation.uri // "")' skillspector.sarif > "audit/skills/latest.md" || true
+          }
+
+          git add audit/skills
+          if ! git diff --cached --quiet; then
+            git commit -m "audit(skills): ${stamp}"
+            git push origin audit/skills
+          else
+            echo "No changes to commit."
           fi
 
       - name: Upload SARIF to Code Scanning

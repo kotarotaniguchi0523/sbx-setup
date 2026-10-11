@@ -233,7 +233,7 @@ lefthook install
 - `.github/workflows/build.yml` … opencode / codex を **matrix で並列**ビルド。集約ジョブ `build` が必須チェック。PR はビルドのみ、main はビルド＋ghcr push（**provenance + SBOM** 付き）
 - `.github/workflows/sisakulint.yml` … GH Actions の SAST（`fail-on: high`）。SARIF は自前生成し `codeql-action` v4 で Code Scanning へ
 - `.github/workflows/nix.yml` … `flake.nix` の devShell を検証
-- `.github/workflows/skills-audit.yml` … **週次（月曜 09:00 JST）＋手動**で skills を SkillSpector で監査（CI だけ OpenCode 1.18.33 を使う `opencode_cli` で LLM 解析。baseline で既知分を抑制し、新規のみ検出）。**毎 push では走らせない**
+- `.github/workflows/skills-audit.yml` … **週次（月曜 09:00 JST）＋手動**で skills を SkillSpector で監査（CI だけ OpenCode 1.18.33 を使う `opencode_cli` で LLM 解析。baseline で既知分を抑制し、新規のみ検出）。**毎 push では走らせない**。結果は **`audit/skills` ブランチに日付付きでコミット**（CI 外に保存）＋ job summary ＋ SARIF を Code Scanning へ
 - `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins/pstack` の更新を検知し PR を作成
 - `renovate.json` … Dependabot alerts 連携（`vulnerabilityAlerts`）／**非メジャーを1PRに集約**／Actions を `GitHub Actions` でまとめ／**リリース後3日待ってから PR**（`minimumReleaseAge: "3 days"` + `internalChecksFilter: strict`）。security 修正のみ即時
 - base イメージは **digest ピン**。pstack / base / npm / sisakulint / Go / waza / ax を追従
