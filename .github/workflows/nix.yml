@@ -1,8 +1,8 @@
 name: nix
 
-# Validate the Nix flake (devShell) used to declare this repo's tooling.
-# Not a required check; it is a signal that flake.nix evaluates and the shell
-# provides the expected tools.
+# Validate the Nix flake: it declares the repo toolchain (devShell) and packages
+# the CLIs that are not in nixpkgs (waza / ax / sisakulint). Not a required
+# check; it is a signal.
 
 on:
   pull_request:
@@ -28,7 +28,7 @@ permissions:
 jobs:
   flake:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -39,7 +39,12 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
+      - name: Build pinned CLIs (fixed-output derivations)
+        run: nix build --no-link .#waza .#ax .#sisakulint
+
       - name: Check flake
+        run: nix flake check
+
+      - name: Dev shell smoke test
         run: |
-          nix flake check
-          nix develop -c bash -c 'node --version && go version && lefthook version && betterleaks version'
+          nix develop -c bash -c 'node --version && go version && lefthook version && betterleaks version && sisakulint -version'

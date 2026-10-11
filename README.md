@@ -171,11 +171,18 @@ lefthook install
 - base イメージは **digest ピン**。pstack / base / npm / sisakulint / Go / waza / ax を追従
 - 署名: コミットは **SSH 署名**（`gpg.format=ssh`）。GitHub の Signing Key に `id_ed25519.pub` を登録すると Verified 表示
 
-## Nix
+## Nix（依存管理）
 
-`flake.nix` にこのリポジトリの開発ツール一式（nodejs / go / gh / curl / jq / lefthook / betterleaks ほか）を devShell として定義。`nix develop` で入る。
-nixpkgs でピンできないもの（Go / sisakulint / waza / ax）は `tools/*.version` と Dockerfile の `ARG` で管理。
-※ Windows は Nix 非対応のため WSL 等が必要（CI と Linux/macOS で利用）。`flake.lock` は Nix 環境で `nix flake lock` を実行して生成。
+`flake.nix` でこのリポジトリの依存を管理する。
+
+- devShell: `nodejs_24` / `go` / `git` / `gh` / `curl` / `jq` / `lefthook` / `betterleaks`（Linux は `docker-client`）
+- パッケージ（nixpkgs に無いもの）: `waza` / `ax` / `sisakulint` を **sha256 固定の導出**として定義
+- `nix develop` で devShell、`nix build .#waza .#ax .#sisakulint` で各 CLI
+- `.github/workflows/nix.yml` が検証、`.github/workflows/nix-lock.yml` が `flake.lock` を生成（PR）
+- 以後 Renovate が `flake.lock`（nixpkgs）を追従
+
+方針と **sbx への影響**は [`docs/nix.md`](docs/nix.md) を参照。
+※ Windows は Nix 非対応（WSL 等が必要）。開発機では `tools/*.version` ＋ winget を併用。
 
 ## 更新
 
