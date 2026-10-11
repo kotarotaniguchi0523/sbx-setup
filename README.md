@@ -221,6 +221,15 @@ lefthook install
 - 手動実行: `node tools/sisakulint.mjs -fix dry-run`（差分確認）/ `-fix on`（自動修正）/ `-init`（設定生成）
 - ignore ポリシー: `tools/sisakulint.ignore`
 
+### 個人情報の混入防止
+
+個人情報（Windows ユーザー名・ローカルパス・個人メール等）を **commit / push でブロック**する。
+
+- パターン: `tools/pii.txt`（1行1正規表現、`#` コメント可）
+- 検査: `node tools/pii-check.mjs --staged`（pre-commit）/ `node tools/pii-check.mjs`（pre-push, 全トラック対象）
+- パターン追加は `tools/pii.txt` に1行足すだけ（パターン定義ファイル自身はスキャン対象外）
+- **方針**: 過去コミットの履歴に残った旧表記は**書き換えない**（コミット author メールは公開済みで匿名化にならず、履歴書き換えのコスト/リスクが利得を上回るため）。再発防止はこの hook で行う。
+
 ## CI / セキュリティ / 依存更新
 
 - `.github/workflows/build.yml` … opencode / codex を **matrix で並列**ビルド。集約ジョブ `build` が必須チェック。PR はビルドのみ、main はビルド＋ghcr push（**provenance + SBOM** 付き）
