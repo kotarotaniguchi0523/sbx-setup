@@ -63,6 +63,20 @@
 - イメージサイズ（closure）が増えうる。
 - Windows 開発機では Nix 不可 → `tools/*.version` ＋ winget を併用（現状維持）。
 
+## tynix（検討 → 見送り）
+
+Nix の段階的型システム [tynix](https://github.com/ubugeeei-prod/tynix)（`ubugeeei-prod/tynix`, v2.0.0）を評価した。
+
+- できること: `.tynix`（型注釈→`.nix` にコンパイル）、`.d.tynix`（既存 `.nix` への ambient 宣言）、`check` / `check-project` / `compile` / `lsp` / `doctor` など。
+  実測では **`tynix check flake.nix` がプレーンな `.nix` も解析でき**、`pick` の `table.${system}` 動的アクセスで型が消える箇所を `TC0009` で指摘した（タイポ検出 `TC0009` や型不一致 `TC0013` も的確）。
+- **見送り理由**:
+  1. このリポジトリの Nix 面は `flake.nix` 1枚で小さく、型破綻リスクが低い。
+  2. **Windows バイナリが無い**（開発機で動かせず Docker/WSL/CI 頼み）。
+  3. v2.0.0 で挙動にムラ（`prefix ++ "/"` に `TC0020` を出すなど）。
+  4. **セキュリティ/サプライチェーンには寄与しない**（正しさ・DX の道具で、Nix 化の主目的とは別軸）。
+- **再評価条件**: Nix コードが増えたとき（段階2以降で `.nix`/`.tynix` が複数になる、overlay が肥大化する等）。
+  導入する場合も **非必須の情報ジョブ**から始める。
+
 ## 移行ステップ
 
 1. （このPR）flake にツールを載せ、CI で実ビルド検証、`flake.lock` 生成。
