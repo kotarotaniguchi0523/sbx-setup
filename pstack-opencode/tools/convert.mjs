@@ -70,6 +70,20 @@ function repomix() {
   return JSON.parse(readFileSync(cache, "utf8"));
 }
 
+// Resolve the upstream main commit so SOURCE.json only changes when 本家 moves.
+function upstreamRef() {
+  try {
+    const out = execSync(`git ls-remote https://github.com/${REPO} refs/heads/main`, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+      shell: true,
+    });
+    return out.trim().split(/\s+/)[0] || null;
+  } catch {
+    return null;
+  }
+}
+
 // --- minimal YAML frontmatter handling -------------------------------------
 
 function splitFrontmatter(text) {
@@ -246,7 +260,11 @@ function main() {
 
   writeFileSync(
     join(ROOT, "SOURCE.json"),
-    JSON.stringify({ repository: REPO, include: INCLUDE, skills: [...skills].sort(), agents: [...agents].sort(), generatedAt: new Date().toISOString() }, null, 2) + "\n",
+    JSON.stringify(
+      { repository: REPO, include: INCLUDE, ref: upstreamRef(), skills: [...skills].sort(), agents: [...agents].sort() },
+      null,
+      2,
+    ) + "\n",
   );
 
   process.stderr.write(`done: ${skills.size} skills, ${agents.size} agents, ${written} files, ${bodyReplacements} body rewrites\n`);

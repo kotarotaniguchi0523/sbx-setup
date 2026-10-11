@@ -1,6 +1,7 @@
 {
   "repository": "cursor/plugins",
   "include": "pstack/**",
+  "ref": "9d76bcab133aefcccb16121d7be874e6aa823729",
   "skills": [
     "architect",
     "arena",
@@ -58,6 +59,5 @@
   "agents": [
     "comment-sicko",
     "poteto-agent"
-  ],
-  "generatedAt": "2026-10-11T04:04:18.496Z"
+  ]
 }
