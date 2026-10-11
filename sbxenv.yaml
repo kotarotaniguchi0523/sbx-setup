@@ -5,12 +5,12 @@ schemaVersion: "1"
 #
 #   OpenCode:
 #     sbx env run sbx-setup/sbxenv.yaml --name common-opencode \
-#       --env-arg workspace=C:\Users\r02ta\projects
+#       --env-arg workspace=%USERPROFILE%\projects
 #
 #   Codex:
 #     sbx env run sbx-setup/sbxenv.yaml --name common-codex \
 #       --env-arg agent=codex --env-arg template=common-codex:dev \
-#       --env-arg workspace=C:\Users\r02ta\projects
+#       --env-arg workspace=%USERPROFILE%\projects
 #
 # lifecycle.initialize runs on the host before the sandbox is created, so the
 # build + load happen as part of the same command. sbx has no build verb and

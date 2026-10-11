@@ -1,15 +1,20 @@
 # Git hooks (managed by Lefthook). Install once with: lefthook install
 #
-#   pre-commit : secret scan (Betterleaks) + GitHub Actions security lint
-#                (sisakulint). sisakulint is installed repo-locally into
-#                .tools/ by tools/sisakulint.mjs — nothing is installed globally.
-#   pre-push   : secret scan over the full history (Betterleaks).
+#   pre-commit : secret scan (Betterleaks) + personal-info scan (pii-check)
+#                + GitHub Actions security lint (sisakulint).
+#   pre-push   : secret scan over the full history (Betterleaks) + personal-info
+#                scan over all tracked files.
+#
+# sisakulint is installed repo-locally into .tools/ by tools/sisakulint.mjs —
+# nothing is installed globally.
 
 pre-commit:
   parallel: true
   jobs:
     - name: betterleaks (staged)
       run: betterleaks git --staged
+    - name: pii
+      run: node tools/pii-check.mjs --staged
     - name: sisakulint
       glob: ".github/workflows/*.{yml,yaml}"
       run: node tools/sisakulint.mjs
@@ -19,3 +24,5 @@ pre-push:
   jobs:
     - name: betterleaks (history)
       run: betterleaks git
+    - name: pii
+      run: node tools/pii-check.mjs

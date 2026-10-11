@@ -7,21 +7,24 @@ Docker Sandboxes (sbx) のテンプレートと共通設定。Skill はすべて
 
 ```
 sbx-setup/
-├── sbxenv.yaml           # 入口。agent / template / lifecycle（ビルド＋取り込み）
-├── .dockerignore
-├── common-opencode/      # OpenCode 用 v3 workload kit（ビルド内で pstack 変換）
-│   ├── common-opencode.yaml
-│   └── common-opencode.dockerfile
-├── common-codex/         # Codex 用 v3 workload kit
-│   ├── common-codex.yaml
-│   └── common-codex.dockerfile
-└── pstack-opencode/      # 本家 pstack を OpenCode 向けに変換する APM パッケージ
-    ├── apm.yml
-    ├── opencode/AGENTS.md
-    └── tools/convert.mjs  # Repomix で本家を取得し .apm/ を生成
+├── sbxenv.yaml             # 入口。agent / template / lifecycle（ビルド＋取り込み）
+├── docker-bake.hcl         # ローカル並列ビルド
+├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node 24 LTS）
+├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
+├── common-codex/           # Codex 用 kit
+├── pstack-opencode/        # 本家 pstack を OpenCode 向けに変換する APM パッケージ
+│   ├── tools/convert.mjs            # Repomix で本家を取得し .apm/ を生成
+│   ├── tools/templates/AGENTS.md    # routing（opencode/AGENTS.md の元）
+│   └── opencode/AGENTS.md           # routing（生成物）
+├── tools/                  # sisakulint / portable Go / npm 固定 / flake 更新スクリプト
+├── docs/nix.md             # Nix 方針と sbx への影響
+├── .github/workflows/      # build / sisakulint / nix / nix-lock / nix-tools-update / pstack-update
+├── lefthook.yml            # ローカル Git hooks（betterleaks / sisakulint）
+└── renovate.json
 ```
 
-生成物（`.apm/`、`*.tar`）はコミットしない。
+- `.apm/` は**コミットする**（本家更新を PR でレビューでき、ビルドは再生成するため決定的）。
+- `.tools/`、`tools/npm/**/node_modules`、`*.tar`、`.cache/` はコミットしない。
 
 ## 決定事項
 
@@ -30,14 +33,47 @@ sbx-setup/
 | 入口 | `sbx env run` / `sbx env create`（`sbx-setup/sbxenv.yaml`） |
 | エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`） |
 | MCP | context7 のみ |
-| CLI | git/gh/node/npm/pnpm/python, uv, mise, nix, cf, mo, difit, waza, apm, agent-browser, ax |
+| CLI | git/gh, uv, mise, nix, cf, mo, difit, waza, apm, agent-browser, ax, node/npm（**Node 24 LTS + npm 12**） |
+| 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |
 | Skill | すべて APM 経由（sbx skills ストアは使わない） |
 | pstack | ビルド時に本家 `cursor/plugins/pstack` を OpenCode 向けに変換（opencode のみ） |
 | 変換の実行 | **sbx テンプレートのビルド内**（Dockerfile 内で `node tools/convert.mjs`） |
 | ビルド/取り込み | `lifecycle.initialize`（host コマンド）で buildx → image save → `sbx template load` |
+| CI | **GitHub Actions**（build[必須] / sisakulint / nix / nix-lock / nix-tools-update / pstack-update cron） |
 | routing | `~/.config/opencode/AGENTS.md`（常設指示） |
 | サイト許可 | 現状維持 + brew/nix/cloudflare |
-| 不採用 | PowerShell / WSL / actrun / GitHub Actions / Docker Compose |
+| 署名 | SSH 署名（`gpg.format=ssh`）。ruleset で**署名コミット必須** |
+| 不採用 | PowerShell / WSL / actrun / Docker Compose |
+
+## 利用ツール / リポジトリ
+
+このリポジトリ（**<https://github.com/kotarotaniguchi0523/sbx-setup>**）で使うツールと配布元。
+
+| ツール | 用途 | 提供元 | URL |
+|---|---|---|---|
+| Nix / nixpkgs | 依存管理 | flake | https://github.com/NixOS/nix · https://github.com/NixOS/nixpkgs |
+| uv | Python ツール | Nix | https://github.com/astral-sh/uv |
+| mise | ランタイム管理 | Nix | https://github.com/jdx/mise |
+| gh | GitHub CLI | Nix | https://github.com/cli/cli |
+| APM (apm-cli) | Skill 管理 | Nix | https://github.com/microsoft/apm |
+| mo | Markdown プレビュー | 自前導出 | https://github.com/k1LoW/mo |
+| pnpm | パッケージ管理 | Nix | https://github.com/pnpm/pnpm |
+| agent-browser | ブラウザ操作 | Nix | https://github.com/vercel-labs/agent-browser |
+| jq / ripgrep / fd | テキスト処理 | Nix | https://github.com/jqlang/jq · https://github.com/BurntSushi/ripgrep · https://github.com/sharkdp/fd |
+| typos | スペル検査 | Nix | https://github.com/crate-ci/typos |
+| lefthook | Git hooks | Nix / host | https://github.com/evilmartians/lefthook |
+| betterleaks | シークレット検査 | host（winget） | https://github.com/betterleaks/betterleaks |
+| sisakulint | GH Actions SAST | 自前導出 | https://github.com/sisaku-security/sisakulint |
+| waza | agent eval | 自前導出 | https://github.com/microsoft/waza |
+| ax | HTTP クライアント | 自前導出 | https://github.com/yusukebe/ax |
+| cf | Cloudflare CLI | npm | https://github.com/cloudflare/cf |
+| difit | diff ビューア | npm | https://github.com/yoshiko-pg/difit |
+| repomix | 本家 pstack 取得 | npm（npx） | https://github.com/yamadashy/repomix |
+| pstack（本家） | 変換元 | 上流 | https://github.com/cursor/plugins |
+| Docker Sandboxes (sbx) | 実行基盤 | Docker | https://docs.docker.com/ai/sandboxes/ |
+| Renovate | 依存更新 | Mend App | https://github.com/renovatebot/renovate |
+
+- 一覧は**このリポジトリで追加・管理しているもの**のみ。**エージェント（opencode / codex）と base イメージ（`docker/sandbox-templates`）、Node/npm は sbx 側が提供**するため除外（Node/npm はバージョンのみ Nix で上書き）。
 
 ## 実行（入口は `sbx env`）
 
@@ -54,9 +90,9 @@ sbx env run
 opencode / codex を切り替えたい場合は、リポジトリ同梱のパラメータ付きファイルを使う:
 
 ```bat
-sbx env run sbx-setup\sbxenv.yaml --name common-opencode --env-arg workspace=C:\Users\r02ta\projects
+sbx env run sbx-setup\sbxenv.yaml --name common-opencode --env-arg workspace=%USERPROFILE%\projects
 sbx env run sbx-setup\sbxenv.yaml --name common-codex ^
-  --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=C:\Users\r02ta\projects
+  --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=%USERPROFILE%\projects
 ```
 
 未アタッチで作成だけなら `sbx env create --auto-approve ...`、削除は `sbx env rm ...`。
@@ -82,13 +118,25 @@ sbx env run sbx-setup\sbxenv.yaml --name common-codex ^
 ```bat
 cd sbx-setup
 docker buildx build -f common-opencode\common-opencode.yaml -t common-opencode:dev .
-docker buildx build -f common-codex\common-codex.yaml       -t common-codex:dev    .\common-codex
-
-docker image save common-opencode:dev -o "%TEMP%\common-opencode.tar"
-docker image save common-codex:dev    -o "%TEMP%\common-codex.tar"
-sbx template load "%TEMP%\common-opencode.tar"
-sbx template load "%TEMP%\common-codex.tar"
+docker buildx build -f common-codex\common-codex.yaml       -t common-codex:dev    .
+docker image save common-opencode:dev common-codex:dev -o "%TEMP%\templates.tar"
+sbx template load "%TEMP%\templates.tar"
 sbx template ls
+```
+
+> build context はリポジトリ直下（`.`）。Dockerfile が `flake.nix` / `flake.lock` を参照するため。
+
+## サンドボックスを作る（補足）
+
+`sbx env` 以外の入口:
+
+```bat
+REM 既にロード済みテンプレートで直接起動（ビルドしない）
+sbx run --pull never -t common-opencode:dev opencode %USERPROFILE%\projects
+sbx run --pull never -t common-codex:dev    codex    %USERPROFILE%\projects
+
+REM TUI ダッシュボード（作成/一覧/attach）。テンプレート選択が出れば上記の :dev を選ぶ
+sbx tui
 ```
 
 ## APM で導入される Skill
@@ -113,10 +161,22 @@ codex → `~/.agents/skills/`。
 `references/opencode-tools.md` 注入・agents の subagent 化・routing 生成を行って `.apm/` を出力する。
 モデル名（`opus`/`grok`）や `/loop`、`subagent_type` は複合IDを壊すため残置し、対応表で読み替える。
 
-## ネットワーク許可（追加分）
+## ネットワーク許可
+
+サンドボックスの許可ホストは **kit 記述子**（`common-opencode/common-opencode.yaml` /
+`common-codex/common-codex.yaml` の `network-policy` capability）で宣言する。
+`sbxenv.yaml` には書けない（`network:` は未知フィールド）。
+
+既定で許可:
+- `github.com` / `api.github.com` / `uploads.github.com` / `raw.githubusercontent.com` / `objects.githubusercontent.com` / `codeload.github.com`（gh・APM・git）
+- `api.cloudflare.com`（`cf`）
+- `cache.nixos.org` / `nixos.org`（サンドボックス内の `nix`）
+- `registry.npmjs.org`（npm / pnpm）
+
+追加で許可したい場合は host 側で:
 
 ```bat
-sbx policy allow network "formulae.brew.sh:443,cache.nixos.org:443,nixos.org:443,api.cloudflare.com:443"
+sbx policy allow network "pypi.org:443,files.pythonhosted.org:443"
 ```
 
 ## MCP
@@ -188,14 +248,17 @@ lefthook install
 
 ## 更新
 
-- 本家 pstack 更新: `sbx env run ...`（initialize のビルド内で再取得・再変換）
+- 本家 pstack: `pstack-update` workflow（毎日）が検知して PR。手元では `sbx env run` の再ビルドでも再変換
 - explainer / yomiyasu / agent-browser / apm-usage: 再ビルドで `main` を再取得
-- waza / ax: Dockerfile の `ARG WAZA_VERSION` / `ARG AX_VERSION` で固定（Renovate が更新。waza は CI のレート制限回避のためリリース資産を直接取得）
-- `pstack-opencode` はビルド内生成のため `apm update` の対象外（再ビルドで更新）
+- Nix のツール（uv / mise / gh / apm-cli / mo / pnpm / agent-browser ほか）: `flake.lock`（Renovate が nixpkgs を追従）
+- 自前固定 CLI（waza / ax / sisakulint）: `nix-tools-update` workflow が version＋hash を更新（PR）
+- npm の例外（`@opencode/cli` / cf / difit）: `tools/npm/*/package-lock.json` を Renovate が更新
+- base イメージ（`docker/sandbox-templates`）: digest ピンを Renovate が更新
+- `pstack-opencode` はビルド内生成（`.apm/` はコミット）のため `apm update` の対象外
 
 ## 未検証・注意
 
-- `lifecycle.initialize` の host コマンドが Windows でどの shell を使うか（`docker`/`sbx` だけのコマンドにしているので shell 非依存の想定）。
-- Nix single-user がコンテナ内で動作するかは実機確認が必要。
+- Nix 由来ツールとサンドボックス内 `nix` の動作はローカル/CI で確認済み（単一ユーザー install は `/nix` を agent 所有にして解決）。
 - 本家 poteto-mode は Cursor 前提部分があり、OpenCode でマルチモデル連携の挙動は未検証。
 - pstack は OpenCode のみ（codex には未導入）。
+- 自動化 PR（`pstack-update` / `nix-lock` / `nix-tools-update`）はコミット未署名。ruleset の `required_signatures` 下で squash マージできるか未検証（問題時は GPG/SSH 署名に対応）。

@@ -16,3 +16,12 @@ Claude tool, subagent, or model, use the OpenCode equivalent in the
 `write`, `edit`, `shell`, `grep`, `glob`, the `skill` tool to load a skill,
 `subagent` to dispatch an agent, `question` to ask, and your configured
 `provider/model` names.
+
+## Environment
+
+- Skills are installed with APM (`apm`); the pstack set and the shared skills are
+  already present under `~/.config/opencode/skills`.
+- Common CLIs are available: `git` / `gh`, `uv`, `mise`, `nix`, `node` / `npm` /
+  `pnpm`, `cf` (Cloudflare), `mo` (markdown preview), `difit` (diff viewer),
+  `apm`, `waza`, `ax`, `agent-browser`.
+- Prefer these installed tools and keep changes reproducible.

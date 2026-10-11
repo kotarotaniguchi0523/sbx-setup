@@ -2,7 +2,7 @@
 schemaVersion: "3"
 kind: workload
 displayName: Common OpenCode
-description: OpenCode with common CLI tools (cf, mo, difit, gh, uv, mise, nix)
+description: OpenCode with a Nix-managed CLI toolchain (nix, uv, mise, gh, apm, cf, mo, difit, node/npm, ...)
 
 capabilities:
   - type: com.docker.sandbox/sbx@1
@@ -17,6 +17,9 @@ capabilities:
           - raw.githubusercontent.com:443
           - objects.githubusercontent.com:443
           - codeload.github.com:443
+          - cache.nixos.org:443
+          - nixos.org:443
+          - registry.npmjs.org:443
   - type: com.docker.sandbox/credential@1
     description: GitHub API access for gh
     optional: true
