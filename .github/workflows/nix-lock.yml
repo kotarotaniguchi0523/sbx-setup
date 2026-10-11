@@ -1,0 +1,45 @@
+name: nix-lock
+
+# Generate / refresh flake.lock (pins nixpkgs). Run manually; it opens a PR.
+# Nix cannot run on the Windows dev host, so the lock is produced here.
+# Renovate keeps flake.lock up to date afterwards.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: nix flake lock
+        run: nix flake lock
+
+      - name: Open a pull request with flake.lock
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          branch: chore/nix-flake-lock
+          delete-branch: true
+          title: "chore: update flake.lock"
+          commit-message: "chore: update flake.lock"
+          body: |
+            Automated `nix flake lock` (pins nixpkgs for reproducible builds).
+          add-paths: |
+            flake.lock
