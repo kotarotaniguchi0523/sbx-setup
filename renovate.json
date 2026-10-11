@@ -14,6 +14,14 @@
   "customManagers": [
     {
       "customType": "regex",
+      "description": "npm CLI version pinned in the kit Dockerfiles",
+      "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
+      "matchStrings": ["npm install -g npm@(?<currentValue>[\\w.-]+)"],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "npm"
+    },
+    {
+      "customType": "regex",
       "description": "Base sandbox-template image",
       "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
       "matchStrings": ["docker/sandbox-templates:(?<currentValue>[\\w.-]+)"],

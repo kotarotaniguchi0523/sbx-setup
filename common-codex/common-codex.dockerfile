@@ -18,6 +18,10 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
  && rm -rf /var/lib/apt/lists/*
 
+# Pin the npm CLI itself (it runs `npm ci`). Matches the version that generated
+# tools/npm/*/package-lock.json. Tracked by Renovate.
+RUN npm install -g npm@11.13.0
+
 # npm-only CLIs, fully pinned via package-lock.json (see common-opencode).
 COPY tools/npm/cli /opt/npm-cli
 RUN cd /opt/npm-cli \

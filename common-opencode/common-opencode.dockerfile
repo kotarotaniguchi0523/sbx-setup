@@ -18,6 +18,10 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
  && rm -rf /var/lib/apt/lists/*
 
+# Pin the npm CLI itself (it runs `npm ci`). Matches the version that generated
+# tools/npm/*/package-lock.json. Tracked by Renovate.
+RUN npm install -g npm@11.13.0
+
 # CLI toolchain from the Nix bundle: unpack the store closure and link every
 # binary onto PATH.
 COPY --from=tools /out/store.tar /tmp/store.tar
