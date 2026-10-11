@@ -52,14 +52,12 @@ sbx-setup/
 | ツール | 用途 | 提供元 | URL |
 |---|---|---|---|
 | Nix / nixpkgs | 依存管理 | flake | https://github.com/NixOS/nix · https://github.com/NixOS/nixpkgs |
-| uv | Python ツール | Nix | https://github.com/astral-sh/uv |
 | mise | ランタイム管理 | Nix | https://github.com/jdx/mise |
-| gh | GitHub CLI | Nix | https://github.com/cli/cli |
 | APM (apm-cli) | Skill 管理 | Nix | https://github.com/microsoft/apm |
 | mo | Markdown プレビュー | 自前導出 | https://github.com/k1LoW/mo |
 | pnpm | パッケージ管理 | Nix | https://github.com/pnpm/pnpm |
 | agent-browser | ブラウザ操作 | Nix | https://github.com/vercel-labs/agent-browser |
-| jq / ripgrep / fd | テキスト処理 | Nix | https://github.com/jqlang/jq · https://github.com/BurntSushi/ripgrep · https://github.com/sharkdp/fd |
+| fd | ファイル検索 | Nix | https://github.com/sharkdp/fd |
 | typos | スペル検査 | Nix | https://github.com/crate-ci/typos |
 | lefthook | Git hooks | Nix / host | https://github.com/evilmartians/lefthook |
 | betterleaks | シークレット検査 | host（winget） | https://github.com/betterleaks/betterleaks |
@@ -73,7 +71,7 @@ sbx-setup/
 | Docker Sandboxes (sbx) | 実行基盤 | Docker | https://docs.docker.com/ai/sandboxes/ |
 | Renovate | 依存更新 | Mend App | https://github.com/renovatebot/renovate |
 
-- 一覧は**このリポジトリで追加・管理しているもの**のみ。**エージェント（opencode / codex）と base イメージ（`docker/sandbox-templates`）、Node/npm は sbx 側が提供**するため除外（Node/npm はバージョンのみ Nix で上書き）。
+- 一覧は**このリポジトリで追加・管理しているもの**のみ。base イメージ（`docker/sandbox-templates`）が元から提供する **エージェント（opencode / codex）・Node/npm・jq / ripgrep / gh / uv・python / git / curl** は除外（base は digest ピンなので据え置き。Node/npm のみ npm 12 のため Nix で上書き）。
 
 ## 実行（入口は `sbx env`）
 
