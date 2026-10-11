@@ -121,22 +121,20 @@
         {
           inherit (pkgs) waza ax sisakulint;
 
-          # Everything the sandbox images install as CLI tooling. Consumed as a
+          # CLI tooling this repo adds to the sandbox images. Consumed as a
           # closure (see the kit Dockerfiles) so the images do not run npm -g /
-          # brew / curl|bash installers.
+          # brew / curl|bash installers. Tools already in the base image
+          # (uv, gh, jq, ripgrep, node, npm, python, git, curl) are NOT repeated
+          # here — the base image is digest-pinned, so those stay pinned too.
           bundle = pkgs.buildEnv {
             name = "sbx-tools";
             paths = with pkgs; [
-              uv
               mise
-              gh
               apm-cli
               mo
               nodejs_24
               pnpm
               agent-browser
-              jq
-              ripgrep
               fd
               typos
               lefthook
