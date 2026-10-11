@@ -1,0 +1,175 @@
+name: skills-audit
+
+# Scheduled (not per-commit) security audit of the converted agent skills.
+#
+# SkillSpector runs its LLM semantic analysis through the OpenCode CLI
+# (`opencode_cli` provider), used the official way: the CLI is installed with
+# `npm install -g opencode-ai@<version>`, provider credentials come from the
+# environment (no interactive `opencode auth`), and the model is a
+# `provider/model` string. The provider accepts only OpenCode 1.18.33, so CI
+# installs that version; the sandbox images keep OpenCode v2. If no LLM
+# credential is configured, the scan runs static-only.
+#
+# Known/accepted findings are suppressed by tools/skillspector-baseline.yaml, so
+# re-scans surface only NEW issues.
+#
+# Results are published where humans read them:
+#   - a GitHub issue titled "Skill security audit" (body updated each run),
+#   - a dated Markdown report + SARIF on the `audit/skills` branch,
+#   - SARIF uploaded to GitHub Code Scanning.
+#
+# All actions are pinned to commit SHAs.
+
+# Trigger policy (decided): scheduled weekly + manual only — NOT on every push
+# or PR. Skill content changes at most weekly (the daily pstack-update PR is
+# reviewed before merge), the LLM pass costs tokens, and the baseline means only
+# NEW issues matter, so a weekly cadence is enough.
+on:
+  schedule:
+    - cron: "0 0 * * 1" # Mondays 00:00 UTC = 09:00 JST
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write # commit the report to the audit/skills branch
+  issues: write # create/update the human-readable audit issue
+  security-events: write # upload SARIF to Code Scanning
+
+jobs:
+  skillspector:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      # Official OpenCode CLI install. The opencode_cli provider accepts only
+      # 1.18.33 (it fails closed otherwise) — do not bump this version.
+      - name: Install OpenCode CLI 1.18.33 (CI only)
+        run: npm install -g opencode-ai@1.18.33
+
+      # Pinned release; Renovate keeps this version updated.
+      - name: Install SkillSpector
+        run: pip install "git+https://github.com/nvidia/skillspector.git@v2.12.0"
+
+      # Official usage: provider API keys in the environment are loaded
+      # automatically, so no interactive `opencode auth` is needed in CI.
+      - name: Verify OpenCode (official CLI)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set -euo pipefail
+          opencode --version
+          opencode models 2>/dev/null | head -5 || true
+
+      - name: Scan skills
+        id: scan
+        env:
+          # Repository secret: the model provider key (OpenCode loads env keys).
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Repository variable: explicit model as `provider/model` (optional;
+          # forwarded to `opencode --model` by SkillSpector's opencode_cli).
+          SKILLSPECTOR_MODEL: ${{ vars.SKILLSPECTOR_MODEL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=(scan pstack-opencode --baseline tools/skillspector-baseline.yaml
+                --format sarif --output skillspector.sarif)
+          if [ -n "${OPENAI_API_KEY:-}" ] || [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+            mode="LLM semantic analysis via opencode_cli"
+            SKILLSPECTOR_PROVIDER=opencode_cli skillspector "${args[@]}"
+          else
+            mode="static only (no LLM credential set)"
+            skillspector "${args[@]}" --no-llm
+          fi
+          echo "mode=${mode}" >> "$GITHUB_OUTPUT"
+
+      # Human-readable report (Markdown) built from the SARIF.
+      - name: Build report
+        shell: bash
+        run: |
+          set -euo pipefail
+          stamp="$(date -u +%Y-%m-%dT%H:%MZ)"
+          {
+            echo "# SkillSpector skill audit"
+            echo
+            echo "- Date (UTC): ${stamp}"
+            echo "- Mode: ${{ steps.scan.outputs.mode }}"
+            echo "- Findings: $(jq '[.runs[].results[]?] | length' skillspector.sarif)"
+            echo
+            echo "## Findings"
+            echo
+            echo "| Severity | Rule | Location |"
+            echo "|---|---|---|"
+            jq -r '.runs[].results[]? | "| " + (.level // "?") + " | " + (.ruleId // "?") + " | " + (.locations[0].physicalLocation.artifactLocation.uri // "") + " |"' skillspector.sarif
+            echo
+            echo "_Reports are also kept on the \`audit/skills\` branch and uploaded to Code Scanning._"
+          } > report.md
+          cat report.md
+
+      # Publish to a human-readable place: a GitHub issue (created once, updated
+      # every run).
+      - name: Update the audit issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh label create skill-audit --color BFD4F2 --description "Skill security audit (SkillSpector)" 2>/dev/null || true
+          number="$(gh issue list --label skill-audit --state open --json number --jq '.[0].number' || true)"
+          if [ -n "${number}" ]; then
+            gh issue edit "${number}" --body-file report.md
+            echo "Updated issue #${number}"
+          else
+            gh issue create --title "Skill security audit" --label skill-audit --body-file report.md
+          fi
+
+      # Persist outside CI: append a dated report to the audit/skills branch.
+      - name: Save report to the audit/skills branch
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git fetch origin audit/skills:refs/heads/audit/skills 2>/dev/null; then
+            git switch audit/skills
+          else
+            git switch --orphan audit/skills
+          fi
+
+          stamp="$(date -u +%Y%m%d-%H%M)"
+          mkdir -p audit/skills
+          cp report.md "audit/skills/report-${stamp}.md"
+          cp report.md audit/skills/latest.md
+          cp skillspector.sarif "audit/skills/skillspector-${stamp}.sarif"
+
+          git add audit/skills
+          if ! git diff --cached --quiet; then
+            git commit -m "audit(skills): ${stamp}"
+            git push origin audit/skills
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Upload SARIF to Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          sarif_file: skillspector.sarif
+          category: skillspector
