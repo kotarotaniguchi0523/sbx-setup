@@ -57,6 +57,10 @@ RUN npm uninstall -g opencode-ai \
 
 USER agent
 
+# The /nix dir was created root-owned when we unpacked the bundle closure; give
+# the agent ownership so the single-user Nix install below can proceed.
+RUN chown agent:agent /nix
+
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 
 RUN touch /etc/sandbox-persistent.sh \
