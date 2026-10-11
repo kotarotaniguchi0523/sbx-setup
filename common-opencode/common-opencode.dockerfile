@@ -28,7 +28,7 @@ RUN set -eux; \
     bundle="$(cat /tmp/bundle-path)"; \
     for f in "$bundle"/bin/*; do ln -sf "$f" "/usr/local/bin/$(basename "$f")"; done; \
     rm -f /tmp/store.tar /tmp/bundle-path; \
-    uv --version; mise --version; gh --version | head -1; pnpm --version; mo -version; node --version; npm --version
+    uv --version; mise --version; gh --version | head -1; pnpm --version; mo --version; node --version; npm --version
 
 # npm 12 (latest) on top of the Nix-provided Node 24 LTS, which satisfies npm
 # 12's engine requirement (>= 24.15). Installed from the registry; Renovate
