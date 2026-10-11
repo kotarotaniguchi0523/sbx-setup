@@ -28,9 +28,10 @@ USER agent
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
  && curl https://mise.run | sh
 
-# ax: pinned release (the installer honours AX_VERSION).
+# ax: pinned release (the installer honours AX_VERSION, which must keep the v).
 ARG AX_VERSION=0.1.25
-RUN AX_VERSION="v${AX_VERSION}" curl -fsSL https://ax.yusuke.run/install | sh
+RUN export AX_VERSION="v${AX_VERSION}"; \
+    curl -fsSL https://ax.yusuke.run/install | sh
 
 RUN NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
  && /home/linuxbrew/.linuxbrew/bin/brew install k1LoW/tap/mo gh apm
