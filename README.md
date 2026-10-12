@@ -257,12 +257,12 @@ lefthook install
 ## 更新
 
 - 本家 pstack: `pstack-update` workflow（毎日）が検知して PR。手元では `sbx env run` の再ビルドでも再変換
-- explainer / yomiyasu / agent-browser / apm-usage: 再ビルドで `main` を再取得
+- 外部 skill（explainer / yomiyasu / agent-browser / ax / waza / apm-usage）: **`apm-update` workflow（週次）が `apm update` で `pstack-opencode/apm.lock.yaml` を更新して PR**（lock で exact SHA ＋ content_hash 固定）
 - Nix のツール（uv / mise / gh / apm-cli / mo / pnpm / agent-browser ほか）: `flake.lock`（Renovate が nixpkgs を追従）
 - 自前固定 CLI（waza / ax / sisakulint）: `nix-tools-update` workflow が version＋hash を更新（PR）
 - npm の例外（`@opencode/cli` / cf / difit）: `tools/npm/*/package-lock.json` を Renovate が更新
 - base イメージ（`docker/sandbox-templates`）: digest ピンを Renovate が更新
-- `pstack-opencode` はビルド内生成（`.apm/` はコミット）のため `apm update` の対象外
+- ローカル pstack（パス依存）は `apm update` の対象外（`pstack-update` が再変換して PR）
 
 ## 未検証・注意
 
