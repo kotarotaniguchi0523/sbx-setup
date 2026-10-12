@@ -70,7 +70,10 @@ function deployedRoots() {
 
 // --- delta: only what this branch changed vs the base -----------------------
 function changedTargets(base) {
-  const changed = run("git", ["diff", "--name-only", `${base}...HEAD`])
+  // Compare the working tree to the base: update runs (`apm update`, the pstack
+  // regen) leave uncommitted changes that a commit-to-commit diff would miss,
+  // while a committed PR checkout sees the same set either way.
+  const changed = run("git", ["diff", "--name-only", base])
     .split("\n")
     .map((s) => s.trim())
     .filter(Boolean);
