@@ -31,6 +31,7 @@ const REPORT = join(CACHE, "report.md");
 const GATE_FILE = join(CACHE, "gate.json");
 const SARIF_OUT = join(CACHE, "apm-audit.sarif");
 const MARKER = "<!-- skills-verify -->";
+const BASELINE = join(ROOT, "tools", "skillspector-baseline.yaml");
 
 // APM exit codes for `apm audit` (SARIF severity scale): 0 clean, 1 critical
 // (error-level), 2 warning, 3 configuration/infrastructure error. Only
@@ -124,6 +125,52 @@ function changeStatus(base) {
   return status;
 }
 
+// --- baseline (false-positive suppression) ----------------------------------
+function unquote(value) {
+  return String(value).replace(/^["']|["']$/g, "").trim();
+}
+
+// Minimal parser for the baseline's YAML list (rule / path / message / reason).
+function parseBaseline() {
+  if (!existsSync(BASELINE)) return [];
+  const entries = [];
+  let cur = null;
+  for (const raw of readFileSync(BASELINE, "utf8").split(/\r?\n/)) {
+    const line = raw.replace(/#.*$/, "").trimEnd();
+    if (!line.trim()) continue;
+    const start = line.match(/^\s*-\s*([A-Za-z0-9_]+):\s*(.*)$/);
+    if (start) {
+      cur = { [start[1]]: unquote(start[2]) };
+      entries.push(cur);
+      continue;
+    }
+    const kv = line.match(/^\s+([A-Za-z0-9_]+):\s*(.*)$/);
+    if (kv && cur) cur[kv[1]] = unquote(kv[2]);
+  }
+  return entries;
+}
+
+function globToRe(glob) {
+  const re = glob
+    .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*\*/g, "\u0000")
+    .replace(/\*/g, "[^/]*")
+    .replace(/\u0000/g, ".*")
+    .replace(/\?/g, ".");
+  return new RegExp(`^${re}$`);
+}
+
+// Returns the matching baseline entry for a finding, or null.
+function matchedBaseline(finding, entries) {
+  for (const e of entries) {
+    if (e.rule && e.rule !== finding.rule) continue;
+    if (e.path && !globToRe(e.path).test(finding.uri)) continue;
+    if (e.message && !finding.msg.toLowerCase().includes(e.message.toLowerCase())) continue;
+    return e;
+  }
+  return null;
+}
+
 // Stage the changed skills into a minimal root. APM audits its project root,
 // so the root is stand-in for the delta.
 function stage(delta) {
@@ -201,18 +248,35 @@ function verify() {
     }
   }
 
-  // Findings grouped by (level, rule), like a report table.
-  const byLevelRule = new Map();
+  // Extract findings with their location, then apply the baseline: a matching
+  // finding is reported under "Suppressed (baseline)" and never gates.
+  const findings = results.map((res) => {
+    const pl = ((res.locations || [])[0] || {}).physicalLocation || {};
+    return {
+      level: res.level || "?",
+      rule: String(res.ruleId || "?").split("/").pop(),
+      uri: (pl.artifactLocation || {}).uri || "",
+      line: (pl.region || {}).startLine,
+      msg: String((res.message || {}).text || "").replace(/\s+/g, " ").trim(),
+    };
+  });
+  const baseline = parseBaseline();
+  const active = [];
+  const suppressed = [];
+  for (const f of findings) {
+    const hit = matchedBaseline(f, baseline);
+    if (hit) suppressed.push({ ...f, reason: hit.reason || "baseline" });
+    else active.push(f);
+  }
   const byLevel = {};
-  for (const res of results) {
-    const rule = String(res.ruleId || "?").split("/").pop();
-    const level = res.level || "?";
-    byLevel[level] = (byLevel[level] || 0) + 1;
-    const key = `${level}\u0000${rule}`;
+  const byLevelRule = new Map();
+  for (const f of active) {
+    byLevel[f.level] = (byLevel[f.level] || 0) + 1;
+    const key = `${f.level}\u0000${f.rule}`;
     byLevelRule.set(key, (byLevelRule.get(key) || 0) + 1);
   }
   const critical = byLevel.error || 0;
-  const fail = exitCode === APM_CRITICAL || exitCode === APM_INFRA || exitCode === null;
+  const fail = critical > 0 || exitCode === APM_INFRA || exitCode === null;
 
   // Changelog-style header: date, versions, range.
   const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
@@ -239,24 +303,22 @@ function verify() {
   const repoSlug = process.env.GITHUB_REPOSITORY || "";
   const headFull = run("git", ["rev-parse", "HEAD"]).trim();
   const repoSkills = pstackSkillNames();
-  const detailRows = results.map((res) => {
-    const pl = ((res.locations || [])[0] || {}).physicalLocation || {};
-    const uri = (pl.artifactLocation || {}).uri || "";
-    const line = (pl.region || {}).startLine;
-    const rule = String(res.ruleId || "?").split("/").pop();
-    const level = res.level || "?";
-    const msg = String((res.message || {}).text || "").replace(/\s+/g, " ").replace(/\|/g, "\\|").slice(0, 160);
-    let loc = "—";
-    if (uri) {
-      const inRepo = repoSkills.has(uri.split("/")[0]);
-      const path = inRepo ? `${PROJECT}/.apm/skills/${uri}` : uri;
-      const ref = `${path}${line ? `:${line}` : ""}`;
-      loc = repoSlug
-        ? `[\`${ref}\`](https://github.com/${repoSlug}/blob/${headFull}/${path}${line ? `#L${line}` : ""})`
-        : `\`${ref}\``;
-    }
-    return `| \`${level}\` | \`${rule}\` | ${loc} | ${msg} |`;
-  });
+  const whereCell = (f) => {
+    if (!f.uri) return "—";
+    const inRepo = repoSkills.has(f.uri.split("/")[0]);
+    const path = inRepo ? `${PROJECT}/.apm/skills/${f.uri}` : f.uri;
+    const ref = `${path}${f.line ? `:${f.line}` : ""}`;
+    return repoSlug
+      ? `[\`${ref}\`](https://github.com/${repoSlug}/blob/${headFull}/${path}${f.line ? `#L${f.line}` : ""})`
+      : `\`${ref}\``;
+  };
+  const detailRow = (f) =>
+    `| \`${f.level}\` | \`${f.rule}\` | ${whereCell(f)} | ${f.msg.replace(/\|/g, "\\|").slice(0, 160)} |`;
+  const detailRows = active.map(detailRow);
+  const suppressedRows = suppressed.map(
+    (f) =>
+      `| \`${f.level}\` | \`${f.rule}\` | ${whereCell(f)} | *(baseline: ${f.reason})* ${f.msg.replace(/\|/g, "\\|").slice(0, 140)} |`,
+  );
 
   const lines = [
     `# Skill verification · ${now}`,
@@ -264,6 +326,7 @@ function verify() {
     `**Version** \`pstack-opencode ${version}\` · upstream \`${upstream}\``,
     `**Range** \`${base}\` (${baseShort}) → \`HEAD\` (${head})`,
     `**Scanner** APM external scanner — \`apm audit --external skillspector\` (offline, deterministic)`,
+    `**Baseline** \`tools/skillspector-baseline.yaml\` (${baseline.length} rule(s); ${suppressed.length} suppressed)`,
     "",
     "## Changes",
     "",
@@ -276,7 +339,7 @@ function verify() {
     "## Findings",
     "",
     `- \`apm audit\` exit code: ${exitCode} (\`0\` clean, \`1\` critical, \`2\` warning, \`3\` infrastructure)`,
-    `- Total: ${results.length} (error ${critical}, warning ${byLevel.warning || 0}, note ${byLevel.note || 0})`,
+    `- Active: ${active.length} (error ${critical}, warning ${byLevel.warning || 0}, note ${byLevel.note || 0}) · Suppressed by baseline: ${suppressed.length}`,
     "",
     "| Level | Rule | Count |",
     "|---|---|---|",
@@ -290,24 +353,31 @@ function verify() {
     "|---|---|---|---|",
     ...(detailRows.length ? detailRows : ["| — | _(none)_ | — | — |"]),
     "",
+    "## Suppressed (baseline)",
+    "",
+    ...(suppressedRows.length
+      ? ["| Level | Rule | Where | Detail |", "|---|---|---|---|", ...suppressedRows]
+      : ["_(none)_"]),
+    "",
     "## Gate",
     "",
     fail
-      ? `❌ **failed** — ${critical} error-level finding(s), or infrastructure error (exit ${exitCode})`
+      ? `❌ **failed** — ${critical} active error-level finding(s), or infrastructure error (exit ${exitCode})`
       : "✅ **passed**",
     "",
     "## Rules",
     "",
-    "- Gate: APM `apm audit` exit code — `1` critical → fail, `2` warning → report, `3` infrastructure → fail (`0` clean).",
+    "- Gate: **active** error-level findings (after baseline) → fail; APM infrastructure error (`3`) → fail.",
+    "- Baseline: `tools/skillspector-baseline.yaml` suppresses known false positives (rule + path glob + message).",
     "- Delta: `git diff <base>` (working tree included, so uncommitted update runs are seen).",
-    "- Scanner: the APM external-scanner contract (`skillspector scan --format sarif --no-llm`); no bespoke baseline.",
+    "- Scanner: the APM external-scanner contract (`skillspector scan --format sarif --no-llm`).",
   ];
   writeFileSync(REPORT, lines.join("\n") + "\n");
   writeFileSync(
     GATE_FILE,
-    JSON.stringify({ fail, exitCode, findings: results.length, critical, staged, lockChanged: delta.lockChanged }),
+    JSON.stringify({ fail, exitCode, active: active.length, suppressed: suppressed.length, critical, staged, lockChanged: delta.lockChanged }),
   );
-  log(`apm audit exit=${exitCode}; findings=${results.length} (error ${critical}); gate ${fail ? "FAIL" : "pass"}`);
+  log(`apm audit exit=${exitCode}; active=${active.length} (error ${critical}); suppressed=${suppressed.length}; gate ${fail ? "FAIL" : "pass"}`);
 }
 
 // --- post to the PR (upsert) ------------------------------------------------
