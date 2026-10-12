@@ -91,30 +91,37 @@ jobs:
         run: |
           set -euo pipefail
           stamp="$(date -u +%Y-%m-%dT%H:%MZ)"
+          version="$(sed -n 's/^version:[[:space:]]*//p' pstack-opencode/apm.yml | head -1)"
+          upstream="$(jq -r '.repository + "@" + ((.ref // "unknown")[0:12])' pstack-opencode/SOURCE.json)"
           {
-            echo "# Skill security audit"
+            echo "# Skill security audit · ${stamp}"
             echo
-            echo "- Date (UTC): ${stamp}"
-            echo "- SkillSpector: via APM external scanner (\`apm audit --external skillspector\`, offline)"
-            echo "- APM external scanner exit code: ${{ steps.scan.outputs.exit }}"
+            echo "**Version** \`pstack-opencode ${version:-unknown}\` · upstream \`${upstream}\`"
+            echo "**Scanner** APM external scanner — \`apm audit --external skillspector\` (offline, deterministic)"
             echo
             echo "## APM audit (lock-pinned skill set)"
             echo
-            echo "See the \`apm-audit\` SARIF in Code Scanning. CI ran \`apm install --frozen\` + \`apm audit --ci\` (10 baseline checks)."
+            echo "\`apm install --frozen\` + \`apm audit --ci\` (10 baseline checks). See the \`apm-audit\` SARIF in Code Scanning."
             echo
             echo "## SkillSpector findings"
             echo
-            echo "Total: $(jq '[.runs[].results[]?] | length' skillspector.sarif)"
+            echo "- \`apm audit --external\` exit: ${{ steps.scan.outputs.exit }} (\`0\` clean, \`1\` critical, \`2\` warning, \`3\` infrastructure)"
+            echo "- Total: $(jq '[.runs[].results[]?] | length' skillspector.sarif)"
             echo
-            echo "| Rule | Count |"
-            echo "|---|---|"
-            jq -r '[.runs[].results[]? | (.ruleId // "?")] | group_by(.) | map("| " + .[0] + " | " + (length|tostring) + " |") | .[]' skillspector.sarif
+            echo "| Level | Rule | Count |"
+            echo "|---|---|---|"
+            jq -r '[.runs[].results[]? | {level: (.level // "?"), rule: (.ruleId // "?")}] | group_by([.level, .rule]) | map({level: .[0].level, rule: .[0].rule, n: length}) | sort_by(-.n) | .[] | "| `\(.level)` | `\(.rule)` | \(.n) |"' skillspector.sarif
             echo
             echo "### Details"
             echo
             echo "| Severity | Rule | Location |"
             echo "|---|---|---|"
-            jq -r '.runs[].results[]? | "| " + (.level // "?") + " | " + (.ruleId // "?") + " | " + (.locations[0].physicalLocation.artifactLocation.uri // "") + " |"' skillspector.sarif
+            jq -r '.runs[].results[]? | "| " + (.level // "?") + " | " + (.ruleId // "?") + " | " + (.locations[0].physicalLocation.artifactLocation.uri // "") + (if (.locations[0].physicalLocation.region.startLine // null) then ":" + (.locations[0].physicalLocation.region.startLine|tostring) else "" end) + " |"' skillspector.sarif
+            echo
+            echo "## Rules"
+            echo
+            echo "- Periodic audit is informational: **infrastructure errors only** fail the job (exit 3); critical/warning are reported."
+            echo "- Scanner: the APM external-scanner contract (\`skillspector scan --format sarif --no-llm\`); no bespoke baseline."
           } > report.md
           cat report.md
 
