@@ -233,6 +233,31 @@ function verify() {
       return `| \`${level}\` | \`${rule}\` | ${count} |`;
     });
 
+  // Where each finding was detected, with a permalink to the audited file at
+  // HEAD so a human can trace it later. pstack skills map back into the repo;
+  // external skills are shown as staged.
+  const repoSlug = process.env.GITHUB_REPOSITORY || "";
+  const headFull = run("git", ["rev-parse", "HEAD"]).trim();
+  const repoSkills = pstackSkillNames();
+  const detailRows = results.map((res) => {
+    const pl = ((res.locations || [])[0] || {}).physicalLocation || {};
+    const uri = (pl.artifactLocation || {}).uri || "";
+    const line = (pl.region || {}).startLine;
+    const rule = String(res.ruleId || "?").split("/").pop();
+    const level = res.level || "?";
+    const msg = String((res.message || {}).text || "").replace(/\s+/g, " ").replace(/\|/g, "\\|").slice(0, 160);
+    let loc = "—";
+    if (uri) {
+      const inRepo = repoSkills.has(uri.split("/")[0]);
+      const path = inRepo ? `${PROJECT}/.apm/skills/${uri}` : uri;
+      const ref = `${path}${line ? `:${line}` : ""}`;
+      loc = repoSlug
+        ? `[\`${ref}\`](https://github.com/${repoSlug}/blob/${headFull}/${path}${line ? `#L${line}` : ""})`
+        : `\`${ref}\``;
+    }
+    return `| \`${level}\` | \`${rule}\` | ${loc} | ${msg} |`;
+  });
+
   const lines = [
     `# Skill verification · ${now}`,
     "",
@@ -256,6 +281,14 @@ function verify() {
     "| Level | Rule | Count |",
     "|---|---|---|",
     ...(findingRows.length ? findingRows : ["| — | _(none)_ | 0 |"]),
+    "",
+    "## Findings — details",
+    "",
+    "Where is relative to the staged audit root; pstack skills mirror `pstack-opencode/.apm/skills/<skill>/`.",
+    "",
+    "| Level | Rule | Where | Detail |",
+    "|---|---|---|---|",
+    ...(detailRows.length ? detailRows : ["| — | _(none)_ | — | — |"]),
     "",
     "## Gate",
     "",

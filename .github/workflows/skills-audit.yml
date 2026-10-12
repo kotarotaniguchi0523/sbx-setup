@@ -116,7 +116,7 @@ jobs:
             echo
             echo "| Severity | Rule | Location |"
             echo "|---|---|---|"
-            jq -r '.runs[].results[]? | "| " + (.level // "?") + " | " + (.ruleId // "?") + " | " + (.locations[0].physicalLocation.artifactLocation.uri // "") + " |"' skillspector.sarif
+            jq -r '.runs[].results[]? | "| " + (.level // "?") + " | " + (.ruleId // "?") + " | " + (.locations[0].physicalLocation.artifactLocation.uri // "") + (if (.locations[0].physicalLocation.region.startLine // null) then ":" + (.locations[0].physicalLocation.region.startLine|tostring) else "" end) + " |"' skillspector.sarif
             echo
             echo "## Rules"
             echo
