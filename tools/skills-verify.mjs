@@ -89,6 +89,41 @@ function changedTargets(base) {
   return { skills: [...skills], lockChanged };
 }
 
+// pstack-opencode version + the pinned upstream ref (for the report header).
+function projectInfo() {
+  let version = "unknown";
+  try {
+    const m = readFileSync(join(PROJECT_DIR, "apm.yml"), "utf8").match(/^version:\s*(\S+)/m);
+    if (m) version = m[1];
+  } catch {
+    /* ignore */
+  }
+  let upstream = "unknown";
+  try {
+    const s = JSON.parse(readFileSync(join(PROJECT_DIR, "SOURCE.json"), "utf8"));
+    upstream = `${s.repository}@${String(s.ref || "unknown").slice(0, 12)}`;
+  } catch {
+    /* ignore */
+  }
+  return { version, upstream };
+}
+
+// Per-skill change status (A/M/D/R) from `git diff --name-status <base>`.
+function changeStatus(base) {
+  const status = new Map();
+  for (const line of run("git", ["diff", "--name-status", base]).split("\n")) {
+    if (!line.trim()) continue;
+    const parts = line.split(/\t/);
+    const code = parts[0][0];
+    const path = parts[parts.length - 1];
+    const m = path.match(new RegExp(`^${PROJECT}/\\.apm/skills/([^/]+)/`));
+    if (!m) continue;
+    const name = m[1];
+    if (!status.has(name) || code === "A" || code === "D") status.set(name, code);
+  }
+  return status;
+}
+
 // Stage the changed skills into a minimal root. APM audits its project root,
 // so the root is stand-in for the delta.
 function stage(delta) {
@@ -166,40 +201,73 @@ function verify() {
     }
   }
 
-  const byRule = new Map();
+  // Findings grouped by (level, rule), like a report table.
+  const byLevelRule = new Map();
   const byLevel = {};
   for (const res of results) {
     const rule = String(res.ruleId || "?").split("/").pop();
     const level = res.level || "?";
     byLevel[level] = (byLevel[level] || 0) + 1;
-    byRule.set(rule, (byRule.get(rule) || 0) + 1);
+    const key = `${level}\u0000${rule}`;
+    byLevelRule.set(key, (byLevelRule.get(key) || 0) + 1);
   }
   const critical = byLevel.error || 0;
   const fail = exitCode === APM_CRITICAL || exitCode === APM_INFRA || exitCode === null;
 
-  const ruleRows = [...byRule.entries()]
+  // Changelog-style header: date, versions, range.
+  const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+  const { version, upstream } = projectInfo();
+  const head = run("git", ["rev-parse", "--short", "HEAD"]).trim();
+  const baseShort = run("git", ["rev-parse", "--short", base]).trim();
+
+  // Changes grouped Added / Modified / Removed, like a changelog.
+  const statusMap = changeStatus(base);
+  const bucket = (letters) =>
+    [...statusMap].filter(([, code]) => letters.includes(code)).map(([name]) => name).sort();
+  const fmt = (names) => (names.length ? names.map((n) => `\`${n}\``).join(", ") : "_(none)_");
+
+  const findingRows = [...byLevelRule.entries()]
     .sort((a, b) => b[1] - a[1])
-    .map(([r, n]) => `| \`${r}\` | ${n} |`);
+    .map(([key, count]) => {
+      const [level, rule] = key.split("\u0000");
+      return `| \`${level}\` | \`${rule}\` | ${count} |`;
+    });
 
   const lines = [
-    "# Skill verification",
+    `# Skill verification · ${now}`,
     "",
-    "Scanned through APM's external-scanner integration: `apm audit --external skillspector`",
-    "(APM runs SkillSpector offline and merges its SARIF into the report).",
+    `**Version** \`pstack-opencode ${version}\` · upstream \`${upstream}\``,
+    `**Range** \`${base}\` (${baseShort}) → \`HEAD\` (${head})`,
+    `**Scanner** APM external scanner — \`apm audit --external skillspector\` (offline, deterministic)`,
     "",
-    `- Base: \`${base}\``,
-    `- Changed pstack skills: ${delta.skills.length ? delta.skills.map((s) => `\`${s}\``).join(", ") : "(none)"}`,
-    `- Lockfile changed: ${delta.lockChanged ? "yes (external skills staged)" : "no"}`,
-    `- Staged for audit: ${staged.map((s) => `\`${s}\``).join(", ")}`,
-    `- APM audit exit code: ${exitCode} (\`0\` clean, \`1\` critical, \`2\` warning, \`3\` infrastructure)`,
-    `- Findings: ${results.length} (error ${critical}, warning ${byLevel.warning || 0}, note ${byLevel.note || 0})`,
-    `- Gate: ${fail ? "❌ failed (critical findings or infrastructure error)" : "✅ passed"}`,
+    "## Changes",
     "",
-    "## Findings by rule",
+    `- **Added**: ${fmt(bucket(["A"]))}`,
+    `- **Modified**: ${fmt(bucket(["M", "R"]))}`,
+    `- **Removed**: ${fmt(bucket(["D"]))}`,
+    `- **Lockfile**: ${delta.lockChanged ? "changed (external skills audited)" : "unchanged"}`,
+    `- **Audited**: ${fmt(staged)}`,
     "",
-    "| Rule | Count |",
-    "|---|---|",
-    ...(ruleRows.length ? ruleRows : ["| _(none)_ | 0 |"]),
+    "## Findings",
+    "",
+    `- \`apm audit\` exit code: ${exitCode} (\`0\` clean, \`1\` critical, \`2\` warning, \`3\` infrastructure)`,
+    `- Total: ${results.length} (error ${critical}, warning ${byLevel.warning || 0}, note ${byLevel.note || 0})`,
+    "",
+    "| Level | Rule | Count |",
+    "|---|---|---|",
+    ...(findingRows.length ? findingRows : ["| — | _(none)_ | 0 |"]),
+    "",
+    "## Gate",
+    "",
+    fail
+      ? `❌ **failed** — ${critical} error-level finding(s), or infrastructure error (exit ${exitCode})`
+      : "✅ **passed**",
+    "",
+    "## Rules",
+    "",
+    "- Gate: APM `apm audit` exit code — `1` critical → fail, `2` warning → report, `3` infrastructure → fail (`0` clean).",
+    "- Delta: `git diff <base>` (working tree included, so uncommitted update runs are seen).",
+    "- Scanner: the APM external-scanner contract (`skillspector scan --format sarif --no-llm`); no bespoke baseline.",
   ];
   writeFileSync(REPORT, lines.join("\n") + "\n");
   writeFileSync(
