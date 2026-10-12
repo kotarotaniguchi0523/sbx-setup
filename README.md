@@ -57,6 +57,8 @@ sbx-setup/
 | mo | Markdown プレビュー | 自前導出 | https://github.com/k1LoW/mo |
 | pnpm | パッケージ管理 | Nix | https://github.com/pnpm/pnpm |
 | agent-browser | ブラウザ操作 | Nix | https://github.com/vercel-labs/agent-browser |
+| obscura | ヘッドレスブラウザ（agent-browser の engine） | Nix | https://github.com/h4ckf0r0day/obscura |
+| ffmpeg | 録画（agent-browser record） | Nix | https://ffmpeg.org |
 | fd | ファイル検索 | Nix | https://github.com/sharkdp/fd |
 | typos | スペル検査 | Nix | https://github.com/crate-ci/typos |
 | lefthook | Git hooks | Nix / host | https://github.com/evilmartians/lefthook |

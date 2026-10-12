@@ -1,6 +1,7 @@
 # ---- build the CLI toolchain with Nix (reproducible, hash-verified) --------
-# uv, mise, gh, apm, mo, pnpm, agent-browser, jq, ripgrep, fd, typos, lefthook,
-# betterleaks, waza, ax and Node 24 LTS (+ its npm) all come from ./flake.nix.
+# uv, mise, gh, apm, mo, pnpm, agent-browser, obscura, ffmpeg, jq, ripgrep, fd,
+# typos, lefthook, betterleaks, waza, ax and Node 24 LTS (+ its npm) all come
+# from ./flake.nix.
 # The bundle closure is copied into the image so no npm -g / brew / curl|bash
 # installers run (cf / difit / opencode stay on npm; see below).
 FROM nixos/nix@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c AS tools
@@ -79,7 +80,10 @@ USER agent
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 
 RUN touch /etc/sandbox-persistent.sh \
- && printf '%s\n' 'export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"' >> /etc/sandbox-persistent.sh
+ && printf '%s\n' \
+      'export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"' \
+      'export AGENT_BROWSER_ENGINE=obscura' \
+      >> /etc/sandbox-persistent.sh
 
 # Generate the pstack-opencode APM package from 本家 cursor/plugins/pstack at
 # image build time (Repomix fetch + tools/convert.mjs), then install it plus the

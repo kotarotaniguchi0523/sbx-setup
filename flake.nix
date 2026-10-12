@@ -135,6 +135,8 @@
               nodejs_24
               pnpm
               agent-browser
+              obscura
+              ffmpeg
               fd
               typos
               lefthook
