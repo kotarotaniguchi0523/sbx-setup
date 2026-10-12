@@ -1,0 +1,32 @@
+# False-positive suppression for the APM-mediated SkillSpector scan.
+#
+# APM's external-scanner contract does not let us pass SkillSpector's own
+# `--baseline`, so tools/skills-verify.mjs applies this list to the SARIF it gets
+# back: a matching finding is reported under "Suppressed (baseline)" and never
+# gates.
+#
+# Each entry matches a finding by `rule`, `path` (a glob against the staged,
+# skill-relative path; `**` spans directories) and/or `message` (case-insensitive
+# substring). Keep entries narrow and record why.
+
+# AS3 "Skill Enumeration": flags any reference to another skill's path, which is
+# expected throughout the playbooks and references.
+- rule: AS3
+  path: "**"
+  reason: "references to other skill paths are expected"
+
+# TM1 "Tool Parameter Abuse": matches --force / --hard in git commands, including
+# the safe --force-with-lease and worktree resets.
+- rule: TM1
+  path: "poteto-mode/playbooks/**"
+  reason: "safe git flags (force-with-lease / reset --hard in a worktree)"
+
+# MP3 "Memory Manipulation": false positive on a benign "Search notes" line.
+- rule: MP3
+  path: "create-verification-skill/references/**"
+  reason: "benign 'notes' reference"
+
+# RA2 "Session Persistence": false positive in the eval playbook framing.
+- rule: RA2
+  path: "poteto-mode/playbooks/eval.md"
+  reason: "false positive (no cron / startup persistence)"
