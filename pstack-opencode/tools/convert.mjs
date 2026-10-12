@@ -32,6 +32,52 @@ const AGENT_OVERRIDES = {
 // Skills that get exposed as a slash command in OpenCode.
 const SLASH = new Set(["poteto-mode"]);
 
+// Only these upstream skills are shipped. The list is the set reachable from
+// poteto-mode through its own files (SKILL.md, playbooks/, references/,
+// scripts/), plus poteto-help, pstack's index skill (its catalog is trimmed to
+// this set below). Every other skill in the upstream plugin is dropped.
+const INCLUDE_SKILLS = new Set([
+  "architect",
+  "arena",
+  "benchmark-checklist",
+  "create-verification-skill",
+  "figure-it-out",
+  "how",
+  "interrogate",
+  "maintain-verification-skill",
+  "no-comments",
+  "poteto-mode",
+  "principle-boundary-discipline",
+  "principle-build-the-lever",
+  "principle-encode-lessons-in-structure",
+  "principle-exhaust-the-design-space",
+  "principle-fix-root-causes",
+  "principle-foundational-thinking",
+  "principle-guard-the-context-window",
+  "principle-laziness-protocol",
+  "principle-make-operations-idempotent",
+  "principle-migrate-callers-then-delete-legacy-apis",
+  "principle-minimize-reader-load",
+  "principle-model-the-domain",
+  "principle-never-block-on-the-human",
+  "principle-outcome-oriented-execution",
+  "principle-prove-it-works",
+  "principle-redesign-from-first-principles",
+  "principle-separate-before-serializing-shared-state",
+  "principle-sequence-verifiable-units",
+  "principle-subtract-before-you-add",
+  "reflect",
+  "setup-pstack",
+  "show-me-your-work",
+  "swarm",
+  "tdd",
+  "technical-writing",
+  "unslop",
+  "why",
+  // pstack's index skill; kept but its catalog is trimmed to this set.
+  "poteto-help",
+]);
+
 // Heuristic: does this skill body reference Cursor / Claude-only primitives?
 const NEEDS_NOTE =
   /subagent_type|Task tool|AskUserQuestion|\bopus\b|\bgrok\b|\bfable\b|\/loop\b|CLAUDE_PLUGIN_ROOT/;
@@ -72,6 +118,9 @@ function repomix() {
 
 // Resolve the upstream main commit so SOURCE.json only changes when 本家 moves.
 function upstreamRef() {
+  // Reproduction/offline runs can pin the recorded ref (e.g. CI with a cached
+  // repomix pack) so SOURCE.json only changes when 本家 actually moves on main.
+  if (process.env.PSTACK_REF) return process.env.PSTACK_REF;
   try {
     const out = execSync(`git ls-remote https://github.com/${REPO} refs/heads/main`, {
       encoding: "utf8",
@@ -160,6 +209,21 @@ const BODY_REPLACEMENTS = [
   [/\/loop\b/g, "a repeating loop"],
 ];
 
+// poteto-help is pstack's index skill: a catalog of every skill. With a
+// trimmed skill set, drop any line that names a dropped skill as a slash
+// command (`/name`) or a relative link (`../name/`), so the catalog does not
+// point at skills we no longer ship.
+function trimHelp(body, dropped) {
+  if (!dropped.length) return body;
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const alt = dropped.map(esc).join("|");
+  const deadLine = new RegExp(`(?:^|[^\\w-])/(?:${alt})(?![\\w-])|\\.\\./(?:${alt})/`);
+  return body
+    .split(/\r?\n/)
+    .filter((line) => !deadLine.test(line))
+    .join("\n");
+}
+
 let bodyReplacements = 0;
 
 function translateBody(body) {
@@ -214,6 +278,19 @@ function main() {
   const files = packed.files ?? {};
   const apm = join(ROOT, ".apm");
   process.stderr.write(`parsed ${Object.keys(files).length} files\n`);
+
+  // Which upstream skills exist, and which we drop. Computed up front so
+  // poteto-help's catalog can be trimmed as it is written.
+  const upstreamSkills = new Set();
+  for (const path of Object.keys(files)) {
+    const m = path.match(/^pstack\/skills\/([^/]+)\//);
+    if (m) upstreamSkills.add(m[1]);
+  }
+  const dropped = [...upstreamSkills].filter((s) => !INCLUDE_SKILLS.has(s)).sort();
+  const missing = [...INCLUDE_SKILLS].filter((s) => !upstreamSkills.has(s)).sort();
+  if (missing.length) process.stderr.write(`warning: INCLUDE_SKILLS not found upstream: ${missing.join(", ")}\n`);
+  process.stderr.write(`skills: keeping ${upstreamSkills.size - dropped.length}/${upstreamSkills.size} (dropped ${dropped.length})\n`);
+
   cleanDir(apm);
   process.stderr.write("cleaned .apm\n");
 
@@ -227,13 +304,15 @@ function main() {
 
     if (skill) {
       const [, id, rel] = skill;
+      if (!INCLUDE_SKILLS.has(id)) continue;
       skills.add(id);
       const dest = join(apm, "skills", id, rel);
       mkdirSync(dirname(dest), { recursive: true });
-      const body =
+      let body =
         rel === "SKILL.md" ? convertSkill(id, content)
         : rel.endsWith(".md") ? translateBody(content)
         : content; // scripts and other assets are copied verbatim
+      if (id === "poteto-help" && rel.endsWith(".md")) body = trimHelp(body, dropped);
       writeFileSync(dest, body, "utf8");
       written++;
     } else if (agent) {
