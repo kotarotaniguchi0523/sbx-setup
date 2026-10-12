@@ -1,0 +1,50 @@
+lockfile_version: '1'
+apm_version: 0.33.0
+dependencies:
+- repo_url: microsoft/apm
+  name: apm-usage
+  host: github.com
+  resolved_commit: b1dc2735a4cdd25c3e679254a2bfd15f3f9d4938
+  version: unknown
+  virtual_path: packages/apm-guide/.apm/skills/apm-usage
+  is_virtual: true
+  package_type: claude_skill
+  content_hash: sha256:34846092cb4d276d722b512954191098041b55ea27c15fdeb01c929fa9218098
+- repo_url: microsoft/waza
+  name: waza
+  host: github.com
+  resolved_commit: 04e7b4c6d593555834e71221227326c63274a921
+  version: unknown
+  package_type: skill_bundle
+  content_hash: sha256:fb444449c504ce8be1cc795076792551109c5668d0701f78e0a28465f1b1fc42
+- repo_url: mizchi/explainer
+  name: explainer
+  host: github.com
+  resolved_commit: ccdd7bacfb47451e38506d837af8a629504960b2
+  version: 0.5.3
+  package_type: skill_bundle
+  content_hash: sha256:c0a9e8e2ca7622a3ec939823e0e6f5325a8f1362a84a39d19ca066ab04231703
+  declared_license: MIT
+- repo_url: nanaism/yomiyasu
+  name: yomiyasu
+  host: github.com
+  resolved_commit: 602a3690dadd5d620bb21524353b8d192914eabb
+  version: 1.1.2
+  package_type: skill_bundle
+  content_hash: sha256:bb02d94567557510c0e8d2c8d36f8a5b18b6d1851636132e6d0008d5c259aef0
+  declared_license: MIT
+- repo_url: vercel-labs/agent-browser
+  name: 7806f76343b67d4b
+  host: github.com
+  resolved_commit: d9570915f4dd6504dee4070379d2c4f79d81dbb2
+  version: d957091
+  package_type: skill_bundle
+  content_hash: sha256:d186d285ffed78ea33eb49279e2ec696c492a6b378e4a96918a9943085a574af
+- repo_url: yusukebe/ax
+  name: ax
+  host: github.com
+  resolved_commit: 8abbca2fc400c2ff4866248ba1ec9309b948812f
+  version: unknown
+  package_type: skill_bundle
+  content_hash: sha256:90a957026d94fd46b62a758428971c8377db8fe8b7d818cb6a1b7ed1cfbe6734
+deployments: []
