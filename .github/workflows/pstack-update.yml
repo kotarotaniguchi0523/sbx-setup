@@ -1,8 +1,10 @@
 name: pstack-update
 
 # Periodically check whether 本家 cursor/plugins/pstack changed, regenerate the
-# OpenCode-converted package (including the injected mapping), and open a pull
-# request for review. All actions are pinned to commit SHAs.
+# OpenCode-converted package, verify the delta with the same flow as any skill PR
+# (apm install --frozen + apm audit --ci + SkillSpector, LLM triage via
+# opencode_cli), post the result to the PR, and gate on high-signal rules.
+# All actions are pinned to commit SHAs.
 
 on:
   schedule:
@@ -20,20 +22,42 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"
 
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+
+      - name: Install tooling
+        shell: bash
+        run: |
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          uv tool install --python 3.12 "apm-cli==0.33.0"
+          uv tool install --python 3.12 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
+          pnpm add -g opencode-ai@1.18.33
+          echo "$(pnpm bin -g)" >> "$GITHUB_PATH"
+
       - name: Regenerate the converted package from 本家 cursor/plugins/pstack
         working-directory: pstack-opencode
         run: node tools/convert.mjs
 
+      - name: Verify the delta
+        env:
+          OPENCODE_AUTH_JSON: ${{ secrets.OPENCODE_AUTH_JSON }}
+          SKILLSPECTOR_MODEL: ${{ vars.SKILLSPECTOR_MODEL }}
+        run: node tools/skills-verify.mjs --base origin/main
+
       - name: Open a pull request if 本家 changed
+        id: pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           branch: chore/pstack-upstream
@@ -42,8 +66,17 @@ jobs:
           commit-message: "chore: sync pstack from 本家 cursor/plugins"
           body: |
             Automated regeneration of the OpenCode-converted pstack skills from
-            `cursor/plugins/pstack` (本家). Review the `.apm/` diff (and the
-            injected `references/opencode-tools.md`) and merge if it looks right.
+            `cursor/plugins/pstack` (本家). Review the `.apm/` diff; the
+            verification result is posted below.
           add-paths: |
             pstack-opencode/.apm
             pstack-opencode/SOURCE.json
+
+      - name: Post the verification to the pull request
+        if: ${{ steps.pr.outputs.pull-request-number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node tools/skills-verify.mjs --post ${{ steps.pr.outputs.pull-request-number }}
+
+      - name: Gate on high-signal rules
+        run: node tools/skills-verify.mjs --gate
