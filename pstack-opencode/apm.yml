@@ -1,10 +1,16 @@
 name: pstack-opencode
 version: 0.1.0
-description: pstack (poteto's agent skills) converted for OpenCode. Generated from cursor/plugins/pstack.
+description: pstack (poteto's agent skills) converted for OpenCode, plus the shared third-party skills.
 author: sbx-common
 targets: [opencode]
 includes: auto
 dependencies:
-  apm: []
+  apm:
+    - mizchi/explainer
+    - nanaism/yomiyasu
+    - vercel-labs/agent-browser
+    - yusukebe/ax
+    - microsoft/waza
+    - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   mcp: []
 scripts: {}

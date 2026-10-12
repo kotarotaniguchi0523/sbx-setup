@@ -3,9 +3,10 @@
 #
 # The converted pstack skills intentionally ship executable orchestration tooling
 # and documented install commands; the scanner's static heuristics flag these,
-# plus one scanner false positive (SC9). Pass with:
-#   skillspector scan <path> --baseline tools/skillspector-baseline.yaml
+# plus one scanner false positive (SC9). Path globs are layout-agnostic because
+# the scan target is the deployed skill tree (.agents/skills).
 #
+# Pass with: skillspector scan <path> --baseline tools/skillspector-baseline.yaml
 # A finding is suppressed when EVERY field a rule sets glob-matches it; "*"
 # matches "/" as well. `reason` is required.
 
@@ -31,18 +32,18 @@ rules:
 
   # Documented force-push in poteto-mode's autopilot playbook.
   - id: "TM1"
-    path: "*playbooks/autopilot-full.md"
+    path: "*autopilot-full*"
     reason: "Documented 'git push --force' in the upstream autopilot playbook."
 
   # Intentional upstream behaviours.
   - id: "RA1"
-    path: "*skills/reflect/*"
+    path: "*reflect*"
     reason: "The reflect skill intentionally edits skills as part of learning."
   - id: "RA2"
-    path: "*skills/setup-pstack/*"
+    path: "*setup-pstack*"
     reason: "The setup skill writes agent config by design."
   - id: "EA2"
-    path: "*skills/automate-me/*"
+    path: "*automate-me*"
     reason: "Autonomy phrasing ('without asking') in the upstream skill description."
   - id: "AS3"
     reason: "Skills legitimately reference peer skills' SKILL.md."
@@ -51,7 +52,7 @@ rules:
   - id: "RP1"
     reason: "README documents 'npx repomix'; the converter itself pins the version."
   - id: "SC1"
-    path: "*skills/poteto-mode/scripts/*"
+    path: "*poteto-mode*"
     reason: "Upstream devDependency uses 'latest'."
 
 fingerprints: []

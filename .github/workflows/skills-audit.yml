@@ -1,28 +1,29 @@
 name: skills-audit
 
-# Scheduled (not per-commit) security audit of ALL agent skills this project
-# installs: the converted pstack package AND the external skill sources pulled
-# in via APM (explainer, yomiyasu, agent-browser, ax, waza, apm).
+# Scheduled (not per-commit) security audit of ALL agent skills.
+#
+# Skills are managed by APM: pstack-opencode/apm.yml declares the converted
+# pstack package plus the external skill sources, and apm.lock.yaml pins every
+# dependency to an exact commit + content hash. CI reproduces that set with
+# `apm install --frozen`, verifies it with `apm audit --ci` (10 baseline checks
+# incl. content integrity + drift), and scans the deployed skills
+# (`.agents/skills`) with SkillSpector.
 #
 # SkillSpector runs its LLM semantic analysis through the OpenCode CLI
-# (`opencode_cli` provider). Per the official docs this needs NO API key: the
-# provider uses OpenCode's own login session. CI installs OpenCode 1.18.33 (the
-# only version opencode_cli accepts), restores OpenCode's credentials if the
-# OPENCODE_AUTH_JSON secret is set, and otherwise degrades to static-only.
+# (`opencode_cli`). Per the official docs this needs NO API key: it uses
+# OpenCode's own login. CI installs OpenCode 1.18.33 (the only version
+# opencode_cli accepts) and restores OpenCode credentials if the
+# OPENCODE_AUTH_JSON secret is set; otherwise it degrades to static-only.
 #
-# Known/accepted findings are suppressed by tools/skillspector-baseline.yaml.
+# Only HIGH-SIGNAL rules gate the job (see GATE_RULES). Noisy heuristics are
+# suppressed by tools/skillspector-baseline.yaml and never gate.
 #
-# Results are published where humans read them:
-#   - a GitHub issue titled "Skill security audit" (body updated each run),
-#   - dated Markdown + SARIF reports on the `audit/skills` branch,
-#   - SARIF uploaded to GitHub Code Scanning.
-#
-# All actions are pinned to commit SHAs.
+# Results are published where humans read them: a GitHub issue titled
+# "Skill security audit" (updated each run), dated reports on the `audit/skills`
+# branch, and SARIF uploaded to Code Scanning. All actions are pinned to SHAs.
 
 # Trigger policy (decided): scheduled weekly + manual only — NOT on every push
-# or PR. Skill content changes at most weekly (the daily pstack-update PR is
-# reviewed before merge), the LLM pass costs tokens, and a weekly cadence is
-# enough.
+# or PR. Skill content changes at most weekly and the LLM pass costs tokens.
 on:
   schedule:
     - cron: "0 0 * * 1" # Mondays 00:00 UTC = 09:00 JST
@@ -33,12 +34,19 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: write # commit the report to the audit/skills branch
+  contents: write # commit reports to the audit/skills branch
   issues: write # create/update the human-readable audit issue
   security-events: write # upload SARIF to Code Scanning
 
+env:
+  # Only these (high-signal) rules fail the job. Everything else is reported
+  # but never gates. See SkillSpector rule ids.
+  GATE_RULES: >-
+    YR1 YR2 YR3 YR4 TT3 TT5 AST8 P1 P2 P3 AR1 AR2 AR3 E2 E4 PE3 SC3
+    SSD-1 SSD-2 SSD-3 SSD-4
+
 jobs:
-  skillspector:
+  audit:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -54,18 +62,28 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Official OpenCode CLI install. opencode_cli accepts only 1.18.33 — do not
-      # bump this version.
+      # APM CLI (pinned to the lockfile's apm_version).
+      - name: Install APM CLI
+        run: pip install "apm-cli==0.33.0"
+
+      # Official OpenCode CLI install for SkillSpector's opencode_cli provider
+      # (accepts only 1.18.33 — do not bump).
       - name: Install OpenCode CLI 1.18.33 (CI only)
         run: npm install -g opencode-ai@1.18.33
 
-      # Pinned release; Renovate keeps this version updated.
       - name: Install SkillSpector
         run: pip install "git+https://github.com/nvidia/skillspector.git@v2.12.0"
 
-      # No API key needed: opencode_cli uses OpenCode's own login. Optionally
-      # restore it from OPENCODE_AUTH_JSON (contents of
-      # ~/.local/share/opencode/auth.json). Without it the scan is static-only.
+      # Reproduce the lock-pinned skill set and verify it with APM.
+      - name: Install skills (APM, frozen)
+        working-directory: pstack-opencode
+        run: apm install --frozen
+
+      - name: APM audit (CI gate)
+        working-directory: pstack-opencode
+        run: apm audit --ci --format sarif --output "$GITHUB_WORKSPACE/apm-audit.sarif"
+
+      # No API key needed: opencode_cli uses OpenCode's own login.
       - name: Configure OpenCode credentials (optional)
         env:
           OPENCODE_AUTH_JSON: ${{ secrets.OPENCODE_AUTH_JSON }}
@@ -76,99 +94,71 @@ jobs:
             mkdir -p "$HOME/.local/share/opencode"
             printf '%s' "$OPENCODE_AUTH_JSON" > "$HOME/.local/share/opencode/auth.json"
             echo "Restored OpenCode credentials."
-          else
-            echo "No OPENCODE_AUTH_JSON secret; OpenCode LLM analysis may be unavailable."
           fi
           opencode --version
           opencode auth list 2>/dev/null || true
-          opencode models 2>/dev/null | head -5 || true
 
-      # Scan every skill source (converted pstack + external APM sources).
-      - name: Scan skills
+      # Scan the deployed, lock-pinned skills.
+      - name: SkillSpector scan (.agents/skills)
         id: scan
         env:
-          # Optional repository variable: model as `provider/model`
-          # (forwarded to `opencode --model` by opencode_cli).
           SKILLSPECTOR_MODEL: ${{ vars.SKILLSPECTOR_MODEL }}
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p sarif
-          targets=(
-            "pstack-opencode|pstack"
-            "https://github.com/mizchi/explainer|explainer"
-            "https://github.com/nanaism/yomiyasu|yomiyasu"
-            "https://github.com/vercel-labs/agent-browser|agent-browser"
-            "https://github.com/yusukebe/ax|ax"
-            "https://github.com/microsoft/waza|waza"
-            "https://github.com/microsoft/apm|apm"
-          )
+          target="pstack-opencode/.agents/skills"
+          args=(scan "$target" --baseline tools/skillspector-baseline.yaml
+                --format sarif --output skillspector.sarif)
           if [ -f "$HOME/.local/share/opencode/auth.json" ] || [ -n "${SKILLSPECTOR_MODEL:-}" ]; then
             mode="LLM semantic analysis via opencode_cli (OpenCode's own login)"
-            llm=1
+            SKILLSPECTOR_PROVIDER=opencode_cli skillspector "${args[@]}" || true
           else
             mode="static only (no OpenCode credentials)"
-            llm=0
+            skillspector "${args[@]}" --no-llm || true
           fi
           echo "mode=${mode}" >> "$GITHUB_OUTPUT"
 
-          for entry in "${targets[@]}"; do
-            target="${entry%%|*}"; name="${entry##*|}"
-            echo "::group::skillspector ${name} (${target})"
-            if [ "$llm" = "1" ]; then
-              SKILLSPECTOR_PROVIDER=opencode_cli \
-                skillspector scan "$target" --baseline tools/skillspector-baseline.yaml \
-                  --format sarif --output "sarif/${name}.sarif" || true
-            else
-              skillspector scan "$target" --baseline tools/skillspector-baseline.yaml \
-                --format sarif --output "sarif/${name}.sarif" --no-llm || true
-            fi
-            echo "::endgroup::"
-          done
-
-          # Merge all per-target SARIF runs into one report.
-          jq -s '{ "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
-                   version: "2.1.0",
-                   runs: [.[].runs[]] }' sarif/*.sarif > skillspector.sarif
-
-      # Human-readable report (Markdown) built from the merged SARIF.
       - name: Build report
         shell: bash
         run: |
           set -euo pipefail
           stamp="$(date -u +%Y-%m-%dT%H:%MZ)"
           {
-            echo "# SkillSpector skill audit"
+            echo "# Skill security audit"
             echo
             echo "- Date (UTC): ${stamp}"
-            echo "- Mode: ${{ steps.scan.outputs.mode }}"
-            echo "- Total findings: $(jq '[.runs[].results[]?] | length' skillspector.sarif)"
+            echo "- SkillSpector mode: ${{ steps.scan.outputs.mode }}"
             echo
-            echo "## Findings by rule"
+            echo "## APM audit (lock-pinned skill set)"
+            echo
+            echo "See the \`apm-audit\` SARIF in Code Scanning. CI ran \`apm install --frozen\` + \`apm audit --ci\` (10 baseline checks)."
+            echo
+            echo "## SkillSpector findings"
+            echo
+            echo "Total: $(jq '[.runs[].results[]?] | length' skillspector.sarif)"
             echo
             echo "| Rule | Count |"
             echo "|---|---|"
             jq -r '[.runs[].results[]? | (.ruleId // "?")] | group_by(.) | map("| " + .[0] + " | " + (length|tostring) + " |") | .[]' skillspector.sarif
             echo
-            echo "## Findings"
+            echo "### Details"
             echo
             echo "| Severity | Rule | Location |"
             echo "|---|---|---|"
             jq -r '.runs[].results[]? | "| " + (.level // "?") + " | " + (.ruleId // "?") + " | " + (.locations[0].physicalLocation.artifactLocation.uri // "") + " |"' skillspector.sarif
             echo
-            echo "_Reports are also kept on the \`audit/skills\` branch and uploaded to Code Scanning._"
+            echo "_Noisy heuristics are suppressed by \`tools/skillspector-baseline.yaml\`. Only high-signal rules gate CI._"
           } > report.md
           cat report.md
 
-      # Publish to a human-readable place: a GitHub issue (created once, updated
-      # every run).
+      # Publish to a human-readable place (issue created once, updated each run).
       - name: Update the audit issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          gh label create skill-audit --color BFD4F2 --description "Skill security audit (SkillSpector)" 2>/dev/null || true
+          gh label create skill-audit --color BFD4F2 --description "Skill security audit" 2>/dev/null || true
           number="$(gh issue list --label skill-audit --state open --json number --jq '.[0].number' || true)"
           if [ -n "${number}" ]; then
             gh issue edit "${number}" --body-file report.md
@@ -177,38 +167,63 @@ jobs:
             gh issue create --title "Skill security audit" --label skill-audit --body-file report.md
           fi
 
-      # Persist outside CI: append a dated report to the audit/skills branch.
-      - name: Save report to the audit/skills branch
+      # Persist outside CI.
+      - name: Save reports to the audit/skills branch
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
           if git fetch origin audit/skills:refs/heads/audit/skills 2>/dev/null; then
             git switch audit/skills
           else
             git switch --orphan audit/skills
           fi
-
           stamp="$(date -u +%Y%m%d-%H%M)"
           mkdir -p audit/skills
           cp report.md "audit/skills/report-${stamp}.md"
           cp report.md audit/skills/latest.md
           cp skillspector.sarif "audit/skills/skillspector-${stamp}.sarif"
-
+          [ -f apm-audit.sarif ] && cp apm-audit.sarif "audit/skills/apm-audit-${stamp}.sarif" || true
           git add audit/skills
           if ! git diff --cached --quiet; then
             git commit -m "audit(skills): ${stamp}"
             git push origin audit/skills
-          else
-            echo "No changes to commit."
           fi
 
-      - name: Upload SARIF to Code Scanning
+      - name: Upload APM audit SARIF to Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          sarif_file: apm-audit.sarif
+          category: apm-audit
+
+      - name: Upload SkillSpector SARIF to Code Scanning
         if: always()
         uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
         with:
           sarif_file: skillspector.sarif
           category: skillspector
+
+      # Gate: fail only on high-signal rules (everything else is reported).
+      - name: Gate on high-signal rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          hits="$(jq -r --arg ids "$GATE_RULES" '
+            ($ids | split(" ") | map(select(length>0))) as $set
+            | [ .runs[].results[]?
+                | (.ruleId // "") | split("/") | last
+                | select(. as $r | ($set | index($r))) ]
+            | length' skillspector.sarif)"
+          echo "High-signal findings: ${hits}"
+          jq -r --arg ids "$GATE_RULES" '
+            ($ids | split(" ") | map(select(length>0))) as $set
+            | .runs[].results[]?
+            | (.ruleId // "") | split("/") | last
+            | select(. as $r | ($set | index($r)))' skillspector.sarif | sort -u || true
+          if [ "${hits}" != "0" ]; then
+            echo "::error::SkillSpector reported ${hits} high-signal finding(s)"
+            exit 1
+          fi
