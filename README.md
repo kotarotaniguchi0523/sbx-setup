@@ -72,6 +72,7 @@ sbx-setup/
 | Renovate | 依存更新 | Mend App | https://github.com/renovatebot/renovate |
 
 - 一覧は**このリポジトリで追加・管理しているもの**のみ。base イメージ（`docker/sandbox-templates`）が元から提供する **エージェント（opencode / codex）・Node/npm・jq / ripgrep / gh / uv・python / git / curl** は除外（base は digest ピンなので据え置き。Node/npm のみ npm 12 のため Nix で上書き）。
+- **pnpm**: ワークスペースは virtiofs で symlink 不可のため、グローバル pnpm 設定（`~/.config/pnpm/config.yaml`。**pnpm のみが読む**）で `nodeLinker: hoisted` ＋ `preferSymlinkedExecutables: false` を既定にする。npm / yarn / 他言語には影響しない（プロジェクト側の `pnpm-workspace.yaml` で上書き可）。
 
 ## 実行（入口は `sbx env`）
 
