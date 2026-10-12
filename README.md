@@ -233,7 +233,9 @@ lefthook install
 - `.github/workflows/build.yml` … opencode / codex を **matrix で並列**ビルド。集約ジョブ `build` が必須チェック。PR はビルドのみ、main はビルド＋ghcr push（**provenance + SBOM** 付き）
 - `.github/workflows/sisakulint.yml` … GH Actions の SAST（`fail-on: high`）。SARIF は自前生成し `codeql-action` v4 で Code Scanning へ
 - `.github/workflows/nix.yml` … `flake.nix` の devShell を検証
-- `.github/workflows/skills-audit.yml` … **週次（月曜 09:00 JST）＋手動**で skills を SkillSpector で監査。対象は **pstack（変換後）＋外部 skill 配布元**（mizchi/explainer・nanaism/yomiyasu・vercel-labs/agent-browser・yusukebe/ax・microsoft/waza・microsoft/apm）。CI だけ OpenCode 1.18.33 を使う `opencode_cli` で LLM 解析（API キー不要、OpenCode のログインを使用）。**毎 push では走らせない**。結果は **GitHub Issue「Skill security audit」を毎回更新**（人間向け）＋ **`audit/skills` ブランチに日付付きで保存** ＋ SARIF を Code Scanning へ
+- `.github/workflows/skills-audit.yml` … **週次（月曜 09:00 JST）＋手動**で全 skills を監査。SkillSpector は **APM の外部スキャナ統合**（`apm audit --external skillspector`。APM がオフライン＝`--no-llm` で実行し SARIF を取り込む。API キー・OpenCode ログイン・独自 baseline は**不要**）。**毎 push では走らせない**。結果は **GitHub Issue「Skill security audit」を毎回更新**（人間向け）＋ **`audit/skills` ブランチに日付付きで保存** ＋ SARIF を Code Scanning へ
+- `.github/workflows/skills-verify.yml` … PR で **skill / lock の差分だけ**を APM 経由で検証し、結果を **PR にコメント**（upsert）＋ critical のみゲート
+- `.github/workflows/apm-update.yml` … 週次で `apm update`（外部 skill の ref を更新）→ 差分検証 → PR
 - `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins/pstack` の更新を検知し PR を作成
 - `renovate.json` … Dependabot alerts 連携（`vulnerabilityAlerts`）／**非メジャーを1PRに集約**／Actions を `GitHub Actions` でまとめ／**リリース後3日待ってから PR**（`minimumReleaseAge: "3 days"` + `internalChecksFilter: strict`）。security 修正のみ即時
 - base イメージは **digest ピン**。pstack / base / npm / sisakulint / Go / waza / ax を追従

@@ -5,18 +5,14 @@ name: skills-audit
 # Skills are managed by APM: pstack-opencode/apm.yml declares the converted
 # pstack package plus the external skill sources, and apm.lock.yaml pins every
 # dependency to an exact commit + content hash. CI reproduces that set with
-# `apm install --frozen`, verifies it with `apm audit --ci` (10 baseline checks
-# incl. content integrity + drift), and scans the deployed skills
-# (`.agents/skills`) with SkillSpector.
+# `apm install --frozen` and verifies it with `apm audit --ci` (10 baseline
+# checks incl. content integrity + drift).
 #
-# SkillSpector runs its LLM semantic analysis through the OpenCode CLI
-# (`opencode_cli`). Per the official docs this needs NO API key: it uses
-# OpenCode's own login. CI installs OpenCode 1.18.33 (the only version
-# opencode_cli accepts) and restores OpenCode credentials if the
-# OPENCODE_AUTH_JSON secret is set; otherwise it degrades to static-only.
-#
-# Only HIGH-SIGNAL rules gate the job (see GATE_RULES). Noisy heuristics are
-# suppressed by tools/skillspector-baseline.yaml and never gate.
+# SkillSpector is folded in through APM's own external-scanner integration
+# (`apm audit --external skillspector`). APM runs it offline and deterministic
+# (`--no-llm`): no API key, no OpenCode credentials, no bespoke baseline file.
+# Because APM always hands the scanner its whole project root, the deployed
+# skills are first staged into a throwaway root that contains only skills.
 #
 # Results are published where humans read them: a GitHub issue titled
 # "Skill security audit" (updated each run), dated reports on the `audit/skills`
@@ -38,13 +34,6 @@ permissions:
   issues: write # create/update the human-readable audit issue
   security-events: write # upload SARIF to Code Scanning
 
-env:
-  # Only these (high-signal) rules fail the job. Everything else is reported
-  # but never gates. See SkillSpector rule ids.
-  GATE_RULES: >-
-    YR1 YR2 YR3 YR4 TT3 TT5 AST8 P1 P2 P3 AR1 AR2 AR3 E2 E4 PE3 SC3
-    SSD-1 SSD-2 SSD-3 SSD-4
-
 jobs:
   audit:
     runs-on: ubuntu-latest
@@ -54,26 +43,20 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        with:
-          version: 10
-
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"
 
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
 
-      # APM CLI (pinned to the lockfile's apm_version) + SkillSpector via uv;
-      # OpenCode CLI 1.18.33 (the only version opencode_cli accepts) via pnpm.
+      # APM CLI (pinned to the lockfile's apm_version) + SkillSpector via uv.
+      # APM invokes SkillSpector itself, offline (no API key).
       - name: Install tooling
         shell: bash
         run: |
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           uv tool install --python 3.12 "apm-cli==0.33.0"
           uv tool install --python 3.12 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
-          pnpm add -g opencode-ai@1.18.33
-          echo "$(pnpm bin -g)" >> "$GITHUB_PATH"
 
       # Reproduce the lock-pinned skill set and verify it with APM.
       - name: Install skills (APM, frozen)
@@ -84,40 +67,24 @@ jobs:
         working-directory: pstack-opencode
         run: apm audit --ci --format sarif --output "$GITHUB_WORKSPACE/apm-audit.sarif"
 
-      # No API key needed: opencode_cli uses OpenCode's own login.
-      - name: Configure OpenCode credentials (optional)
-        env:
-          OPENCODE_AUTH_JSON: ${{ secrets.OPENCODE_AUTH_JSON }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ -n "${OPENCODE_AUTH_JSON:-}" ]; then
-            mkdir -p "$HOME/.local/share/opencode"
-            printf '%s' "$OPENCODE_AUTH_JSON" > "$HOME/.local/share/opencode/auth.json"
-            echo "Restored OpenCode credentials."
-          fi
-          opencode --version
-          opencode auth list 2>/dev/null || true
-
-      # Scan the deployed, lock-pinned skills.
-      - name: SkillSpector scan (.agents/skills)
+      # Fold SkillSpector into the audit through APM. APM always scans its whole
+      # project root, so stage the deployed skills into a throwaway root first
+      # (outside any apm.yml) to keep the scan bounded.
+      - name: SkillSpector scan via APM (external scanner)
         id: scan
-        env:
-          SKILLSPECTOR_MODEL: ${{ vars.SKILLSPECTOR_MODEL }}
         shell: bash
         run: |
           set -euo pipefail
-          target="pstack-opencode/.agents/skills"
-          args=(scan "$target" --baseline tools/skillspector-baseline.yaml
-                --format sarif --output skillspector.sarif)
-          if [ -f "$HOME/.local/share/opencode/auth.json" ] || [ -n "${SKILLSPECTOR_MODEL:-}" ]; then
-            mode="LLM semantic analysis via opencode_cli (OpenCode's own login)"
-            SKILLSPECTOR_PROVIDER=opencode_cli skillspector "${args[@]}" || true
-          else
-            mode="static only (no OpenCode credentials)"
-            skillspector "${args[@]}" --no-llm || true
-          fi
-          echo "mode=${mode}" >> "$GITHUB_OUTPUT"
+          apm experimental enable external-scanners
+          root="$(mktemp -d)"
+          cp -r pstack-opencode/.agents/skills/. "$root"/
+          cd "$root"
+          set +e
+          apm audit --external skillspector --format sarif --output "$GITHUB_WORKSPACE/skillspector.sarif"
+          code=$?
+          set -e
+          echo "exit=${code}" >> "$GITHUB_OUTPUT"
+          echo "APM external scanner exit code: ${code} (0 clean, 1 critical, 2 warning, 3 infra)"
 
       - name: Build report
         shell: bash
@@ -128,7 +95,8 @@ jobs:
             echo "# Skill security audit"
             echo
             echo "- Date (UTC): ${stamp}"
-            echo "- SkillSpector mode: ${{ steps.scan.outputs.mode }}"
+            echo "- SkillSpector: via APM external scanner (\`apm audit --external skillspector\`, offline)"
+            echo "- APM external scanner exit code: ${{ steps.scan.outputs.exit }}"
             echo
             echo "## APM audit (lock-pinned skill set)"
             echo
@@ -147,8 +115,6 @@ jobs:
             echo "| Severity | Rule | Location |"
             echo "|---|---|---|"
             jq -r '.runs[].results[]? | "| " + (.level // "?") + " | " + (.ruleId // "?") + " | " + (.locations[0].physicalLocation.artifactLocation.uri // "") + " |"' skillspector.sarif
-            echo
-            echo "_Noisy heuristics are suppressed by \`tools/skillspector-baseline.yaml\`. Only high-signal rules gate CI._"
           } > report.md
           cat report.md
 
@@ -207,24 +173,17 @@ jobs:
           sarif_file: skillspector.sarif
           category: skillspector
 
-      # Gate: fail only on high-signal rules (everything else is reported).
-      - name: Gate on high-signal rules
+      # Gate: the scheduled full-set audit reports; it fails only on an
+      # infrastructure error (exit 3). Critical findings are surfaced in the
+      # issue and Code Scanning, not used to redden the periodic run.
+      - name: Gate on infrastructure errors
         shell: bash
         run: |
           set -euo pipefail
-          hits="$(jq -r --arg ids "$GATE_RULES" '
-            ($ids | split(" ") | map(select(length>0))) as $set
-            | [ .runs[].results[]?
-                | (.ruleId // "") | split("/") | last
-                | select(. as $r | ($set | index($r))) ]
-            | length' skillspector.sarif)"
-          echo "High-signal findings: ${hits}"
-          jq -r --arg ids "$GATE_RULES" '
-            ($ids | split(" ") | map(select(length>0))) as $set
-            | .runs[].results[]?
-            | (.ruleId // "") | split("/") | last
-            | select(. as $r | ($set | index($r)))' skillspector.sarif | sort -u || true
-          if [ "${hits}" != "0" ]; then
-            echo "::error::SkillSpector reported ${hits} high-signal finding(s)"
+          code="${{ steps.scan.outputs.exit }}"
+          errors="$(jq '[.runs[].results[]? | select(.level == "error")] | length' skillspector.sarif 2>/dev/null || echo 0)"
+          echo "APM external scanner exit=${code}; error-level findings=${errors}"
+          if [ "${code}" = "3" ]; then
+            echo "::error::APM external scanner reported an infrastructure error (exit 3)"
             exit 1
           fi

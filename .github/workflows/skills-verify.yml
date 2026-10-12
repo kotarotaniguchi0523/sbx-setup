@@ -1,16 +1,15 @@
 name: skills-verify
 
 # Verify ONLY what a pull request changes: the delta is the Git diff against the
-# base branch. Runs `apm install --frozen` + `apm audit --ci` for integrity, then
-# SkillSpector on the changed skills (LLM triage via opencode_cli when OpenCode
-# credentials are present), posts the result as a PR comment, and gates on
-# high-signal rules only.
+# base branch. Materialises the lock (`apm install --frozen`), then scans the
+# changed skills through APM's external-scanner integration
+# (`apm audit --external skillspector`), posts the result as a PR comment, and
+# gates on critical findings only.
 
 on:
   pull_request:
     paths:
       - "pstack-opencode/**"
-      - "tools/skillspector-baseline.yaml"
       - "tools/skills-verify.mjs"
       - ".github/workflows/skills-verify.yml"
   workflow_dispatch:
@@ -33,29 +32,21 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        with:
-          version: 10
-
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"
 
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
 
+      # APM runs SkillSpector itself, offline (no API key, no opencode_cli).
       - name: Install tooling
         shell: bash
         run: |
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           uv tool install --python 3.12 "apm-cli==0.33.0"
           uv tool install --python 3.12 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
-          pnpm add -g opencode-ai@1.18.33
-          echo "$(pnpm bin -g)" >> "$GITHUB_PATH"
 
       - name: Verify the changed skills
-        env:
-          OPENCODE_AUTH_JSON: ${{ secrets.OPENCODE_AUTH_JSON }}
-          SKILLSPECTOR_MODEL: ${{ vars.SKILLSPECTOR_MODEL }}
         run: node tools/skills-verify.mjs --base "origin/${{ github.base_ref || 'main' }}"
 
       - name: Post the result to the pull request
@@ -64,5 +55,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node tools/skills-verify.mjs --post ${{ github.event.pull_request.number }}
 
-      - name: Gate on high-signal rules
+      - name: Gate on critical findings
         run: node tools/skills-verify.mjs --gate
