@@ -52,6 +52,17 @@ RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- 
 RUN touch /etc/sandbox-persistent.sh \
  && printf '%s\n' 'export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"' >> /etc/sandbox-persistent.sh
 
+# pnpm's own settings live in pnpm's YAML config, which ONLY pnpm reads
+# (npm / yarn / other toolchains never see it). The sandbox workspace is a
+# virtiofs/FUSE mount where pnpm's default symlinks break, so default to a flat
+# node_modules without symlinked executables. Override per project in
+# pnpm-workspace.yaml.
+RUN mkdir -p /home/agent/.config/pnpm \
+ && printf '%s\n' \
+      'nodeLinker: hoisted' \
+      'preferSymlinkedExecutables: false' \
+      > /home/agent/.config/pnpm/config.yaml
+
 # Shared skills via APM (codex target -> ~/.agents/skills). No pstack here
 # (the pstack conversion targets OpenCode only).
 RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH" \
