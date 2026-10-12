@@ -1,3 +1,10 @@
 # Repomix cache (never commit). .apm/ IS committed so upstream updates show
 # up as a reviewable pull request.
 .cache/
+
+# APM materialises dependencies here on install (pinned by apm.lock.yaml).
+apm_modules/
+
+# Deployed outputs (reproduced from apm.lock.yaml on install).
+.agents/
+.opencode/
