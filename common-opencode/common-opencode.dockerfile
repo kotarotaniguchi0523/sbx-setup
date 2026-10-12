@@ -30,6 +30,21 @@ RUN set -eux; \
     rm -f /tmp/store.tar /tmp/bundle-path; \
     uv --version; mise --version; gh --version | head -1; pnpm --version; mo --version; node --version; npm --version
 
+# pnpm-only defaults: the sandbox workspace is a virtiofs/FUSE mount where
+# pnpm's default symlinks break. Wrap pnpm so the settings apply only while
+# pnpm runs -- PNPM_CONFIG_* is pnpm's own env namespace, so npm / yarn / other
+# toolchains never see it, and no global pnpm config file is installed.
+RUN real="$(readlink -f /usr/local/bin/pnpm)" \
+ && rm -f /usr/local/bin/pnpm \
+ && printf '%s\n' \
+      '#!/bin/sh' \
+      'export PNPM_CONFIG_NODE_LINKER="${PNPM_CONFIG_NODE_LINKER:-hoisted}"' \
+      'export PNPM_CONFIG_PREFER_SYMLINKED_EXECUTABLES="${PNPM_CONFIG_PREFER_SYMLINKED_EXECUTABLES:-false}"' \
+      "exec \"$real\" \"\$@\"" \
+      > /usr/local/bin/pnpm \
+ && chmod +x /usr/local/bin/pnpm \
+ && pnpm --version
+
 # npm 12 (latest) on top of the Nix-provided Node 24 LTS, which satisfies npm
 # 12's engine requirement (>= 24.15). Installed from the registry; Renovate
 # tracks the version.
@@ -65,17 +80,6 @@ RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- 
 
 RUN touch /etc/sandbox-persistent.sh \
  && printf '%s\n' 'export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"' >> /etc/sandbox-persistent.sh
-
-# pnpm's own settings live in pnpm's YAML config, which ONLY pnpm reads
-# (npm / yarn / other toolchains never see it). The sandbox workspace is a
-# virtiofs/FUSE mount where pnpm's default symlinks break, so default to a flat
-# node_modules without symlinked executables. Override per project in
-# pnpm-workspace.yaml.
-RUN mkdir -p /home/agent/.config/pnpm \
- && printf '%s\n' \
-      'nodeLinker: hoisted' \
-      'preferSymlinkedExecutables: false' \
-      > /home/agent/.config/pnpm/config.yaml
 
 # Generate the pstack-opencode APM package from 本家 cursor/plugins/pstack at
 # image build time (Repomix fetch + tools/convert.mjs), then install it plus the
