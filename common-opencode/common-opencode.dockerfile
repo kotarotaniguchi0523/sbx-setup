@@ -81,7 +81,7 @@ RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- 
 
 RUN touch /etc/sandbox-persistent.sh \
  && printf '%s\n' \
-      'export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"' \
+      'export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH"' \
       'export AGENT_BROWSER_ENGINE=obscura' \
       >> /etc/sandbox-persistent.sh
 
@@ -92,7 +92,7 @@ RUN touch /etc/sandbox-persistent.sh \
 #   third-party: mizchi/explainer, nanaism/yomiyasu, vercel-labs/agent-browser,
 #                yusukebe/ax, microsoft/waza, microsoft/apm (apm-usage)
 COPY --chown=agent:agent pstack-opencode /opt/pstack-opencode
-RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH" \
+RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH" \
  && cd /opt/pstack-opencode \
  && node tools/convert.mjs \
  && cd /home/agent \

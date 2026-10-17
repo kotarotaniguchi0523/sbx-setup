@@ -11,6 +11,9 @@ capabilities:
       runtime:
         allow:
           - api.cloudflare.com:443
+          - api.doppler.com:443
+          - opencode.ai:443
+          - "*.opencode.ai:443"
           - github.com:443
           - api.github.com:443
           - uploads.github.com:443
@@ -33,3 +36,25 @@ capabilities:
           - { domain: api.github.com, header: Authorization, format: "Bearer %s" }
           - { domain: uploads.github.com, header: Authorization, format: "Bearer %s" }
           - { domain: github.com, header: Authorization, format: "Bearer %s" }
+  - type: com.docker.sandbox/credential@1
+    description: Cloudflare API access for cf
+    optional: true
+    config:
+      service: cloudflare
+      phase: runtime
+      apiKey:
+        name: CLOUDFLARE_API_TOKEN
+        proxyManaged: true
+        inject:
+          - { domain: api.cloudflare.com, header: Authorization, format: "Bearer %s" }
+  - type: com.docker.sandbox/credential@1
+    description: Doppler service token (sandbox-side doppler CLI)
+    optional: true
+    config:
+      service: doppler
+      phase: runtime
+      apiKey:
+        name: DOPPLER_TOKEN
+        proxyManaged: true
+        inject:
+          - { domain: api.doppler.com, header: Authorization, format: "Bearer %s" }
