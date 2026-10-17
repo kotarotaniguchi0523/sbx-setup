@@ -36,6 +36,29 @@ sandboxOptions:
   pullPolicy: never
   skills: off
 
+# 自作 kit（common-opencode / common-codex）が credential@1 で github を
+# 宣言しているため、その注入ドメインを承認する（opencode / codex 共通）。
+# 承認は host 全体の credentials.yaml にマージされる（sbx env rm でも残る）。
+bindings:
+  github:
+    apiKey:
+      domains:
+        - api.github.com
+        - github.com
+        - uploads.github.com
+  # cf CLI 用。kit 記述子の credential@1 (service: cloudflare) と対になる承認。
+  # 値は未投入（後で: sbx secret set cloudflare）
+  cloudflare:
+    apiKey:
+      domains:
+        - api.cloudflare.com
+  # sandbox 内で doppler CLI を使う場合のみ。ホスト側で解決する使い方には不要。
+  # 値は未投入（後で: sbx secret set doppler）
+  doppler:
+    apiKey:
+      domains:
+        - api.doppler.com
+
 lifecycle:
   initialize:
     - name: Build templates (parallel via bake; opencode conversion runs inside)
