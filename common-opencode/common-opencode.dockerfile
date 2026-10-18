@@ -1,9 +1,13 @@
 # ---- build the CLI toolchain with Nix (reproducible, hash-verified) --------
-# uv, mise, gh, apm, mo, pnpm, agent-browser, obscura, ffmpeg, jq, ripgrep, fd,
-# typos, lefthook, betterleaks, waza, ax and Node 24 LTS (+ its npm) all come
-# from ./flake.nix.
+# uv, gh, apm, agent-browser, obscura, ffmpeg, jq, ripgrep, fd, typos,
+# lefthook, betterleaks, waza, ax and Node 24 LTS (+ its npm) all come from
+# ./flake.nix.
 # The bundle closure is copied into the image so no npm -g / brew / curl|bash
 # installers run (cf / difit / opencode stay on npm; see below).
+# mise and pnpm come from their vendors' official images instead: both ship a
+# single static binary and track upstream releases faster than nixpkgs does
+# (mise 2026.10.3 vs 2026.10.13, pnpm 12.9.0 vs 12.14.0 when this was written).
+# mo is installed through mise's aqua backend, for the same reason.
 FROM nixos/nix@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c AS tools
 WORKDIR /src
 COPY flake.nix flake.lock ./
@@ -20,6 +24,16 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
  && rm -rf /var/lib/apt/lists/*
 
+# mise + pnpm from the vendors' official images. Both are single static binaries
+# with no runtime deps; the digest pins are what Renovate's docker manager keeps
+# current, the same mechanism as the base image above.
+#   jdxcode/mise      -> /usr/local/bin/mise
+#   ghcr.io/pnpm/pnpm -> /opt/pnpm/pnpm, symlinked onto PATH so the PNPM_CONFIG_*
+#                        wrapper below can rewrite that symlink into a shim.
+COPY --from=jdxcode/mise:2026.10.13@sha256:a2f1563d47f56a7ce69d5c94ac61d9f7af5063613bfd3c50e6268768ed9c87ad /usr/local/bin/mise /usr/local/bin/mise
+COPY --from=ghcr.io/pnpm/pnpm:12.14.0@sha256:71202ae73719148f6b6e129ca1e9fa3ceabbc9a037dc34800715606f2b5290a1 /opt/pnpm/pnpm /opt/pnpm/pnpm
+RUN ln -sf /opt/pnpm/pnpm /usr/local/bin/pnpm
+
 # CLI toolchain from the Nix bundle (Node 24 LTS + its bundled npm): unpack the
 # store closure and link every binary onto PATH.
 COPY --from=tools /out/store.tar /tmp/store.tar
@@ -29,7 +43,7 @@ RUN set -eux; \
     bundle="$(cat /tmp/bundle-path)"; \
     for f in "$bundle"/bin/*; do ln -sf "$f" "/usr/local/bin/$(basename "$f")"; done; \
     rm -f /tmp/store.tar /tmp/bundle-path; \
-    uv --version; mise --version; gh --version | head -1; pnpm --version; mo --version; node --version; npm --version
+    uv --version; mise --version; gh --version | head -1; pnpm --version; node --version; npm --version
 
 # pnpm-only defaults: the sandbox workspace is a virtiofs/FUSE mount where
 # pnpm's default symlinks break. Wrap pnpm so the settings apply only while
@@ -79,9 +93,16 @@ USER agent
 
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 
+# mo (k1LoW/mo) through mise's aqua backend instead of a hand-written Nix
+# derivation: the version is pinned here, Renovate tracks it (see renovate.json),
+# and the mise shims dir below puts `mo` on PATH.
+RUN mise use -g aqua:k1LoW/mo@1.6.9 \
+ && export PATH="$HOME/.local/share/mise/shims:$PATH" \
+ && mo --version
+
 RUN touch /etc/sandbox-persistent.sh \
  && printf '%s\n' \
-      'export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"' \
+      'export PATH="/home/agent/.local/share/mise/shims:/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH"' \
       'export AGENT_BROWSER_ENGINE=obscura' \
       >> /etc/sandbox-persistent.sh
 
@@ -92,7 +113,7 @@ RUN touch /etc/sandbox-persistent.sh \
 #   third-party: mizchi/explainer, nanaism/yomiyasu, vercel-labs/agent-browser,
 #                yusukebe/ax, microsoft/waza, microsoft/apm (apm-usage)
 COPY --chown=agent:agent pstack-opencode /opt/pstack-opencode
-RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:$PATH" \
+RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH" \
  && cd /opt/pstack-opencode \
  && node tools/convert.mjs \
  && cd /home/agent \

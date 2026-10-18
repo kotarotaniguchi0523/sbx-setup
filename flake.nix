@@ -28,7 +28,6 @@
           wazaVersion = "0.38.10";
           axVersion = "0.1.25";
           sisakulintVersion = "0.3.7";
-          moVersion = "1.6.9";
 
           wazaAssets = {
             x86_64-linux = { name = "waza-linux-amd64"; sha256 = "fae469af3b20ca63b789ad64e8f2c007a069d0843cc88d9e83d224de4f7077b3"; };
@@ -47,13 +46,6 @@
             aarch64-linux = { name = "sisakulint_${sisakulintVersion}_linux_arm64.tar.gz"; sha256 = "f911b7b516fc6cb0159e12ba1143beeaa901b7a2b2b6231e67e89b0dbfba2423"; };
             x86_64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_amd64.tar.gz"; sha256 = "2b32d103c644038cbc2dfca2e0037f43f25e0f0ba9ccb1bcef1bf744b68f896a"; };
             aarch64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_arm64.tar.gz"; sha256 = "0119216c5dd7759da9d0b2fcfd010db6b8c42efae0b8be1ddb59eef977f8eb07"; };
-          };
-
-          moAssets = {
-            x86_64-linux = { url = "https://github.com/k1LoW/mo/releases/download/v${moVersion}/mo_v${moVersion}_linux_amd64.tar.gz"; sha256 = "d69a7963cc7be94deedabb335ae5a5780c9dc038e7f656b40ace697876ca0961"; };
-            aarch64-linux = { url = "https://github.com/k1LoW/mo/releases/download/v${moVersion}/mo_v${moVersion}_linux_arm64.tar.gz"; sha256 = "11ed51448d0963b4f9ebab52eb5c9c8265f5fb37d4710eabf7c9f5bad0305fab"; };
-            x86_64-darwin = { url = "https://github.com/k1LoW/mo/releases/download/v${moVersion}/mo_v${moVersion}_darwin_amd64.zip"; sha256 = "281b1a4e5d30952e1848e8f7e79f9072dcc0a2a3b3ad484ad436f3cafe61a9f4"; };
-            aarch64-darwin = { url = "https://github.com/k1LoW/mo/releases/download/v${moVersion}/mo_v${moVersion}_darwin_arm64.zip"; sha256 = "94da891b45a3889bf1bbb908e4e12ccafd1f162b760ce7eb9c471e1b453545b5"; };
           };
 
           pick = name: table:
@@ -98,20 +90,6 @@
               install -D -m 0755 sisakulint "$out/bin/sisakulint"
             '';
           };
-
-          mo = final.stdenvNoCC.mkDerivation {
-            pname = "mo";
-            version = moVersion;
-            src = final.fetchurl {
-              url = (pick "mo" moAssets).url;
-              sha256 = (pick "mo" moAssets).sha256;
-            };
-            sourceRoot = ".";
-            nativeBuildInputs = [ final.unzip ];
-            installPhase = ''
-              install -D -m 0755 mo "$out/bin/mo"
-            '';
-          };
         };
 
       packages = forAllSystems (system:
@@ -126,14 +104,16 @@
           # brew / curl|bash installers. Tools already in the base image
           # (uv, gh, jq, ripgrep, node, npm, python, git, curl) are NOT repeated
           # here — the base image is digest-pinned, so those stay pinned too.
+          # mise and pnpm are not here either: the Dockerfiles copy those two
+          # from the vendors' official images (jdxcode/mise, ghcr.io/pnpm/pnpm),
+          # which ship a single static binary and track upstream faster than
+          # nixpkgs does. mo is installed through mise (aqua backend) in the
+          # Dockerfiles, where the version is pinned and Renovate tracks it.
           bundle = pkgs.buildEnv {
             name = "sbx-tools";
             paths = with pkgs; [
-              mise
               apm-cli
-              mo
               nodejs_24
-              pnpm
               agent-browser
               obscura
               ffmpeg
