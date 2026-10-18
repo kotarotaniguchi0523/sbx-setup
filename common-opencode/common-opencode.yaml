@@ -2,7 +2,7 @@
 schemaVersion: "3"
 kind: workload
 displayName: Common OpenCode
-description: OpenCode with a Nix-managed CLI toolchain (nix, uv, mise, gh, apm, cf, mo, difit, node/npm, ...)
+description: OpenCode with a pinned CLI toolchain (nix, uv, mise, gh, apm, cf, mo, difit, pnpm, node/npm, ...)
 
 capabilities:
   - type: com.docker.sandbox/sbx@1

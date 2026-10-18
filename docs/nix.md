@@ -11,9 +11,15 @@
 - `flake.nix`
   - devShell（nixpkgs）: `nodejs_24` `go` `git` `gh` `curl` `jq` `lefthook` `betterleaks`（Linux は `docker-client`）
   - `bundle`（サンドボックスイメージに入れる CLI 一式。base イメージが提供する `uv`/`gh`/`jq`/`ripgrep`/`node`/`npm` は**含めない**）:
-    - nixpkgs: `mise` `apm-cli`(microsoft/apm) `nodejs_24` `pnpm` `agent-browser` `obscura` `ffmpeg` `fd` `typos` `lefthook` `betterleaks`
-    - 自前導出（nixpkgs に無い）: `mo`(k1LoW) `waza` `ax`（`sisakulint` は dev/CI のみ）
+    - nixpkgs: `apm-cli`(microsoft/apm) `nodejs_24` `agent-browser` `obscura` `ffmpeg` `fd` `typos` `lefthook` `betterleaks`
+    - 自前導出（nixpkgs に無い）: `waza` `ax`（`sisakulint` は dev/CI のみ）
       - リリース資産を `sha256` 付き `fetchurl` で取得
+    - **公式イメージ由来**（`flake.nix` には無い）: `mise`（`jdxcode/mise`）/ `pnpm`（`ghcr.io/pnpm/pnpm`）
+      - どちらも単体バイナリを配っており、nixpkgs の収録より上流の追随が速い（実測: mise 2026.10.3 → 2026.10.13、pnpm 12.9.0 → 12.14.0）
+      - Dockerfile の `COPY --from=<image>@sha256:...` で取り込み、digest は Renovate（docker datasource）が更新
+    - **mise 経由**（aqua backend）: `mo`(k1LoW)
+      - `mise use -g aqua:k1LoW/mo@<ver>`。mise のレジストリには `mo` が無いが aqua registry にある
+      - バージョンピンは Dockerfile、追従は Renovate（`github-releases`）。`mo` は mise の shims 経由で PATH に載る
   - 例外（**npm 固定版**）: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`
     - これらの npm パッケージは自己完結せず実行時依存（`minisearch`/`commander` 等）を import するため tarball ラップでは動作せず、Nix 化しない（nixpkgs の `opencode` は別プロジェクト v1）
     - **完全固定**は `tools/npm/cli`（cf, difit）と `tools/npm/opencode`（@opencode/cli）の `package.json` ＋ `package-lock.json` を **`npm ci`**（integrity 付き）で導入。Renovate が lock ごと更新
@@ -31,6 +37,7 @@
 | `flake.lock`（nixpkgs） | **Renovate**（nix manager）＋ `nix-lock` |
 | `flake.nix` の固定 CLI（waza / ax / sisakulint） | **`nix-tools-update`**（Renovate は固定出力ハッシュを再計算できないため） |
 | `tools/*.version` / Dockerfile の `ARG` | **Renovate** |
+| Dockerfile の `COPY --from` / base イメージの digest | **Renovate**（docker datasource, `pinDigests`） |
 
 ## セキュリティ上の線引き
 
@@ -59,7 +66,8 @@
    - before: `curl | bash`（uv / mise / ax / waza）や `brew` / `npm -g` で実行時取得。
    - after: 多段ビルド `FROM nixos/nix AS nix` で `nix build .#waza .#ax .#sisakulint` し、
      `COPY --from=nix /nix/store/.../bin/... /usr/local/bin/` で最終イメージへ取り込む。
-     `uv` / `mise` は nixpkgs（`pkgs.uv` / `pkgs.mise`）へ寄せる。
+     `uv` は nixpkgs（`pkgs.uv`）へ、`mise` / `pnpm` はベンダー公式イメージ
+     （`jdxcode/mise` / `ghcr.io/pnpm/pnpm`）の単体バイナリへ寄せる。
 2. base イメージは **digest ピン**（済）。その上に Nix 由来の固定物を重ねる。
 3. **Renovate の追従対象に `flake.lock`（nixpkgs）が加わる**（3日待ちも適用）。
 4. **CI**: `build` は「Nix ビルド → イメージ取り込み」に変わる。`nix.yml` で先に検証。
@@ -89,5 +97,5 @@ Nix の段階的型システム [tynix](https://github.com/ubugeeei-prod/tynix)�
 
 1. （このPR）flake にツールを載せ、CI で実ビルド検証、`flake.lock` 生成。
 2. kit Dockerfile を Nix ビルド段に置換（まず waza / ax）。
-3. `uv` / `mise` / `brew` / `npm -g` を Nix へ。
+3. `uv` / `brew` / `npm -g` を Nix へ（`mise` / `pnpm` はベンダー公式イメージの単体バイナリへ）。
 4. 余力で sbx イメージ自体を `dockerTools` 化（完全再現ビルド）。

@@ -14,6 +14,14 @@
   "customManagers": [
     {
       "customType": "regex",
+      "description": "mo installed through mise (aqua backend) in the kit Dockerfiles",
+      "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
+      "matchStrings": ["aqua:k1LoW/mo@(?<currentValue>[\\w.-]+)"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "k1LoW/mo"
+    },
+    {
+      "customType": "regex",
       "description": "npm CLI version pinned in the kit Dockerfiles",
       "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
       "matchStrings": ["npm install -g npm@(?<currentValue>[\\w.-]+)"],
