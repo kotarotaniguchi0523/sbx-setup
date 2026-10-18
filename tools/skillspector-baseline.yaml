@@ -30,3 +30,17 @@
 - rule: RA2
   path: "poteto-mode/playbooks/eval.md"
   reason: "false positive (no cron / startup persistence)"
+
+# RA1 "Self-Modification": the reflect reviewer prompts literally forbid
+# modification ("Do not modify files, write code, edit skills, or commit").
+# Reading a prohibition against self-modification as self-modification is a
+# false positive. Glob covers future *-reviewer.md files.
+- rule: RA1
+  path: "reflect/references/*-reviewer.md"
+  reason: "prohibition sentence misread as self-modification"
+
+# MP3 "Memory Manipulation": the append-only audit-log rule ("Never edit or
+# delete history") misread as memory manipulation.
+- rule: MP3
+  path: "show-me-your-work/SKILL.md"
+  reason: "append-only rule (never edit/delete history)"
