@@ -27,7 +27,7 @@
 
           wazaVersion = "0.38.10";
           axVersion = "0.1.25";
-          sisakulintVersion = "0.3.7";
+          sisakulintVersion = "0.3.8";
 
           wazaAssets = {
             x86_64-linux = { name = "waza-linux-amd64"; sha256 = "fae469af3b20ca63b789ad64e8f2c007a069d0843cc88d9e83d224de4f7077b3"; };
@@ -42,10 +42,10 @@
             aarch64-darwin = { name = "ax-darwin-arm64"; sha256 = "94633f9d61c743cffcf51e5338289d974c21428efb70bd2995e6c6ec13e062c1"; };
           };
           sisakulintAssets = {
-            x86_64-linux = { name = "sisakulint_${sisakulintVersion}_linux_amd64.tar.gz"; sha256 = "746161556d4913baef4fa60be3dfc8b34ca9ded20ad0dc1a936b58ad4808f5ba"; };
-            aarch64-linux = { name = "sisakulint_${sisakulintVersion}_linux_arm64.tar.gz"; sha256 = "f911b7b516fc6cb0159e12ba1143beeaa901b7a2b2b6231e67e89b0dbfba2423"; };
-            x86_64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_amd64.tar.gz"; sha256 = "2b32d103c644038cbc2dfca2e0037f43f25e0f0ba9ccb1bcef1bf744b68f896a"; };
-            aarch64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_arm64.tar.gz"; sha256 = "0119216c5dd7759da9d0b2fcfd010db6b8c42efae0b8be1ddb59eef977f8eb07"; };
+            x86_64-linux = { name = "sisakulint_${sisakulintVersion}_linux_amd64.tar.gz"; sha256 = "6da250932db1cc6fae8b8f44185acacb6e6ffc16dbafb90b1a37a25ad3ad21df"; };
+            aarch64-linux = { name = "sisakulint_${sisakulintVersion}_linux_arm64.tar.gz"; sha256 = "81bdfda81da01a3481fa4d2455fc9930dc6b3e39d78c9b4552458f89806caf61"; };
+            x86_64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_amd64.tar.gz"; sha256 = "dd3107cacc022332428bc05995b1a4cf4d5fcdffdcf04f7b8047fd580e183a73"; };
+            aarch64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_arm64.tar.gz"; sha256 = "4816e02bf8579b3d08aa5442014a06f646f8c963b8c1ce80c33c3accf2950f48"; };
           };
 
           pick = name: table:
