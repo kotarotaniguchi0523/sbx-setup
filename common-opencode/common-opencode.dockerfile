@@ -30,7 +30,7 @@ RUN apt-get update \
 #   jdxcode/mise      -> /usr/local/bin/mise
 #   ghcr.io/pnpm/pnpm -> /opt/pnpm/pnpm, symlinked onto PATH so the PNPM_CONFIG_*
 #                        wrapper below can rewrite that symlink into a shim.
-COPY --from=jdxcode/mise:2026.10.13@sha256:a2f1563d47f56a7ce69d5c94ac61d9f7af5063613bfd3c50e6268768ed9c87ad /usr/local/bin/mise /usr/local/bin/mise
+COPY --from=jdxcode/mise:2026.10.17@sha256:a80f941369a7cc3af35d6eca41c63756f6a243367b52bdeda481954cd6fca0e2 /usr/local/bin/mise /usr/local/bin/mise
 COPY --from=ghcr.io/pnpm/pnpm:12.14.0@sha256:71202ae73719148f6b6e129ca1e9fa3ceabbc9a037dc34800715606f2b5290a1 /opt/pnpm/pnpm /opt/pnpm/pnpm
 RUN ln -sf /opt/pnpm/pnpm /usr/local/bin/pnpm
 
@@ -63,7 +63,7 @@ RUN real="$(readlink -f /usr/local/bin/pnpm)" \
 # npm 12 (latest) on top of the Nix-provided Node 24 LTS, which satisfies npm
 # 12's engine requirement (>= 24.15). Installed from the registry; Renovate
 # tracks the version.
-RUN npm install -g npm@12.2.0 \
+RUN npm install -g npm@12.2.1 \
  && node --version && npm --version
 
 # npm-only CLIs, fully pinned via package-lock.json (npm ci, integrity-checked).
