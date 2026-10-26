@@ -127,6 +127,10 @@ function changeStatus(base) {
     const name = m[1];
     if (!status.has(name) || code === "A" || code === "D") status.set(name, code);
   }
+  for (const path of run("git", ["ls-files", "--others", "--exclude-standard"]).split("\n")) {
+    const m = path.match(new RegExp(`^${PROJECT}/\\.apm/skills/([^/]+)/`));
+    if (m && !status.has(m[1])) status.set(m[1], "A");
+  }
   return status;
 }
 
@@ -252,9 +256,11 @@ function verify() {
   const exitCode = audit.status;
 
   let results = [];
+  let sarifValid = false;
   if (existsSync(SARIF_OUT)) {
     try {
       results = JSON.parse(readFileSync(SARIF_OUT, "utf8")).runs?.flatMap((r) => r.results || []) ?? [];
+      sarifValid = true;
     } catch (err) {
       log(`could not parse APM SARIF: ${err.message}`);
     }
@@ -288,7 +294,7 @@ function verify() {
     byLevelRule.set(key, (byLevelRule.get(key) || 0) + 1);
   }
   const critical = byLevel.error || 0;
-  const fail = critical > 0 || exitCode === APM_INFRA || exitCode === null || !existsSync(SARIF_OUT);
+  const fail = critical > 0 || exitCode === APM_INFRA || exitCode === null || !sarifValid;
 
   // Changelog-style header: date, versions, range.
   const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
