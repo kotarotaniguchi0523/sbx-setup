@@ -29,13 +29,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: write # commit reports to the audit/skills branch
-  issues: write # create/update the human-readable audit issue
-  security-events: write # upload SARIF to Code Scanning
+permissions: {}
 
 jobs:
   audit:
+    permissions:
+      contents: write
+      issues: write
+      security-events: write
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
