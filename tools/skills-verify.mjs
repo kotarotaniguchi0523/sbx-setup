@@ -74,20 +74,25 @@ function changedTargets(base) {
   // Compare the working tree to the base: update runs (`apm update`, the pstack
   // regen) leave uncommitted changes that a commit-to-commit diff would miss,
   // while a committed PR checkout sees the same set either way.
-  const changed = run("git", ["diff", "--name-only", base])
-    .split("\n")
-    .map((s) => s.trim())
-    .filter(Boolean);
+  // Include newly generated, not-yet-added pstack skills from update runs.
+  const changed = [...new Set([
+    ...run("git", ["diff", "--name-only", base]).split("\n"),
+    ...run("git", ["ls-files", "--others", "--exclude-standard"]).split("\n"),
+  ].map((s) => s.trim()).filter(Boolean))];
   const skills = new Set();
   let lockChanged = false;
+  let auditAll = process.argv.includes("--all");
   for (const path of changed) {
+    if (path === "tools/skillspector-baseline.yaml" ||
+        path === "tools/skills-verify.mjs" ||
+        path === ".github/workflows/skills-verify.yml") auditAll = true;
     if (path.startsWith(`${PROJECT}/.apm/skills/`)) {
       const name = path.slice(`${PROJECT}/.apm/skills/`.length).split("/")[0];
       if (name) skills.add(name);
     }
     if (path === `${PROJECT}/apm.lock.yaml`) lockChanged = true;
   }
-  return { skills: [...skills], lockChanged };
+  return { skills: [...skills], lockChanged, auditAll };
 }
 
 // pstack-opencode version + the pinned upstream ref (for the report header).
@@ -183,9 +188,16 @@ function stage(delta) {
     cpSync(src, join(STAGE, name), { recursive: true });
     staged.push(name);
   }
-  // A lockfile change refreshes external packages; stage every deployed skill
-  // that is not part of pstack (their names are not in the repo).
-  if (delta.lockChanged) {
+  // A baseline/scanner change must re-evaluate all skills, not silently skip.
+  if (delta.auditAll) {
+    for (const name of listDirs(PSTACK_SKILLS)) {
+      if (staged.includes(name)) continue;
+      cpSync(join(PSTACK_SKILLS, name), join(STAGE, name), { recursive: true });
+      staged.push(name);
+    }
+  }
+  // A lockfile change refreshes external packages; audit all deployed external skills.
+  if (delta.lockChanged || delta.auditAll) {
     const pstack = pstackSkillNames();
     for (const root of deployedRoots()) {
       for (const name of listDirs(root)) {
@@ -206,7 +218,7 @@ function verify() {
   const delta = changedTargets(base);
   log(`changed pstack skills: ${delta.skills.join(", ") || "(none)"}; lock changed: ${delta.lockChanged}`);
 
-  if (delta.skills.length === 0 && !delta.lockChanged) {
+  if (delta.skills.length === 0 && !delta.lockChanged && !delta.auditAll) {
     writeFileSync(REPORT, "# Skill verification\n\nNo skill changes on this branch.\n");
     writeFileSync(GATE_FILE, JSON.stringify({ fail: false, reason: "no changes", staged: [] }));
     return;
@@ -221,7 +233,7 @@ function verify() {
 
   if (staged.length === 0) {
     writeFileSync(REPORT, "# Skill verification\n\nNo changed skills could be staged for auditing.\n");
-    writeFileSync(GATE_FILE, JSON.stringify({ fail: false, reason: "nothing staged", staged }));
+    writeFileSync(GATE_FILE, JSON.stringify({ fail: true, reason: "changed skills could not be staged", staged }));
     return;
   }
 
@@ -276,7 +288,7 @@ function verify() {
     byLevelRule.set(key, (byLevelRule.get(key) || 0) + 1);
   }
   const critical = byLevel.error || 0;
-  const fail = critical > 0 || exitCode === APM_INFRA || exitCode === null;
+  const fail = critical > 0 || exitCode === APM_INFRA || exitCode === null || !existsSync(SARIF_OUT);
 
   // Changelog-style header: date, versions, range.
   const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
@@ -406,7 +418,8 @@ function post(pr) {
 if (process.argv.includes("--post")) {
   post(flag("post"));
 } else if (process.argv.includes("--gate")) {
-  const g = existsSync(GATE_FILE) ? JSON.parse(readFileSync(GATE_FILE, "utf8")) : { fail: false };
+  if (!existsSync(GATE_FILE)) throw new Error("missing gate.json: verification did not complete");
+  const g = JSON.parse(readFileSync(GATE_FILE, "utf8"));
   if (g.fail) {
     process.stderr.write(`[skills-verify] gate failed (apm audit exit=${g.exitCode}, critical=${g.critical ?? "?"})\n`);
     process.exit(1);
