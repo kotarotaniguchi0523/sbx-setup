@@ -42,6 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -68,24 +69,18 @@ jobs:
         working-directory: pstack-opencode
         run: apm audit --ci --format sarif --output "$GITHUB_WORKSPACE/apm-audit.sarif"
 
-      # Fold SkillSpector into the audit through APM. APM always scans its whole
-      # project root, so stage the deployed skills into a throwaway root first
-      # (outside any apm.yml) to keep the scan bounded.
-      - name: SkillSpector scan via APM (external scanner)
+      # APM's SkillSpector adapter has a hard 300s subprocess timeout;
+      # the shared verifier scans bounded groups of skills and merges SARIF.
+      - name: SkillSpector scan via APM (batched full audit)
         id: scan
         shell: bash
         run: |
           set -euo pipefail
-          apm experimental enable external-scanners
-          root="$(mktemp -d)"
-          cp -r pstack-opencode/.agents/skills/. "$root"/
-          cd "$root"
-          set +e
-          apm audit --external skillspector --format sarif --output "$GITHUB_WORKSPACE/skillspector.sarif"
-          code=$?
-          set -e
-          echo "exit=${code}" >> "$GITHUB_OUTPUT"
-          echo "APM external scanner exit code: ${code} (0 clean, 1 critical, 2 warning, 3 infra)"
+          node tools/skills-verify.mjs --all --base origin/main
+          cp .cache/skills-verify/apm-audit.sarif skillspector.sarif
+          code="$(jq -r '.exitCode' .cache/skills-verify/gate.json)"
+          echo "exit=$code" >> "$GITHUB_OUTPUT"
+          echo "APM external scanner result: exit $code"
 
       - name: Build report
         shell: bash
