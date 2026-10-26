@@ -44,8 +44,8 @@ jobs:
         shell: bash
         run: |
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          uv tool install --python 3.12 "apm-cli==0.33.0"
-          uv tool install --python 3.12 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
+          uv tool install --python 3.13 "apm-cli==0.33.0"
+          uv tool install --python 3.13 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
 
       - name: Report outdated APM dependencies
         working-directory: pstack-opencode

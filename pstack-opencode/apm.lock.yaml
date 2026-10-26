@@ -35,7 +35,7 @@ dependencies:
   name: waza
   host: github.com
   resolved_commit: 1b763c094145f2dd7e5148898bee957737c6922b
-  version: 0.0.0
+  version: unknown
   package_type: skill_bundle
   deployed_files:
   - .agents/skills/code-explainer
@@ -50,7 +50,7 @@ dependencies:
     .agents/skills/waza-interactive/SKILL.md: sha256:6976d7c90efce2fa934871265085abaceb59bc722d6218307c7a1d962838be71
     .agents/skills/waza-interactive/tests/eval.yaml: sha256:fdb84af4a57da4ad360f1bbf35d34b7ae786586f3c73f8abff2a5ff63ced8e00
     .agents/skills/waza/SKILL.md: sha256:e7ef60562bbf3535d7ca4b8b8b9d5c65bd210a37a03ef00e19e43be16b4f960e
-  content_hash: sha256:c72b7ba531a5639e07eeb460d539458bcceb63b0d81e4135fe17adb21026857c
+  content_hash: sha256:680fed6f275cd587ee51f79d002480030989afc466ed3bf995130fb39577f805
 - repo_url: mizchi/explainer
   name: explainer
   host: github.com
