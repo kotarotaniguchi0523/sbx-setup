@@ -18,13 +18,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: write
-  pull-requests: write
-  actions: write # Dispatch checks for PRs created with GITHUB_TOKEN.
+permissions: {}
 
 jobs:
   update:
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -85,7 +86,7 @@ jobs:
         if: ${{ steps.pr.outputs.pull-request-operation == 'created' || steps.pr.outputs.pull-request-operation == 'updated' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run build.yml --ref chore/apm-update
+        run: gh workflow run build.yml --ref chore/apm-update -f image=opencode
 
       - name: Post the verification to the pull request
         if: ${{ steps.pr.outputs.pull-request-number }}

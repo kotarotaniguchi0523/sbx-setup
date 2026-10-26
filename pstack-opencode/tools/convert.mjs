@@ -96,7 +96,7 @@ function cleanDir(dir) {
   }
 }
 
-function repomix() {
+function repomix(ref) {
   if (process.env.PSTACK_PACKED) {
     process.stderr.write(`reading packed repo from ${process.env.PSTACK_PACKED}\n`);
     return JSON.parse(readFileSync(process.env.PSTACK_PACKED, "utf8"));
@@ -106,7 +106,7 @@ function repomix() {
   process.stderr.write(`packing ${REPO} (${INCLUDE}) with repomix...\n`);
   // Write to a file rather than capturing stdout: a multi-hundred-KB pipe
   // capture crashes Node on Windows.
-  const cmd = `npx -y repomix@latest --remote ${REPO} --include "${INCLUDE}" --style json -o "${cache}"`;
+  const cmd = `npx -y repomix@1.18.1 --remote ${REPO} --remote-branch "${ref}" --include "${INCLUDE}" --style json -o "${cache}"`;
   try {
     execSync(cmd, { stdio: ["ignore", "inherit", "inherit"], shell: true });
   } catch (err) {
@@ -116,21 +116,26 @@ function repomix() {
   return JSON.parse(readFileSync(cache, "utf8"));
 }
 
-// Resolve the upstream main commit so SOURCE.json only changes when 本家 moves.
+// An explicit refresh uses the new upstream main commit; regular conversions
+// (including Docker builds) reproduce the reviewed SOURCE.json snapshot.
 function upstreamRef() {
-  // Reproduction/offline runs can pin the recorded ref (e.g. CI with a cached
-  // repomix pack) so SOURCE.json only changes when 本家 actually moves on main.
-  if (process.env.PSTACK_REF) return process.env.PSTACK_REF;
-  try {
+  if (process.env.PSTACK_REF) {
+    if (!/^[a-f0-9]{40}$/i.test(process.env.PSTACK_REF)) throw new Error("invalid PSTACK_REF");
+    return process.env.PSTACK_REF;
+  }
+  if (process.env.PSTACK_REFRESH === "1") {
     const out = execSync(`git ls-remote https://github.com/${REPO} refs/heads/main`, {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
       shell: true,
     });
-    return out.trim().split(/\s+/)[0] || null;
-  } catch {
-    return null;
+    const sha = out.trim().split(/\s+/)[0];
+    if (!/^[a-f0-9]{40}$/i.test(sha || "")) throw new Error("unable to resolve upstream main commit");
+    return sha;
   }
+  const recorded = JSON.parse(readFileSync(join(ROOT, "SOURCE.json"), "utf8")).ref;
+  if (!/^[a-f0-9]{40}$/i.test(recorded || "")) throw new Error("SOURCE.json.ref is invalid");
+  return recorded;
 }
 
 // --- minimal YAML frontmatter handling -------------------------------------
@@ -274,7 +279,8 @@ function convertAgent(id, raw) {
 // --- main -------------------------------------------------------------------
 
 function main() {
-  const packed = repomix();
+  const ref = upstreamRef();
+  const packed = repomix(ref);
   const files = packed.files ?? {};
   const apm = join(ROOT, ".apm");
   process.stderr.write(`parsed ${Object.keys(files).length} files\n`);
@@ -340,7 +346,7 @@ function main() {
   writeFileSync(
     join(ROOT, "SOURCE.json"),
     JSON.stringify(
-      { repository: REPO, include: INCLUDE, ref: upstreamRef(), skills: [...skills].sort(), agents: [...agents].sort() },
+      { repository: REPO, include: INCLUDE, ref, skills: [...skills].sort(), agents: [...agents].sort() },
       null,
       2,
     ) + "\n",
