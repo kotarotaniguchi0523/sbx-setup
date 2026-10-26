@@ -21,13 +21,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: write
-  id-token: write # build provenance attestations
+permissions: {}
 
 jobs:
   changes:
+    permissions:
+      contents: read
+      pull-requests: read
     runs-on: ubuntu-latest
     outputs:
       build: ${{ steps.filter.outputs.build }}
@@ -41,6 +41,7 @@ jobs:
         with:
           filters: |
             build:
+    permissions: {}
               - 'common-opencode/**'
               - 'common-codex/**'
               - 'pstack-opencode/**'
@@ -51,6 +52,9 @@ jobs:
               - '.github/workflows/build.yml'
 
   image:
+    permissions:
+      contents: read
+      packages: write
     name: image (${{ matrix.name }})
     needs: changes
     if: needs.changes.outputs.build == 'true' || github.event_name == 'workflow_dispatch'
