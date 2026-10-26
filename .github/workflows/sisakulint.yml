@@ -16,6 +16,10 @@ on:
     paths:
       - ".github/workflows/**"
       - ".github/sisakulint.yaml"
+      - "tools/sisakulint.mjs"
+      - "tools/sisakulint.version"
+      - "tools/golang.version"
+      - "tools/sisakulint.ignore"
   push:
     branches: [main]
     paths:
