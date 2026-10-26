@@ -142,6 +142,16 @@ sbx tui
 
 ## APM で導入される Skill
 
+外部 Skill の更新は `.github/workflows/apm-update.yml` が毎日12:30（日本時間）に確認する。
+`apm outdated` の結果を実行ログに残し、`apm update --yes` で既定ブランチの最新コミットと
+内容ハッシュを解決する。変更があれば `chore/apm-update` の同じPRを作成・更新し、
+APM + SkillSpector の検証結果を添付する。`GITHUB_TOKEN` で作ったPRは通常のPRイベントを
+発火しないため、必須の `build` は明示的に起動する。手動実行は
+`gh workflow run apm-update.yml`。失敗時は Actions の `apm-update` ログを確認する。
+
+Renovate の APM manager は `#<ref>` のない依存をスキップするため、このプロジェクトの
+既定ブランチ追従は上記ワークフローが担当する（https://docs.renovatebot.com/modules/manager/apm/）。
+
 | パッケージ | 形 | 対象 | skills |
 |---|---|---|---|
 | `pstack-opencode` | ビルド内生成（ローカル `/opt`） | opencode | 38 |
