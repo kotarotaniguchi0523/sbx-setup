@@ -29,18 +29,20 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: write # commit reports to the audit/skills branch
-  issues: write # create/update the human-readable audit issue
-  security-events: write # upload SARIF to Code Scanning
+permissions: {}
 
 jobs:
   audit:
+    permissions:
+      contents: read
+    outputs:
+      report_ready: ${{ steps.report_artifact.outcome }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -57,6 +59,12 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           uv tool install --python 3.13 "apm-cli==0.33.0"
           uv tool install --python 3.13 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
+          # Verify both CLIs are on PATH before running the APM adapter.
+          export PATH="$HOME/.local/bin:$PATH"
+          command -v apm
+          apm --version
+          command -v skillspector
+          skillspector --version
 
       # Reproduce the lock-pinned skill set and verify it with APM.
       - name: Install skills (APM, frozen)
@@ -67,24 +75,18 @@ jobs:
         working-directory: pstack-opencode
         run: apm audit --ci --format sarif --output "$GITHUB_WORKSPACE/apm-audit.sarif"
 
-      # Fold SkillSpector into the audit through APM. APM always scans its whole
-      # project root, so stage the deployed skills into a throwaway root first
-      # (outside any apm.yml) to keep the scan bounded.
-      - name: SkillSpector scan via APM (external scanner)
+      # APM's SkillSpector adapter has a hard 300s subprocess timeout;
+      # the shared verifier scans bounded groups of skills and merges SARIF.
+      - name: SkillSpector scan via APM (batched full audit)
         id: scan
         shell: bash
         run: |
           set -euo pipefail
-          apm experimental enable external-scanners
-          root="$(mktemp -d)"
-          cp -r pstack-opencode/.agents/skills/. "$root"/
-          cd "$root"
-          set +e
-          apm audit --external skillspector --format sarif --output "$GITHUB_WORKSPACE/skillspector.sarif"
-          code=$?
-          set -e
-          echo "exit=${code}" >> "$GITHUB_OUTPUT"
-          echo "APM external scanner exit code: ${code} (0 clean, 1 critical, 2 warning, 3 infra)"
+          node tools/skills-verify.mjs --all --base origin/main
+          cp .cache/skills-verify/apm-audit.sarif skillspector.sarif
+          code="$(jq -r '.exitCode' .cache/skills-verify/gate.json)"
+          echo "exit=$code" >> "$GITHUB_OUTPUT"
+          echo "APM external scanner result: exit $code"
 
       - name: Build report
         shell: bash
@@ -125,6 +127,59 @@ jobs:
           } > report.md
           cat report.md
 
+      - name: Archive audit report and SARIF
+        id: report_artifact
+        if: ${{ always() && hashFiles('report.md') != '' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: skills-audit-report
+          path: |
+            report.md
+            apm-audit.sarif
+            skillspector.sarif
+          retention-days: 7
+
+      # Gate: the scheduled full-set audit reports; it fails only on an
+      # infrastructure error (exit 3). Critical findings are surfaced in the
+      # issue and Code Scanning, not used to redden the periodic run.
+      - name: Gate on infrastructure errors
+        shell: bash
+        run: |
+          set -euo pipefail
+          code="${{ steps.scan.outputs.exit }}"
+          errors="$(jq '[.runs[].results[]? | select(.level == "error")] | length' skillspector.sarif 2>/dev/null || echo 0)"
+          echo "APM external scanner exit=${code}; error-level findings=${errors}"
+          if [ "${code}" = "3" ]; then
+            echo "::error::APM external scanner reported an infrastructure error (exit 3)"
+            exit 1
+          fi
+
+  publish:
+    name: Publish skills audit
+    needs: audit
+    if: ${{ always() && needs.audit.outputs.report_ready == 'success' }}
+    permissions:
+      contents: write
+      issues: write
+      security-events: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: skills-audit-report
+          path: ${{ runner.temp }}/skills-audit-report
+      - name: Restore audit files from isolated artifact directory
+        run: |
+          cp "$RUNNER_TEMP/skills-audit-report/report.md" report.md
+          cp "$RUNNER_TEMP/skills-audit-report/skillspector.sarif" skillspector.sarif
+          if [ -f "$RUNNER_TEMP/skills-audit-report/apm-audit.sarif" ]; then
+            cp "$RUNNER_TEMP/skills-audit-report/apm-audit.sarif" apm-audit.sarif
+          fi
+
       # Publish to a human-readable place (issue created once, updated each run).
       - name: Update the audit issue
         env:
@@ -144,9 +199,12 @@ jobs:
       # Persist outside CI.
       - name: Save reports to the audit/skills branch
         if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
+          gh auth setup-git
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if git fetch origin audit/skills:refs/heads/audit/skills 2>/dev/null; then
@@ -180,17 +238,3 @@ jobs:
           sarif_file: skillspector.sarif
           category: skillspector
 
-      # Gate: the scheduled full-set audit reports; it fails only on an
-      # infrastructure error (exit 3). Critical findings are surfaced in the
-      # issue and Code Scanning, not used to redden the periodic run.
-      - name: Gate on infrastructure errors
-        shell: bash
-        run: |
-          set -euo pipefail
-          code="${{ steps.scan.outputs.exit }}"
-          errors="$(jq '[.runs[].results[]? | select(.level == "error")] | length' skillspector.sarif 2>/dev/null || echo 0)"
-          echo "APM external scanner exit=${code}; error-level findings=${errors}"
-          if [ "${code}" = "3" ]; then
-            echo "::error::APM external scanner reported an infrastructure error (exit 3)"
-            exit 1
-          fi
