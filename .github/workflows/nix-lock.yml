@@ -30,8 +30,8 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      - name: nix flake lock
-        run: nix flake lock
+      - name: nix flake update
+        run: nix flake update
 
       - name: Open a pull request with flake.lock
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
@@ -41,6 +41,6 @@ jobs:
           title: "chore: update flake.lock"
           commit-message: "chore: update flake.lock"
           body: |
-            Automated `nix flake lock` (pins nixpkgs for reproducible builds).
+            Automated `nix flake update` (refreshes the pinned nixpkgs revision).
           add-paths: |
             flake.lock
