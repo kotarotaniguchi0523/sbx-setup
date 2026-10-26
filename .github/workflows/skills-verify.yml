@@ -11,6 +11,7 @@ on:
     paths:
       - "pstack-opencode/**"
       - "tools/skills-verify.mjs"
+      - "tools/skillspector-baseline.yaml"
       - ".github/workflows/skills-verify.yml"
   workflow_dispatch:
 
@@ -49,7 +50,7 @@ jobs:
           uv tool install --python 3.13 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
 
       - name: Verify the changed skills
-        run: node tools/skills-verify.mjs --base "origin/${{ github.base_ref || 'main' }}"
+        run: node tools/skills-verify.mjs --base "origin/${{ github.base_ref || 'main' }}" ${{ github.event_name == 'workflow_dispatch' && '--all' || '' }}
 
       - name: Stage verification report
         if: ${{ always() && hashFiles('.cache/skills-verify/report.md') != '' }}
