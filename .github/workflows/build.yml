@@ -43,6 +43,7 @@ jobs:
             opencode:
               - 'common-opencode/**'
               - 'pstack-opencode/**'
+              - 'tools/npm/opencode/**'
             codex:
               - 'common-codex/**'
             shared:
