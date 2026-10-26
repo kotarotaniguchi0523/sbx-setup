@@ -27,12 +27,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  security-events: write # upload SARIF to Code Scanning
+permissions: {}
 
 jobs:
   scan:
+    permissions:
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
