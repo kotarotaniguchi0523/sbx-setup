@@ -6,11 +6,12 @@ name: apm-update
 # external-scanner integration (`apm audit --external skillspector` on the
 # delta), posted as a PR comment, and gated on critical findings only.
 #
-# Renovate cannot manage APM git refs, so this workflow owns them.
+# Renovate's APM manager skips entries without #<ref>. This workflow owns
+# updates of the default-branch dependencies used by this project.
 
 on:
   schedule:
-    - cron: "30 3 * * 1" # Mondays 03:30 UTC
+    - cron: "30 3 * * *" # Daily 03:30 UTC (12:30 Asia/Tokyo)
   workflow_dispatch:
 
 concurrency:
@@ -20,6 +21,7 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  actions: write # Dispatch checks for PRs created with GITHUB_TOKEN.
 
 jobs:
   update:
@@ -42,14 +44,20 @@ jobs:
         shell: bash
         run: |
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          uv tool install --python 3.12 "apm-cli==0.33.0"
-          uv tool install --python 3.12 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
+          uv tool install --python 3.13 "apm-cli==0.33.0"
+          uv tool install --python 3.13 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
+
+      - name: Report outdated APM dependencies
+        working-directory: pstack-opencode
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: apm outdated
 
       - name: apm update (refresh refs, rewrite the lock)
         working-directory: pstack-opencode
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: apm update
+        run: apm update --yes
 
       - name: Verify the delta
         run: node tools/skills-verify.mjs --base origin/main
@@ -68,7 +76,16 @@ jobs:
             Review the `pstack-opencode/apm.lock.yaml` diff (new resolved commit
             SHAs + content hashes). The verification result is posted below.
           add-paths: |
+            pstack-opencode/apm.yml
             pstack-opencode/apm.lock.yaml
+
+      # GITHUB_TOKEN-created PRs do not trigger pull_request workflows.
+      # Explicit dispatch attaches the required build check to the branch SHA.
+      - name: Start build checks for the updated PR
+        if: ${{ steps.pr.outputs.pull-request-operation == 'created' || steps.pr.outputs.pull-request-operation == 'updated' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run build.yml --ref chore/apm-update
 
       - name: Post the verification to the pull request
         if: ${{ steps.pr.outputs.pull-request-number }}

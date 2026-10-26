@@ -4,47 +4,2904 @@ dependencies:
 - repo_url: microsoft/apm
   name: apm-usage
   host: github.com
-  resolved_commit: b1dc2735a4cdd25c3e679254a2bfd15f3f9d4938
+  resolved_commit: 2920043258932f0f67e6f01df7b9047eb42f358c
   version: unknown
   virtual_path: packages/apm-guide/.apm/skills/apm-usage
   is_virtual: true
   package_type: claude_skill
-  content_hash: sha256:34846092cb4d276d722b512954191098041b55ea27c15fdeb01c929fa9218098
+  deployed_files:
+  - .agents/skills/apm-usage
+  - .agents/skills/apm-usage/SKILL.md
+  - .agents/skills/apm-usage/authentication.md
+  - .agents/skills/apm-usage/commands.md
+  - .agents/skills/apm-usage/dependencies.md
+  - .agents/skills/apm-usage/governance.md
+  - .agents/skills/apm-usage/installation.md
+  - .agents/skills/apm-usage/package-authoring.md
+  - .agents/skills/apm-usage/troubleshooting.md
+  - .agents/skills/apm-usage/workflow.md
+  deployed_file_hashes:
+    .agents/skills/apm-usage/SKILL.md: sha256:715b6d3497d5ca30f4751463091b8ff7cd85dc51e375d2176aea8f0867081c38
+    .agents/skills/apm-usage/authentication.md: sha256:253f932e324d5e6fe5209d8271764dc5512a9cc1db8ed2a490fc6bf94675a4b0
+    .agents/skills/apm-usage/commands.md: sha256:b832421add4f49b56658a5571825e188d75a0a93fa4c4b53c8c9292b6af33ea0
+    .agents/skills/apm-usage/dependencies.md: sha256:28822c38deb16a5c7fceaf3851fd7530d894c37b0f95853b86c2fb956a84ab73
+    .agents/skills/apm-usage/governance.md: sha256:968670a858801f4576746fbe86affacf4cf27296f634ad9008f58bcba22b2409
+    .agents/skills/apm-usage/installation.md: sha256:c70544c5d1f85102c5e144ac6ae1ca68fcf8ba6a8323cb2ca6adc840d13aa960
+    .agents/skills/apm-usage/package-authoring.md: sha256:00983812289ec13ac9ad84f57148c5cfd3ff5af479c26a42caffc9d6674e14d3
+    .agents/skills/apm-usage/troubleshooting.md: sha256:2c6f13b1a1758b84305f1d11e2eeb096896a02851de1e24dde644783862667cc
+    .agents/skills/apm-usage/workflow.md: sha256:1bbb710fa9fd710aa2258aea52f6d905c6a2b3d366a1fdc723b028b4bfd2dbae
+  content_hash: sha256:0a1e4c20c374600b02ebd4059d01134f8bc83b51945133d157e1edf6408d696a
 - repo_url: microsoft/waza
   name: waza
   host: github.com
-  resolved_commit: 04e7b4c6d593555834e71221227326c63274a921
+  resolved_commit: 1b763c094145f2dd7e5148898bee957737c6922b
   version: unknown
   package_type: skill_bundle
-  content_hash: sha256:fb444449c504ce8be1cc795076792551109c5668d0701f78e0a28465f1b1fc42
+  deployed_files:
+  - .agents/skills/code-explainer
+  - .agents/skills/code-explainer/SKILL.md
+  - .agents/skills/waza
+  - .agents/skills/waza-interactive
+  - .agents/skills/waza-interactive/SKILL.md
+  - .agents/skills/waza-interactive/tests/eval.yaml
+  - .agents/skills/waza/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/code-explainer/SKILL.md: sha256:5390cb6bc9ddd8a6419bbf07f27ec9aae7b8e74dcdcfccf9b5acb67501ee0f8c
+    .agents/skills/waza-interactive/SKILL.md: sha256:6976d7c90efce2fa934871265085abaceb59bc722d6218307c7a1d962838be71
+    .agents/skills/waza-interactive/tests/eval.yaml: sha256:fdb84af4a57da4ad360f1bbf35d34b7ae786586f3c73f8abff2a5ff63ced8e00
+    .agents/skills/waza/SKILL.md: sha256:e7ef60562bbf3535d7ca4b8b8b9d5c65bd210a37a03ef00e19e43be16b4f960e
+  content_hash: sha256:680fed6f275cd587ee51f79d002480030989afc466ed3bf995130fb39577f805
 - repo_url: mizchi/explainer
   name: explainer
   host: github.com
   resolved_commit: ccdd7bacfb47451e38506d837af8a629504960b2
   version: 0.5.3
   package_type: skill_bundle
+  deployed_files:
+  - .agents/skills/d2-diagram
+  - .agents/skills/d2-diagram/SKILL.md
+  - .agents/skills/d2-diagram/assets/d2-facts.mjs
+  - .agents/skills/d2-diagram/assets/vlmkit-workspace.d2
+  - .agents/skills/d2-diagram/assets/vlmkit-workspace.facts.json
+  - .agents/skills/d2-diagram/assets/vlmkit-workspace.svg
+  - .agents/skills/d2-diagram/assets/vlmkit-workspace.txt
+  - .agents/skills/d2-slides
+  - .agents/skills/d2-slides/SKILL.md
+  - .agents/skills/d2-slides/assets/build-deck.mjs
+  - .agents/skills/d2-slides/assets/deck-review.mjs
+  - .agents/skills/explainer
+  - .agents/skills/explainer-book
+  - .agents/skills/explainer-book/SKILL.md
+  - .agents/skills/explainer-book/references/book-json.md
+  - .agents/skills/explainer-book/scripts/verify-book.mjs
+  - .agents/skills/explainer/SKILL.md
+  - .agents/skills/explainer/references/figures.md
+  - .agents/skills/explainer/references/persona.md
+  - .agents/skills/explainer/references/writing.md
+  - .agents/skills/explainer/scripts/build-html.mjs
+  - .agents/skills/explainer/scripts/figure-arrows.mjs
+  - .agents/skills/explainer/scripts/figure-check.mjs
+  - .agents/skills/explainer/scripts/figure-variants.mjs
+  - .agents/skills/explainer/scripts/icons.mjs
+  - .agents/skills/explainer/scripts/tlc-to-mermaid.mjs
+  - .agents/skills/explainer/scripts/verify-doc.mjs
+  - .agents/skills/first-reader
+  - .agents/skills/first-reader/LICENSE
+  - .agents/skills/first-reader/NOTICE
+  - .agents/skills/first-reader/README.md
+  - .agents/skills/first-reader/SKILL.md
+  - .agents/skills/first-reader/references/interview.md
+  - .agents/skills/first-reader/references/personas.md
+  - .agents/skills/first-reader/references/report.md
+  - .agents/skills/first-reader/references/room.md
+  - .agents/skills/first-reader/scripts/ask.py
+  - .agents/skills/first-reader/scripts/feed.py
+  - .agents/skills/first-reader/scripts/recall.py
+  - .agents/skills/first-reader/scripts/room.py
+  - .agents/skills/first-reader/scripts/room_template.html
+  - .agents/skills/first-reader/scripts/signals.py
+  - .agents/skills/first-reader/scripts/skim.py
+  deployed_file_hashes:
+    .agents/skills/d2-diagram/SKILL.md: sha256:05df931fb5898b19cb48010f5b81e351710f2b4bd34ca5ae37d79a878aa5ad51
+    .agents/skills/d2-diagram/assets/d2-facts.mjs: sha256:a25e7de35f825471e1d3ac489b43ad708e1d1c96798799be6ee11885ab2e1c46
+    .agents/skills/d2-diagram/assets/vlmkit-workspace.d2: sha256:804efdc26fb2901c5e6e4a304ea381a1c8e9c10fa115f0618c2b7f90532613a6
+    .agents/skills/d2-diagram/assets/vlmkit-workspace.facts.json: sha256:3f200a53d735a1b15cb72ee4245c1be8f8a45c0e0c969474e148ff1adc4eb70b
+    .agents/skills/d2-diagram/assets/vlmkit-workspace.svg: sha256:c19f20b0e57758212129b4880f3c81d8366d010977023fda1107eac79aae596d
+    .agents/skills/d2-diagram/assets/vlmkit-workspace.txt: sha256:c860b54459f265a1eb275b668cd354ed0cb7a6232a6e6777069bb46652434a7a
+    .agents/skills/d2-slides/SKILL.md: sha256:f18527eca8884179634e387beb566dd2e701f9e8d02fcd57bd981cacd8dad1f7
+    .agents/skills/d2-slides/assets/build-deck.mjs: sha256:13c126da6bb36d0d4a1b833c9b76a72862a99fb6eabff563b884acb0663371d0
+    .agents/skills/d2-slides/assets/deck-review.mjs: sha256:debb19d0fefd3531eadc9cddeb991b3be754c05cec696b3b74ac3acd7ad8852d
+    .agents/skills/explainer-book/SKILL.md: sha256:3e6311339fe3be70e1e86a17642d03f7bf02d594793d105ebc8a2cbe8deee769
+    .agents/skills/explainer-book/references/book-json.md: sha256:2e293744f0ce6ba987f718ad9291d05be4194cfb5099bc83c1e16e752870222d
+    .agents/skills/explainer-book/scripts/verify-book.mjs: sha256:31e3f98750f0266f840486f792a67aa18f6c7b82b617884705aa809708307374
+    .agents/skills/explainer/SKILL.md: sha256:99e089961affbf6f52dcc9ddb78ef4af886c35cb4b1616d350888b72e93778ea
+    .agents/skills/explainer/references/figures.md: sha256:84fd0e8cb8c82d98520241f6dec71147f8f0d0c160df335c0c5cb88e8e885912
+    .agents/skills/explainer/references/persona.md: sha256:701c296db39bf22c0afff3a97a256cf98f8ed5427d9408d241f0222f344d518e
+    .agents/skills/explainer/references/writing.md: sha256:9c38b31474296f0b045c5ee24ab35d81362e8b95ad62a1ccc488bbd7f3a040a6
+    .agents/skills/explainer/scripts/build-html.mjs: sha256:c05ee674936b2af1094ae22eea34b1d05a107122c7e94f691ba8693098265b16
+    .agents/skills/explainer/scripts/figure-arrows.mjs: sha256:7099992138a441cead13642eb2ed256219b68933dfdb0edbcab20158bc3909eb
+    .agents/skills/explainer/scripts/figure-check.mjs: sha256:83e55a25bbac2c16f69667b169825c09cc983e2cf596035d272a122e747a4a35
+    .agents/skills/explainer/scripts/figure-variants.mjs: sha256:330c1c9e2dd50aa1a533054270ddcbc4c53977919c48a0c78009549343c85d30
+    .agents/skills/explainer/scripts/icons.mjs: sha256:b33cd85be42e29c81a370ba3e497c1fc4f67ac2f079cace63899dedd2c57e944
+    .agents/skills/explainer/scripts/tlc-to-mermaid.mjs: sha256:91999c925194e8403cd6c6ff8df5fac28f31b4ef5f8dc5b3c23e30d0c4ebe0d2
+    .agents/skills/explainer/scripts/verify-doc.mjs: sha256:05fc79132c7c4a63714a1ddb42083fe358264f3f49566c2c9de09ddc88f45362
+    .agents/skills/first-reader/LICENSE: sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+    .agents/skills/first-reader/NOTICE: sha256:87ee09615b36efd2e9b1c60a93224441c2c9958f54b7fb6131249d472ba4b6d6
+    .agents/skills/first-reader/README.md: sha256:b21d577ae0c25a04fe1fbface5f19e18f79d8ddcf724198b700e3295b026e193
+    .agents/skills/first-reader/SKILL.md: sha256:51ead158e27a65eff7c1bacc5db8a89d1ed1101b44b3b57fa05440f60582d55d
+    .agents/skills/first-reader/references/interview.md: sha256:1cfe4df25d1f5db6e1ecb869172ed4cc59cdf7c1ce21036a521d6f7336513093
+    .agents/skills/first-reader/references/personas.md: sha256:80ed354630f231235f47b096b6d6feb0b2ae854ff0beb47c6e72ac99d892aa02
+    .agents/skills/first-reader/references/report.md: sha256:eb79fcd5800ee7500257bd01e9da09e38c9fb048a17242feaa81c7c053e66cb8
+    .agents/skills/first-reader/references/room.md: sha256:4ab04a5d7ed4fa0795de189d4e6cc0370d566aedf5aff5f2b6e9741133a907b9
+    .agents/skills/first-reader/scripts/ask.py: sha256:4f474f8e7e41808fba18152b0edc4d84333e6fdda877b622ad9ef6cc8c5c680e
+    .agents/skills/first-reader/scripts/feed.py: sha256:2f1267f7367f4bcf548fa28151ebdc713511a26a43f85dcc5ba7c3addcd669a7
+    .agents/skills/first-reader/scripts/recall.py: sha256:77d54c219d721f9cd56db710af17efed79750fde69a5647908861f212724ea9f
+    .agents/skills/first-reader/scripts/room.py: sha256:100b61bd9e1d8ac0af8e51c7c630e133bc1cd3b2f9acb3b5c5cf1c7c72030657
+    .agents/skills/first-reader/scripts/room_template.html: sha256:8631c113a79ff74c25df88267342a690badc634a3fe6d9e578d48d8d7da0f32e
+    .agents/skills/first-reader/scripts/signals.py: sha256:4e9096ac2e5dac1ff8707689e9b816f6cc52de9872b5ed42d2342cb012f981aa
+    .agents/skills/first-reader/scripts/skim.py: sha256:47ceffc0b6c2a737e206a97b34fba2dff493e328bb8f68c371fd810201335ecb
   content_hash: sha256:c0a9e8e2ca7622a3ec939823e0e6f5325a8f1362a84a39d19ca066ab04231703
   declared_license: MIT
 - repo_url: nanaism/yomiyasu
   name: yomiyasu
   host: github.com
-  resolved_commit: 602a3690dadd5d620bb21524353b8d192914eabb
-  version: 1.1.2
-  package_type: skill_bundle
-  content_hash: sha256:bb02d94567557510c0e8d2c8d36f8a5b18b6d1851636132e6d0008d5c259aef0
+  resolved_commit: 552c12c472ddfb79e2ee7a15219847782686a945
+  version: 2.4.0
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/yomiyasu
+  - .agents/skills/yomiyasu/.codex-plugin/plugin.json
+  - .agents/skills/yomiyasu/LICENSE
+  - .agents/skills/yomiyasu/SKILL.md
+  - .agents/skills/yomiyasu/UNICODE-LICENSE.txt
+  - .agents/skills/yomiyasu/assets/algo-artis.png
+  - .agents/skills/yomiyasu/references/audience.md
+  - .agents/skills/yomiyasu/references/calques.md
+  - .agents/skills/yomiyasu/references/doc-types/article.md
+  - .agents/skills/yomiyasu/references/doc-types/essay.md
+  - .agents/skills/yomiyasu/references/doc-types/formal.md
+  - .agents/skills/yomiyasu/references/doc-types/incident.md
+  - .agents/skills/yomiyasu/references/doc-types/mail.md
+  - .agents/skills/yomiyasu/references/doc-types/manual.md
+  - .agents/skills/yomiyasu/references/doc-types/minutes.md
+  - .agents/skills/yomiyasu/references/doc-types/paper.md
+  - .agents/skills/yomiyasu/references/doc-types/pr.md
+  - .agents/skills/yomiyasu/references/doc-types/promo.md
+  - .agents/skills/yomiyasu/references/doc-types/proposal.md
+  - .agents/skills/yomiyasu/references/doc-types/script.md
+  - .agents/skills/yomiyasu/references/doc-types/slides.md
+  - .agents/skills/yomiyasu/references/domains/business.md
+  - .agents/skills/yomiyasu/references/domains/essay.md
+  - .agents/skills/yomiyasu/references/domains/tech.md
+  - .agents/skills/yomiyasu/references/fact-recovery-details.md
+  - .agents/skills/yomiyasu/references/fact-recovery.md
+  - .agents/skills/yomiyasu/references/gemini-syntax.md
+  - .agents/skills/yomiyasu/references/lists/fact-gaps.txt
+  - .agents/skills/yomiyasu/references/lists/feelings.txt
+  - .agents/skills/yomiyasu/references/lists/hedges.txt
+  - .agents/skills/yomiyasu/references/lists/intensifiers.txt
+  - .agents/skills/yomiyasu/references/lists/katakana-terms.txt
+  - .agents/skills/yomiyasu/references/lists/nominalization.txt
+  - .agents/skills/yomiyasu/references/lists/renyo-nouns.txt
+  - .agents/skills/yomiyasu/references/lists/thin-evaluation.txt
+  - .agents/skills/yomiyasu/references/persona.md
+  - .agents/skills/yomiyasu/references/rephrase-test.md
+  - .agents/skills/yomiyasu/references/review-points.md
+  - .agents/skills/yomiyasu/references/slop-catalog.md
+  - .agents/skills/yomiyasu/scripts/markdown_visibility.py
+  - .agents/skills/yomiyasu/scripts/yomiyasu_check.py
+  - .agents/skills/yomiyasu/scripts/yomiyasu_diff.py
+  - .agents/skills/yomiyasu/scripts/yomiyasu_hook.py
+  - .agents/skills/yomiyasu/scripts/yomiyasu_lint.py
+  deployed_file_hashes:
+    .agents/skills/yomiyasu/.codex-plugin/plugin.json: sha256:b26d6af9532a22e6ca8d825196a4816fee3ca0a06458419f5427d5252a856318
+    .agents/skills/yomiyasu/LICENSE: sha256:79d802f15bc8caf67f1a83c1bdbe214ccb41a0a0275f9046b329b89c65ee1fca
+    .agents/skills/yomiyasu/SKILL.md: sha256:9b4b64f067894698be35287225b388b72368c40784fc091bd340202a2e35f471
+    .agents/skills/yomiyasu/UNICODE-LICENSE.txt: sha256:e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96
+    .agents/skills/yomiyasu/assets/algo-artis.png: sha256:57c7c204d43d0e2873e3b61221db3ac4ba75a7ce29271a6deaeb3bd09f26fdec
+    .agents/skills/yomiyasu/references/audience.md: sha256:48f0295fddc9cd878166ca5c3a6f7e9c33f0a4e07a2d37620b97d6fb6a212e3c
+    .agents/skills/yomiyasu/references/calques.md: sha256:0f4cd78823f40685fd56517bcda3cb671e7962c698f40285b218ed3108c7f454
+    .agents/skills/yomiyasu/references/doc-types/article.md: sha256:e5009c496b4b4ac8974c16f2f15b0f8ce93620863dfe721803b01138db845716
+    .agents/skills/yomiyasu/references/doc-types/essay.md: sha256:9b164c2916544e417fb42454e199f5c790cbfcd233879c59f563a1942329d9bb
+    .agents/skills/yomiyasu/references/doc-types/formal.md: sha256:6b4121d4e57d52fb60fb428770a4504c53e1fb06c3fa20e57a1fcd56ce933141
+    .agents/skills/yomiyasu/references/doc-types/incident.md: sha256:d25282690b220e5d4fa2595228d282d65f7b03d8d4b325c30bf251b58a474b77
+    .agents/skills/yomiyasu/references/doc-types/mail.md: sha256:43c84865368c6e1e61c0ac1645583933092ddcaabb49b6ed4b6c4621e9ba2d4f
+    .agents/skills/yomiyasu/references/doc-types/manual.md: sha256:37971c4b7cf8159656a2435b30444a05692fbdffdd7dc3dd8e8f4ada90e8ef8f
+    .agents/skills/yomiyasu/references/doc-types/minutes.md: sha256:7869c10e72e0e4ce6ecb94833e84452beba7f8b676230908fe623deddc49b140
+    .agents/skills/yomiyasu/references/doc-types/paper.md: sha256:39a7ff9aca340a003c637153c374f0dc1d668cda3520aab99923bffbc1c37f94
+    .agents/skills/yomiyasu/references/doc-types/pr.md: sha256:d7bb8a4ac7f5344abf66bb7dfe893480c67ea8d635078c5a8d2582264a21506b
+    .agents/skills/yomiyasu/references/doc-types/promo.md: sha256:06f8f3a39547985fc74a70c3717596070401b9d3db5fc93e3b10f76f9b6656e4
+    .agents/skills/yomiyasu/references/doc-types/proposal.md: sha256:2a8d8a557b33f2df51aedeed02ba5bb8ed623fcde55f6a42ff4b477920853731
+    .agents/skills/yomiyasu/references/doc-types/script.md: sha256:41bc1c8ebb9f5fea7c18b70b18a3e8ee86073e38f85d62d4ad00ae0719acb49a
+    .agents/skills/yomiyasu/references/doc-types/slides.md: sha256:a4e9f08113fc7efeaa523d67fb6125c33c7e179886698f1d76f72bf049ad1e51
+    .agents/skills/yomiyasu/references/domains/business.md: sha256:416d0752959ae43cd030f2cbcee76425d457ae37f153164db64f7884f7df7685
+    .agents/skills/yomiyasu/references/domains/essay.md: sha256:aeeeb9f9c842d68fa0fcf2e956bd2f87c5f450bc820df931f3f94b903a8a8c7a
+    .agents/skills/yomiyasu/references/domains/tech.md: sha256:faeaf3ea41d93e11ef3f679263df23b02a6156da6baecb4eb4dd03f58aa41dd1
+    .agents/skills/yomiyasu/references/fact-recovery-details.md: sha256:37ad635a1180d0a1c4fbe1e3eacbb79131b47cc51a5066b74d9881dbbeaaf8c3
+    .agents/skills/yomiyasu/references/fact-recovery.md: sha256:64786a3f8639e7bc6d20a7c37789983697d3623f5878b47a4a9ae526e12b472f
+    .agents/skills/yomiyasu/references/gemini-syntax.md: sha256:bb4a212402f63e9144d221feb9992dfe9db69527e71ad74b497c3d97e7453585
+    .agents/skills/yomiyasu/references/lists/fact-gaps.txt: sha256:c78da500dcddc76978fecd1a7a9f3318d9feabf0db78387a41662a4545e6964f
+    .agents/skills/yomiyasu/references/lists/feelings.txt: sha256:37b6779b3ef8cf91260379b21d6b721bda362542a5702affd99d550879539e82
+    .agents/skills/yomiyasu/references/lists/hedges.txt: sha256:ed666036f63f4705d2c129d3fd30e971018d50732bbef2c18081412a61ccd771
+    .agents/skills/yomiyasu/references/lists/intensifiers.txt: sha256:65d9189ebebaf8f9cb2aad2c04be3d0ccf53c4d6782affe16bcd8078054d3c83
+    .agents/skills/yomiyasu/references/lists/katakana-terms.txt: sha256:47c686e6a7a94590a97fa9e052b3dee9171dfc8a5f25da727111428cda978e2d
+    .agents/skills/yomiyasu/references/lists/nominalization.txt: sha256:cfe31060efc6d165c30b1619ab574ec405312a80bfb00387efc6557911614be0
+    .agents/skills/yomiyasu/references/lists/renyo-nouns.txt: sha256:0642b6ba40e4707af4715463d7433c0215087a8e068b00e7894b73e89365997a
+    .agents/skills/yomiyasu/references/lists/thin-evaluation.txt: sha256:b2cf6a8e1fc424d1bcac15e2aa2045a98ec77a002e2830692922a8f97ee406e4
+    .agents/skills/yomiyasu/references/persona.md: sha256:a805b2a8946a423a011d2cd66a33bf1be784d0dacdad32a5c5d3b4fed7bc0976
+    .agents/skills/yomiyasu/references/rephrase-test.md: sha256:a3531b41aaefe987726e928b09d59dbb312a35594b8dc6ce6a85dae10c2cc1b7
+    .agents/skills/yomiyasu/references/review-points.md: sha256:8fcdc5eda87b7b301aaed1eb813bc9b9693bfce5f2b35e572754321edeed5411
+    .agents/skills/yomiyasu/references/slop-catalog.md: sha256:8d0cf87d501c44710639050ea72d70608e4ca3443a8bc7ccf2a49a99c1b30213
+    .agents/skills/yomiyasu/scripts/markdown_visibility.py: sha256:5e6064d75d243ea15340efe515f2467f690bfc1c5efb4032238adf261ba1ac18
+    .agents/skills/yomiyasu/scripts/yomiyasu_check.py: sha256:e8c8b47b5a520efed25aebeda7cc25777a90960176f861a4fc104354efd7f8b7
+    .agents/skills/yomiyasu/scripts/yomiyasu_diff.py: sha256:31c46a98bcd987c0a2dda7d9712fb830f3a70b1e0636b6a034ae191530d51ab5
+    .agents/skills/yomiyasu/scripts/yomiyasu_hook.py: sha256:689ffbeecbaf0380ac99e37b6093f136364b7c7bbf014ada961c8e0781e8ab8b
+    .agents/skills/yomiyasu/scripts/yomiyasu_lint.py: sha256:b02c21464353b726a8c4e366f89bdfd2f341613f7bf75f779e83cc4dfbc54c9e
+  content_hash: sha256:86c7eb7843a794bddc2617adf42018c759720ea9e635f976ade44e153cb04e8d
   declared_license: MIT
 - repo_url: vercel-labs/agent-browser
-  name: 7806f76343b67d4b
+  name: agent-browser
   host: github.com
-  resolved_commit: d9570915f4dd6504dee4070379d2c4f79d81dbb2
-  version: d957091
-  package_type: skill_bundle
-  content_hash: sha256:d186d285ffed78ea33eb49279e2ec696c492a6b378e4a96918a9943085a574af
+  resolved_commit: 04ba5264dade678062c3cdcce0f4f293e748249f
+  version: 04ba526
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/agent-browser
+  - .agents/skills/agent-browser/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/agent-browser/SKILL.md: sha256:3a7520e64de2dfaa516b6721c001e84e06e3c06a187b82af029ae721540ebfac
+  content_hash: sha256:28afe40e893364172dfda2577f004dc89dedd5d38af97acb6ae4af9ab9d40fa5
 - repo_url: yusukebe/ax
   name: ax
   host: github.com
   resolved_commit: 8abbca2fc400c2ff4866248ba1ec9309b948812f
   version: unknown
   package_type: skill_bundle
+  deployed_files:
+  - .agents/skills/ax
+  - .agents/skills/ax/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ax/SKILL.md: sha256:4acbbc5574e36a21c27fbc3099cc40638e074e7cada674e00d23698cef34d37c
   content_hash: sha256:90a957026d94fd46b62a758428971c8377db8fe8b7d818cb6a1b7ed1cfbe6734
-deployments: []
+deployments:
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/architect
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/architect/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:44e6ed5f13176ae0153a9a1263a110f3fdc4303f1f56b2d6c7b99dc1578fb49b
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/architect/references/design-red-flags.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:eaa0e680dcb0dd263f06457a1b06b284a8088ebe5ea2eac8d988d1cfe9767e82
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/architect/references/rationale-template.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f98b20afb446d275ab6731d1877d147335c8b2b51c9b06281ac3b6a67f41bd12
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/architect/references/runner-prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a8e4ba4cc8608ae6fca943a6130e9292994df66c76a905c6748502cd4e453eb7
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/arena
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/arena/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ca0d1091ee48a5ce1644a3992a72fd65ef2590a1189b3ed19ecf4640aa20834b
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/benchmark-checklist
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/benchmark-checklist/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:d46693b0921c6b26d022b9d7ba3aff4dbec5fdcfba9c238c7d09c689f38e141f
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/create-verification-skill
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/create-verification-skill/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f3111aeea0fb22b70e98587dd55fb8cb2c30688bc20e4f8dcd8481d7c4cd7108
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/create-verification-skill/references/feature-map-example/README.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e6d025499928c89b39df80108ed976c0be87120eb9bd15d851e5e5d91e7c6e65
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/create-verification-skill/references/feature-map-example/create-note.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:8752c69fe2e1ff8cb0d42b85fae3e89a99e61fe87c200a36d51ee604da8c4535
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/create-verification-skill/references/feature-map-example/search.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e6b504775ae7bc281ca33da67fc177f2a506691c0bebba6faca9081cafb856bc
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/figure-it-out
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/figure-it-out/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:19fd11750bee39f485734e50c2c475df0a736a7e5ff410d0bbb8a3611e97a35a
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/how
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/how/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0278be14b65788108d585f9e94095efdb53d1b5ff66b9b05a3be08a6e5b755a1
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/how/references/explainer-prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:23c079f1ccd081aeabdd6254cd8d1b356d43371bea6775af7f4c0c695a117755
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/how/references/explorer-prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:676c796e7777716facd3719fb99c435a485b21a5230afb9b6fc0ea2505acf44e
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/interrogate
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/interrogate/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:77c9cdc3a8a9d7815482a02f7e623e8c8d0b3308132303eebddb53acfd31e580
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/interrogate/references/code-quality-review.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c5f55e9377ac1869e32cd7bbb9c95744ea219e90dd20bb9ad63a7e3a2bbbd118
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/interrogate/references/lead-judgment.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:569913b3f69413ef41d0703920bbf7f633e76765a4459c282177ee92cf1f60f6
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/interrogate/references/reviewer-prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:28ef7f0d799eeb91e9ae43165624c6a7be21f33a00e68d2c50aad876e26afef1
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/interrogate/references/rubric.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ca4306b66510e88c30d038829e43d77ff9955adbf1657d18763e33f05364073e
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/maintain-verification-skill
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/maintain-verification-skill/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1015a6d697fe2b9385833b53bc8777c0e4a70ba0361bd04a68044721bfb70811
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/no-comments
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/no-comments/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f3c8e97545d88a70342ff43de701bcca42f98c8aadb92bd84cbe5f3149d459ae
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-help
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-help/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:182abdda9c527c56a05c5cfbc99063d2942545655358e986741d1fa604f60d80
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-help/references/prompting.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:73c7194d60fda18f3bab88c1e00c282d85c9a5a6f4e3f0c991f6e083b076dbdc
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-help/references/recipes.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a4be697dc71a35c483d5336be766e54f4c5fd988cb74b0a18be155391a2a9543
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:dcd419670b2c93f4193ba253ad69111b27569ef8e1d88b7ba5e364827e19244e
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/authoring-a-skill.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:713f6155d4946a0d4bd4b16a8cff1421da58b121cde08197c97518a58562cfb8
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/autonomous-run.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a565b6187cdf8ef76ed262d4586e81cd4e5212b13cfbde854b69a850320e5b98
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/autopilot-full.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:493acc6d98e06b414ca3c20f9a59682c4ac7fc14e8d536c4efa314710b4a5cac
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/autopilot-stack.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:57af2d4fa903ce2cb2ad6aaca8a2e48a97ff669b6c688ec1416ba872ac9b399a
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/babysit.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:31f2b1c64f30f5ed9c5ff7b5e0db26ac86b86da61a5ee8d3f813855372d7f062
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/bug-fix.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c0a51dd2922ef6c279f0d9ab4e941862cc19810a65b6d6489f73edfcc85b2bc6
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/eval.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:468f597e354b894f70a2740fc561f7790342070fef3e764ebd23564a5cb82f05
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/feature.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5b15452a08ab83fa0d907e488711b3303ba54a8f1fcdd7da2e9e69bdc0a989be
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/hillclimb.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:8fce67ff3b37771405a17b85d76dc3766645ba42652f59f93dc56543fa24ddcc
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/investigation.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:78f700edaafb438eb40592f46dae82bfeecd5468956fabee2e78cda6cae7b5d9
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/multi-phase-plan.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:fca50d912f42446386c7e4aab1007c4bb97972469c9e98ed4d50b1a0527c416f
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/opening-a-pr.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e9e11082fe7d59e1efea6e3450714a8ffec731d44dba61372b83e075209931b5
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/orchestrate.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:64849dc9b20c80a7c5298d69b5c6162c5c3cb4770abef9a1c85d8bbf5f442880
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/pause-safely.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:509da62f0dad29b08996830b309a5d0d2142f959bb494c31b228b1cf4e324428
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/perf-issue.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:aa85e5f4d13ea64d0afe381bbcaede3c632516d2864ecf17ba40d07d365004c5
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/prototype.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:66d69fe873674c96acd828dd09aa81ce6a55114796492edf3ac74d1ee660d5e0
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/refactoring.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a3f4ac1db40692be88b2a446b4504efe50aa674afcb1cb84f32ad7b0c13cabdb
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/runtime-forensics.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:4de81477902fd85efedb90721b67298513ce4fc5995fd05719846c94c74318a4
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/session-pickup.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:55ac7719520866a50e381b6610df10d2a61a34bf4a9d43ae51e6506707cf2c72
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/shipping.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a9d3e8a85be1c8284f3b73b0f2a67363d2ff37e62a9f6ea7cf2fa3b75fdc45fc
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/trace-forensics.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:9a0cd7f952011c1a5eed81c76c9271174d8d8d3f8f37c05c8cb6b488adfa93ff
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/visual-parity.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7d20f5f4ae9fd2ea92d2fdabf14637ce69d5ba1a4e110d8e3beadc8f3aa5e56d
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/playbooks/worktree-cleanup.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:4eb0abbe223f28563fbc3877e1dcbc98d0a586092d965b4569bcc74e5a6a66e4
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/references/bugbot-triage.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0ace79be55c7149ffa7c65977f6fa215991d238f90ce1da540233fbf079f1a94
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/references/opencode-tools.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1c906cff2d9126f97fe6cdbe0043cf9b9180af9432c00c89eab9c222022f652e
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/bootstrap.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:2470f6e874fcc2d34acd0d6d5351c64c8ac077229100e18c7c31250a5128a4f5
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/check-plan.mjs
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:70e583f6f8bfa500899cd390de6ea228d94f885d06d6adbf63bad364e7e44617
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/check-plan.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:d57684d9a39a310766c763948fca70ece1a0ad92f3d544273481af34930d2c59
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/orch/orch.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:234668333d5184324be7231b17636d3502041460ca57c9aaab44104dfc23ed09
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/orch/orch.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ffa225e4e9c61e9731b819f3e07e6b56ccea7ec3ef9cb9143caeae6d3e7e07f5
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/orch/store.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:8831d17aaefaf14f236908a9de2194fb428666247dd91051439ed85334e60786
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/package.json
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1a382754c266de74629d48822c93e1795a12efb79c654863c413f9fc8b6f07d8
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/cli.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:9d0edc2a3a312e87d0fb5acd5bbaf918b00490d8315c4cd82573460f59b501eb
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/cli.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a50a766103a0bdf0684ef792c04bf3292b0bd0efd4e4712d248f5363d4333d95
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/fakes.test-helper.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:6bef77b16ed4b0d385f440b5503b5462e8623f7caaed86e29966b99216e207eb
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/github.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:957b369e1b3af2050255aaf9f100a4d3a06b6eefac10504d09ca3c5f02889a90
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/github.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0e11dad2bbe36114e4d613fcf4a2e9555556e3ace001d56b159f9a76126ea38c
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/policy.test.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a07cb6cb51aaf171deecd1a978a66d16d7d05f9ac5f427ca893b08d2ad4bde26
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/policy.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:11a2a83d32b783f354b478bc9ee76ff8d4e04276163d417faf1785712fc418ef
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/render.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:3135d32509ccb676dd16d6a97be9c482587003f8326eb85dd00989702a83c5f3
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/tsconfig.json
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:d9d19c3f84d4e1e62c7e94ae26ab9f674386118e54e02afb58423063c8ee04ca
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/types.compile.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5e4c8ee8510b552b42a5280d3dd3dd0bf40dcfcddef14007f53e8d6ab5afb716
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/types.ts
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a70eda8ac791f5221f297cb678382738b4b1caa8d9561d0b391883e4bcf7f2d0
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/watch-pr/watch-pr
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1f76b1e9426c26c902473e2a21430b6345667fc95ab98a56286c0e81285934e0
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/poteto-mode/scripts/worktree-audit.sh
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:875739ccfbefc80f2363c5c7e220d62e2556f4f8fc8e3feca3cfcaa4b6680c4f
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-boundary-discipline
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-boundary-discipline/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:bd8545ae7e1df85bd63ea558dd2d135c45238790a882d5a55bd7bb03999df9b1
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-build-the-lever
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-build-the-lever/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:425b07fcd896c7b03b30c6a96337b387547f0eaac2e18bf817441cfb8684ecfa
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-encode-lessons-in-structure
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-encode-lessons-in-structure/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:251e9815459d58b57afafc04b43da1f4fadbae314b0b402af375c740cc14045d
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-exhaust-the-design-space
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-exhaust-the-design-space/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:13cbdf61fdb60a958c5ab7eceac68823238e37e5dc6e712ecdb82625cab74027
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-fix-root-causes
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-fix-root-causes/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c93cf05a8cb7e92afee2884e49078fdacb047cccb5a5b669a59726d1c04e25c5
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-foundational-thinking
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-foundational-thinking/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:3fd8939bcdbf0746edce789573949227d86c3602168e072e1dacd08218fa7fd7
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-guard-the-context-window
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-guard-the-context-window/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:fb37c4afdf966812d59ab74bd6d0730f2366a6923433f9b06e4df0decb755770
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-laziness-protocol
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-laziness-protocol/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:c350b45aa96af42ef98547355955ab8d2ccc6708ee5424bb8a056b20c0fa28c8
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-make-operations-idempotent
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-make-operations-idempotent/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:99aa7530ce47f9e3d93d12b6d3807e59035bbe4beb4311003ffc809685d97b25
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-migrate-callers-then-delete-legacy-apis
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:391b398bbc85ba160805e8538fc06d233bed4133d5e0968aff2fc42259758986
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-minimize-reader-load
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-minimize-reader-load/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f925a247bb990048be483398780a9237e5aaaec2fb67b42782976ef2ff525409
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-model-the-domain
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-model-the-domain/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0b53effece5c2a0b7ecd28e06fe46e15d22d53f9dc5074a4059333aed23017f8
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-never-block-on-the-human
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-never-block-on-the-human/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:40a15b121b3c3b2398770fef35a7b58c968bc3c998b2f49fecb4fafc828922c1
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-outcome-oriented-execution
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-outcome-oriented-execution/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:546bac522d15bc43f935842fe8147882b7e56aa873e743262cc7b39178ac4feb
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-prove-it-works
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-prove-it-works/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:2b57f0699ea0f2c25f6257068b01eb53398eebd75c9a0112fbe04364b482bf5f
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-redesign-from-first-principles
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-redesign-from-first-principles/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:8ac14de703d4c722ababdcf83882ae13fa5ec72a333d16b44aa12dcfc8f438d9
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-separate-before-serializing-shared-state
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-separate-before-serializing-shared-state/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:f59591d1f552d0011cb573c76213b8032d28919f91fcdc5e84ded1adea3b81ca
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-sequence-verifiable-units
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-sequence-verifiable-units/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:e8e217358c913e5710d023bd8f8923166dddb20fa6276c55b7e0189cf0ed1d66
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-subtract-before-you-add
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/principle-subtract-before-you-add/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:8568b0b230fac69ac77dbe678fcf6148c6086669a90231815f92dbad2830c0da
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/reflect
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/reflect/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ca5ff43c7df8d91f8990c732c213230ca0bf559656704979aad77e39a5fe9844
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/reflect/references/divergent-reviewer.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:81ccdbc02ffc7498eb96435763fa89c6eb10a137a61d243df9548f05f597a29f
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/reflect/references/judgment-reviewer.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:2a05bbbee6313b78aa567b4ac2f78e104615a23827ae1aefa8a58d7f7b2ceccf
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/reflect/references/synthesizer.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:08915d2e9508446c3142d2f36b23c80988f35430e0df04b040c0db1f8a583c04
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/reflect/references/tooling-reviewer.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:514cdfbe3751d7b727bf9dc116c3c79fb28b111ab53ecd3a1812130a91c1be2a
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/setup-pstack
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/setup-pstack/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:9e5ce6ba626edbbd32767ff7695d1a8e5b41f17e944ebd8396e849eecdf80359
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/show-me-your-work
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/show-me-your-work/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:72ca5a1f7ce03ec927482d04b0dbc5c706e05b4537d7f57b190d5afc5d5cbe71
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/show-me-your-work/references/decision-log-template.tsv
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:ce5219fde74b7be36fe9ac72af67986135194ec9c97e27db30cb1273c639261e
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/show-me-your-work/scripts/log.sh
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:970555e61e673fa395d7a0caa0438e7414d6489c635328c7f2d89cda8acce855
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/swarm
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/swarm/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:111d363684585f5f6b6e7793d1c36d5ea2822c2fbcb88e0eb1175dc422a49fab
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/tdd
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/tdd/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:98b890e82d7280c7c0a56b5ccc06480e8955120b81ec7343791a11909d5ef3c4
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/technical-writing
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/technical-writing/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1f0414857b63d0ef496bb9f7f67d956a7b07dd64412264fe0cd5d317beb871c0
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/unslop
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/unslop/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:a0f31dc023a3255a93d7bd900d0f2268c8397d7ab49ff0e843175847306233c5
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7ff800fb229fa129f767d6f50dec7fec7c9b30d945cac5ff39aa6b29d4f50224
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/epistemics.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:9b5a789f9d87bfcef2ef4ba6f2f23a9df2ad03aa2277ceef017fefd2cbe606d8
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/investigator-prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1839b98828b3d3df2d8e0ec3af7e2b79bdaecd9f9c69bab03188fb1e1cc8a9e2
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/source-playbook.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:3dcfa7d843993722110800b9d4c794ae21b317934537157def9523d2ec912509
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/sources/code-archaeology.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:13169fc6f2f879d2ecf65f7e8310f399836f64f6c2b8497b3467520360091032
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/sources/databricks.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:0791e368573941d310cd9bf907bb1c61b48317c0fb217a2e4bdc86c47aba3418
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/sources/datadog.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:3147df3faff33addd9bdbe49280f343cfa319e1d5606500d05d9fd620bac0f6a
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/sources/incident-postmortem.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:1dfab3deb553139407101fa40cdf32eae4ed4b4a1abb2570e6e48b6708a575f2
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/sources/linear.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:88fb454b1a33b03f9af8713da3ecf3abe101fc8861a876b32cb9f116b5f24a33
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/sources/notion.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:dc8c3f7f9c527481c4b4e3911de6ca705b3737262a9a3ab8da27287ba85ba6f1
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/sources/sentry.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:b230e80c71df451a2fb181a523e62c9bf71bde62ad01e7758a43aa25878466ce
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/sources/slack.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:963ac4fd166664d4d0b2cef873489c6f481b15e86407cad0e6b5107aab4f0a71
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/why/references/synthesizer-prompt.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:7feec4d622526aab2401eb413e6749f687e56cad41825aebec981b9187d4de1b
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/agent-browser
+  runtime: null
+  scope: project
+  owners:
+  - vercel-labs/agent-browser
+  active_owner: vercel-labs/agent-browser
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/agent-browser/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - vercel-labs/agent-browser
+  active_owner: vercel-labs/agent-browser
+  content_hash: sha256:3a7520e64de2dfaa516b6721c001e84e06e3c06a187b82af029ae721540ebfac
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:715b6d3497d5ca30f4751463091b8ff7cd85dc51e375d2176aea8f0867081c38
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/authentication.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:253f932e324d5e6fe5209d8271764dc5512a9cc1db8ed2a490fc6bf94675a4b0
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/commands.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:b832421add4f49b56658a5571825e188d75a0a93fa4c4b53c8c9292b6af33ea0
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/dependencies.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:28822c38deb16a5c7fceaf3851fd7530d894c37b0f95853b86c2fb956a84ab73
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/governance.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:968670a858801f4576746fbe86affacf4cf27296f634ad9008f58bcba22b2409
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/installation.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:c70544c5d1f85102c5e144ac6ae1ca68fcf8ba6a8323cb2ca6adc840d13aa960
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/package-authoring.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:00983812289ec13ac9ad84f57148c5cfd3ff5af479c26a42caffc9d6674e14d3
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/troubleshooting.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:2c6f13b1a1758b84305f1d11e2eeb096896a02851de1e24dde644783862667cc
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/apm-usage/workflow.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+  content_hash: sha256:1bbb710fa9fd710aa2258aea52f6d905c6a2b3d366a1fdc723b028b4bfd2dbae
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/ax
+  runtime: null
+  scope: project
+  owners:
+  - yusukebe/ax
+  active_owner: yusukebe/ax
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/ax/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - yusukebe/ax
+  active_owner: yusukebe/ax
+  content_hash: sha256:4acbbc5574e36a21c27fbc3099cc40638e074e7cada674e00d23698cef34d37c
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/code-explainer
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/waza
+  active_owner: microsoft/waza
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/code-explainer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/waza
+  active_owner: microsoft/waza
+  content_hash: sha256:5390cb6bc9ddd8a6419bbf07f27ec9aae7b8e74dcdcfccf9b5acb67501ee0f8c
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-diagram
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-diagram/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:05df931fb5898b19cb48010f5b81e351710f2b4bd34ca5ae37d79a878aa5ad51
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-diagram/assets/d2-facts.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:a25e7de35f825471e1d3ac489b43ad708e1d1c96798799be6ee11885ab2e1c46
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-diagram/assets/vlmkit-workspace.d2
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:804efdc26fb2901c5e6e4a304ea381a1c8e9c10fa115f0618c2b7f90532613a6
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-diagram/assets/vlmkit-workspace.facts.json
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:3f200a53d735a1b15cb72ee4245c1be8f8a45c0e0c969474e148ff1adc4eb70b
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-diagram/assets/vlmkit-workspace.svg
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:c19f20b0e57758212129b4880f3c81d8366d010977023fda1107eac79aae596d
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-diagram/assets/vlmkit-workspace.txt
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:c860b54459f265a1eb275b668cd354ed0cb7a6232a6e6777069bb46652434a7a
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-slides
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-slides/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:f18527eca8884179634e387beb566dd2e701f9e8d02fcd57bd981cacd8dad1f7
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-slides/assets/build-deck.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:13c126da6bb36d0d4a1b833c9b76a72862a99fb6eabff563b884acb0663371d0
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/d2-slides/assets/deck-review.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:debb19d0fefd3531eadc9cddeb991b3be754c05cec696b3b74ac3acd7ad8852d
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer-book
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer-book/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:3e6311339fe3be70e1e86a17642d03f7bf02d594793d105ebc8a2cbe8deee769
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer-book/references/book-json.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:2e293744f0ce6ba987f718ad9291d05be4194cfb5099bc83c1e16e752870222d
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer-book/scripts/verify-book.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:31e3f98750f0266f840486f792a67aa18f6c7b82b617884705aa809708307374
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:99e089961affbf6f52dcc9ddb78ef4af886c35cb4b1616d350888b72e93778ea
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/references/figures.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:84fd0e8cb8c82d98520241f6dec71147f8f0d0c160df335c0c5cb88e8e885912
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/references/persona.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:701c296db39bf22c0afff3a97a256cf98f8ed5427d9408d241f0222f344d518e
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/references/writing.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:9c38b31474296f0b045c5ee24ab35d81362e8b95ad62a1ccc488bbd7f3a040a6
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/scripts/build-html.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:c05ee674936b2af1094ae22eea34b1d05a107122c7e94f691ba8693098265b16
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/scripts/figure-arrows.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:7099992138a441cead13642eb2ed256219b68933dfdb0edbcab20158bc3909eb
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/scripts/figure-check.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:83e55a25bbac2c16f69667b169825c09cc983e2cf596035d272a122e747a4a35
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/scripts/figure-variants.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:330c1c9e2dd50aa1a533054270ddcbc4c53977919c48a0c78009549343c85d30
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/scripts/icons.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:b33cd85be42e29c81a370ba3e497c1fc4f67ac2f079cace63899dedd2c57e944
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/scripts/tlc-to-mermaid.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:91999c925194e8403cd6c6ff8df5fac28f31b4ef5f8dc5b3c23e30d0c4ebe0d2
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/explainer/scripts/verify-doc.mjs
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:05fc79132c7c4a63714a1ddb42083fe358264f3f49566c2c9de09ddc88f45362
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/NOTICE
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:87ee09615b36efd2e9b1c60a93224441c2c9958f54b7fb6131249d472ba4b6d6
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/README.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:b21d577ae0c25a04fe1fbface5f19e18f79d8ddcf724198b700e3295b026e193
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:51ead158e27a65eff7c1bacc5db8a89d1ed1101b44b3b57fa05440f60582d55d
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/references/interview.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:1cfe4df25d1f5db6e1ecb869172ed4cc59cdf7c1ce21036a521d6f7336513093
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/references/personas.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:80ed354630f231235f47b096b6d6feb0b2ae854ff0beb47c6e72ac99d892aa02
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/references/report.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:eb79fcd5800ee7500257bd01e9da09e38c9fb048a17242feaa81c7c053e66cb8
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/references/room.md
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:4ab04a5d7ed4fa0795de189d4e6cc0370d566aedf5aff5f2b6e9741133a907b9
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/scripts/ask.py
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:4f474f8e7e41808fba18152b0edc4d84333e6fdda877b622ad9ef6cc8c5c680e
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/scripts/feed.py
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:2f1267f7367f4bcf548fa28151ebdc713511a26a43f85dcc5ba7c3addcd669a7
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/scripts/recall.py
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:77d54c219d721f9cd56db710af17efed79750fde69a5647908861f212724ea9f
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/scripts/room.py
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:100b61bd9e1d8ac0af8e51c7c630e133bc1cd3b2f9acb3b5c5cf1c7c72030657
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/scripts/room_template.html
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:8631c113a79ff74c25df88267342a690badc634a3fe6d9e578d48d8d7da0f32e
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/scripts/signals.py
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:4e9096ac2e5dac1ff8707689e9b816f6cc52de9872b5ed42d2342cb012f981aa
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/first-reader/scripts/skim.py
+  runtime: null
+  scope: project
+  owners:
+  - mizchi/explainer
+  active_owner: mizchi/explainer
+  content_hash: sha256:47ceffc0b6c2a737e206a97b34fba2dff493e328bb8f68c371fd810201335ecb
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/waza
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/waza
+  active_owner: microsoft/waza
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/waza-interactive
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/waza
+  active_owner: microsoft/waza
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/waza-interactive/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/waza
+  active_owner: microsoft/waza
+  content_hash: sha256:6976d7c90efce2fa934871265085abaceb59bc722d6218307c7a1d962838be71
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/waza-interactive/tests/eval.yaml
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/waza
+  active_owner: microsoft/waza
+  content_hash: sha256:fdb84af4a57da4ad360f1bbf35d34b7ae786586f3c73f8abff2a5ff63ced8e00
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/waza/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - microsoft/waza
+  active_owner: microsoft/waza
+  content_hash: sha256:e7ef60562bbf3535d7ca4b8b8b9d5c65bd210a37a03ef00e19e43be16b4f960e
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/.codex-plugin/plugin.json
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:b26d6af9532a22e6ca8d825196a4816fee3ca0a06458419f5427d5252a856318
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:79d802f15bc8caf67f1a83c1bdbe214ccb41a0a0275f9046b329b89c65ee1fca
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:9b4b64f067894698be35287225b388b72368c40784fc091bd340202a2e35f471
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/UNICODE-LICENSE.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/assets/algo-artis.png
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:57c7c204d43d0e2873e3b61221db3ac4ba75a7ce29271a6deaeb3bd09f26fdec
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/audience.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:48f0295fddc9cd878166ca5c3a6f7e9c33f0a4e07a2d37620b97d6fb6a212e3c
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/calques.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:0f4cd78823f40685fd56517bcda3cb671e7962c698f40285b218ed3108c7f454
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/article.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:e5009c496b4b4ac8974c16f2f15b0f8ce93620863dfe721803b01138db845716
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/essay.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:9b164c2916544e417fb42454e199f5c790cbfcd233879c59f563a1942329d9bb
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/formal.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:6b4121d4e57d52fb60fb428770a4504c53e1fb06c3fa20e57a1fcd56ce933141
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/incident.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:d25282690b220e5d4fa2595228d282d65f7b03d8d4b325c30bf251b58a474b77
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/mail.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:43c84865368c6e1e61c0ac1645583933092ddcaabb49b6ed4b6c4621e9ba2d4f
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/manual.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:37971c4b7cf8159656a2435b30444a05692fbdffdd7dc3dd8e8f4ada90e8ef8f
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/minutes.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:7869c10e72e0e4ce6ecb94833e84452beba7f8b676230908fe623deddc49b140
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/paper.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:39a7ff9aca340a003c637153c374f0dc1d668cda3520aab99923bffbc1c37f94
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/pr.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:d7bb8a4ac7f5344abf66bb7dfe893480c67ea8d635078c5a8d2582264a21506b
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/promo.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:06f8f3a39547985fc74a70c3717596070401b9d3db5fc93e3b10f76f9b6656e4
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/proposal.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:2a8d8a557b33f2df51aedeed02ba5bb8ed623fcde55f6a42ff4b477920853731
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/script.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:41bc1c8ebb9f5fea7c18b70b18a3e8ee86073e38f85d62d4ad00ae0719acb49a
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/doc-types/slides.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:a4e9f08113fc7efeaa523d67fb6125c33c7e179886698f1d76f72bf049ad1e51
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/domains/business.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:416d0752959ae43cd030f2cbcee76425d457ae37f153164db64f7884f7df7685
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/domains/essay.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:aeeeb9f9c842d68fa0fcf2e956bd2f87c5f450bc820df931f3f94b903a8a8c7a
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/domains/tech.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:faeaf3ea41d93e11ef3f679263df23b02a6156da6baecb4eb4dd03f58aa41dd1
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/fact-recovery-details.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:37ad635a1180d0a1c4fbe1e3eacbb79131b47cc51a5066b74d9881dbbeaaf8c3
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/fact-recovery.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:64786a3f8639e7bc6d20a7c37789983697d3623f5878b47a4a9ae526e12b472f
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/gemini-syntax.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:bb4a212402f63e9144d221feb9992dfe9db69527e71ad74b497c3d97e7453585
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/lists/fact-gaps.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:c78da500dcddc76978fecd1a7a9f3318d9feabf0db78387a41662a4545e6964f
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/lists/feelings.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:37b6779b3ef8cf91260379b21d6b721bda362542a5702affd99d550879539e82
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/lists/hedges.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:ed666036f63f4705d2c129d3fd30e971018d50732bbef2c18081412a61ccd771
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/lists/intensifiers.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:65d9189ebebaf8f9cb2aad2c04be3d0ccf53c4d6782affe16bcd8078054d3c83
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/lists/katakana-terms.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:47c686e6a7a94590a97fa9e052b3dee9171dfc8a5f25da727111428cda978e2d
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/lists/nominalization.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:cfe31060efc6d165c30b1619ab574ec405312a80bfb00387efc6557911614be0
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/lists/renyo-nouns.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:0642b6ba40e4707af4715463d7433c0215087a8e068b00e7894b73e89365997a
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/lists/thin-evaluation.txt
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:b2cf6a8e1fc424d1bcac15e2aa2045a98ec77a002e2830692922a8f97ee406e4
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/persona.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:a805b2a8946a423a011d2cd66a33bf1be784d0dacdad32a5c5d3b4fed7bc0976
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/rephrase-test.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:a3531b41aaefe987726e928b09d59dbb312a35594b8dc6ce6a85dae10c2cc1b7
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/review-points.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:8fcdc5eda87b7b301aaed1eb813bc9b9693bfce5f2b35e572754321edeed5411
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/references/slop-catalog.md
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:8d0cf87d501c44710639050ea72d70608e4ca3443a8bc7ccf2a49a99c1b30213
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/scripts/markdown_visibility.py
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:5e6064d75d243ea15340efe515f2467f690bfc1c5efb4032238adf261ba1ac18
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/scripts/yomiyasu_check.py
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:e8c8b47b5a520efed25aebeda7cc25777a90960176f861a4fc104354efd7f8b7
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/scripts/yomiyasu_diff.py
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:31c46a98bcd987c0a2dda7d9712fb830f3a70b1e0636b6a034ae191530d51ab5
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/scripts/yomiyasu_hook.py
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:689ffbeecbaf0380ac99e37b6093f136364b7c7bbf014ada961c8e0781e8ab8b
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/yomiyasu/scripts/yomiyasu_lint.py
+  runtime: null
+  scope: project
+  owners:
+  - nanaism/yomiyasu
+  active_owner: nanaism/yomiyasu
+  content_hash: sha256:b02c21464353b726a8c4e366f89bdfd2f341613f7bf75f779e83cc4dfbc54c9e
+- kind: project-relative
+  target: opencode
+  value: .opencode/agents/comment-sicko.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:93576c2b49178ef165d7ee97349809b1f07198eca30b9fc2713309b3a8b88b38
+- kind: project-relative
+  target: opencode
+  value: .opencode/agents/poteto-agent.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:3ddbc918d206f566ce1245d839a1b00bc9cd71aa809cba4c9ba8d5e50c0df641
+local_deployed_files:
+- .agents/skills/architect
+- .agents/skills/architect/SKILL.md
+- .agents/skills/architect/references/design-red-flags.md
+- .agents/skills/architect/references/rationale-template.md
+- .agents/skills/architect/references/runner-prompt.md
+- .agents/skills/arena
+- .agents/skills/arena/SKILL.md
+- .agents/skills/benchmark-checklist
+- .agents/skills/benchmark-checklist/SKILL.md
+- .agents/skills/create-verification-skill
+- .agents/skills/create-verification-skill/SKILL.md
+- .agents/skills/create-verification-skill/references/feature-map-example/README.md
+- .agents/skills/create-verification-skill/references/feature-map-example/create-note.md
+- .agents/skills/create-verification-skill/references/feature-map-example/search.md
+- .agents/skills/figure-it-out
+- .agents/skills/figure-it-out/SKILL.md
+- .agents/skills/how
+- .agents/skills/how/SKILL.md
+- .agents/skills/how/references/explainer-prompt.md
+- .agents/skills/how/references/explorer-prompt.md
+- .agents/skills/interrogate
+- .agents/skills/interrogate/SKILL.md
+- .agents/skills/interrogate/references/code-quality-review.md
+- .agents/skills/interrogate/references/lead-judgment.md
+- .agents/skills/interrogate/references/reviewer-prompt.md
+- .agents/skills/interrogate/references/rubric.md
+- .agents/skills/maintain-verification-skill
+- .agents/skills/maintain-verification-skill/SKILL.md
+- .agents/skills/no-comments
+- .agents/skills/no-comments/SKILL.md
+- .agents/skills/poteto-help
+- .agents/skills/poteto-help/SKILL.md
+- .agents/skills/poteto-help/references/prompting.md
+- .agents/skills/poteto-help/references/recipes.md
+- .agents/skills/poteto-mode
+- .agents/skills/poteto-mode/SKILL.md
+- .agents/skills/poteto-mode/playbooks/authoring-a-skill.md
+- .agents/skills/poteto-mode/playbooks/autonomous-run.md
+- .agents/skills/poteto-mode/playbooks/autopilot-full.md
+- .agents/skills/poteto-mode/playbooks/autopilot-stack.md
+- .agents/skills/poteto-mode/playbooks/babysit.md
+- .agents/skills/poteto-mode/playbooks/bug-fix.md
+- .agents/skills/poteto-mode/playbooks/eval.md
+- .agents/skills/poteto-mode/playbooks/feature.md
+- .agents/skills/poteto-mode/playbooks/hillclimb.md
+- .agents/skills/poteto-mode/playbooks/investigation.md
+- .agents/skills/poteto-mode/playbooks/multi-phase-plan.md
+- .agents/skills/poteto-mode/playbooks/opening-a-pr.md
+- .agents/skills/poteto-mode/playbooks/orchestrate.md
+- .agents/skills/poteto-mode/playbooks/pause-safely.md
+- .agents/skills/poteto-mode/playbooks/perf-issue.md
+- .agents/skills/poteto-mode/playbooks/prototype.md
+- .agents/skills/poteto-mode/playbooks/refactoring.md
+- .agents/skills/poteto-mode/playbooks/runtime-forensics.md
+- .agents/skills/poteto-mode/playbooks/session-pickup.md
+- .agents/skills/poteto-mode/playbooks/shipping.md
+- .agents/skills/poteto-mode/playbooks/trace-forensics.md
+- .agents/skills/poteto-mode/playbooks/visual-parity.md
+- .agents/skills/poteto-mode/playbooks/worktree-cleanup.md
+- .agents/skills/poteto-mode/references/bugbot-triage.md
+- .agents/skills/poteto-mode/references/opencode-tools.md
+- .agents/skills/poteto-mode/scripts/bootstrap.ts
+- .agents/skills/poteto-mode/scripts/check-plan.mjs
+- .agents/skills/poteto-mode/scripts/check-plan.test.ts
+- .agents/skills/poteto-mode/scripts/orch/orch.test.ts
+- .agents/skills/poteto-mode/scripts/orch/orch.ts
+- .agents/skills/poteto-mode/scripts/orch/store.ts
+- .agents/skills/poteto-mode/scripts/package.json
+- .agents/skills/poteto-mode/scripts/watch-pr/cli.test.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/cli.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/fakes.test-helper.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/github.test.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/github.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/policy.test.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/policy.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/render.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/tsconfig.json
+- .agents/skills/poteto-mode/scripts/watch-pr/types.compile.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/types.ts
+- .agents/skills/poteto-mode/scripts/watch-pr/watch-pr
+- .agents/skills/poteto-mode/scripts/worktree-audit.sh
+- .agents/skills/principle-boundary-discipline
+- .agents/skills/principle-boundary-discipline/SKILL.md
+- .agents/skills/principle-build-the-lever
+- .agents/skills/principle-build-the-lever/SKILL.md
+- .agents/skills/principle-encode-lessons-in-structure
+- .agents/skills/principle-encode-lessons-in-structure/SKILL.md
+- .agents/skills/principle-exhaust-the-design-space
+- .agents/skills/principle-exhaust-the-design-space/SKILL.md
+- .agents/skills/principle-fix-root-causes
+- .agents/skills/principle-fix-root-causes/SKILL.md
+- .agents/skills/principle-foundational-thinking
+- .agents/skills/principle-foundational-thinking/SKILL.md
+- .agents/skills/principle-guard-the-context-window
+- .agents/skills/principle-guard-the-context-window/SKILL.md
+- .agents/skills/principle-laziness-protocol
+- .agents/skills/principle-laziness-protocol/SKILL.md
+- .agents/skills/principle-make-operations-idempotent
+- .agents/skills/principle-make-operations-idempotent/SKILL.md
+- .agents/skills/principle-migrate-callers-then-delete-legacy-apis
+- .agents/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md
+- .agents/skills/principle-minimize-reader-load
+- .agents/skills/principle-minimize-reader-load/SKILL.md
+- .agents/skills/principle-model-the-domain
+- .agents/skills/principle-model-the-domain/SKILL.md
+- .agents/skills/principle-never-block-on-the-human
+- .agents/skills/principle-never-block-on-the-human/SKILL.md
+- .agents/skills/principle-outcome-oriented-execution
+- .agents/skills/principle-outcome-oriented-execution/SKILL.md
+- .agents/skills/principle-prove-it-works
+- .agents/skills/principle-prove-it-works/SKILL.md
+- .agents/skills/principle-redesign-from-first-principles
+- .agents/skills/principle-redesign-from-first-principles/SKILL.md
+- .agents/skills/principle-separate-before-serializing-shared-state
+- .agents/skills/principle-separate-before-serializing-shared-state/SKILL.md
+- .agents/skills/principle-sequence-verifiable-units
+- .agents/skills/principle-sequence-verifiable-units/SKILL.md
+- .agents/skills/principle-subtract-before-you-add
+- .agents/skills/principle-subtract-before-you-add/SKILL.md
+- .agents/skills/reflect
+- .agents/skills/reflect/SKILL.md
+- .agents/skills/reflect/references/divergent-reviewer.md
+- .agents/skills/reflect/references/judgment-reviewer.md
+- .agents/skills/reflect/references/synthesizer.md
+- .agents/skills/reflect/references/tooling-reviewer.md
+- .agents/skills/setup-pstack
+- .agents/skills/setup-pstack/SKILL.md
+- .agents/skills/show-me-your-work
+- .agents/skills/show-me-your-work/SKILL.md
+- .agents/skills/show-me-your-work/references/decision-log-template.tsv
+- .agents/skills/show-me-your-work/scripts/log.sh
+- .agents/skills/swarm
+- .agents/skills/swarm/SKILL.md
+- .agents/skills/tdd
+- .agents/skills/tdd/SKILL.md
+- .agents/skills/technical-writing
+- .agents/skills/technical-writing/SKILL.md
+- .agents/skills/unslop
+- .agents/skills/unslop/SKILL.md
+- .agents/skills/why
+- .agents/skills/why/SKILL.md
+- .agents/skills/why/references/epistemics.md
+- .agents/skills/why/references/investigator-prompt.md
+- .agents/skills/why/references/source-playbook.md
+- .agents/skills/why/references/sources/code-archaeology.md
+- .agents/skills/why/references/sources/databricks.md
+- .agents/skills/why/references/sources/datadog.md
+- .agents/skills/why/references/sources/incident-postmortem.md
+- .agents/skills/why/references/sources/linear.md
+- .agents/skills/why/references/sources/notion.md
+- .agents/skills/why/references/sources/sentry.md
+- .agents/skills/why/references/sources/slack.md
+- .agents/skills/why/references/synthesizer-prompt.md
+- .opencode/agents/comment-sicko.md
+- .opencode/agents/poteto-agent.md
+local_deployed_file_hashes:
+  .agents/skills/architect/SKILL.md: sha256:44e6ed5f13176ae0153a9a1263a110f3fdc4303f1f56b2d6c7b99dc1578fb49b
+  .agents/skills/architect/references/design-red-flags.md: sha256:eaa0e680dcb0dd263f06457a1b06b284a8088ebe5ea2eac8d988d1cfe9767e82
+  .agents/skills/architect/references/rationale-template.md: sha256:f98b20afb446d275ab6731d1877d147335c8b2b51c9b06281ac3b6a67f41bd12
+  .agents/skills/architect/references/runner-prompt.md: sha256:a8e4ba4cc8608ae6fca943a6130e9292994df66c76a905c6748502cd4e453eb7
+  .agents/skills/arena/SKILL.md: sha256:ca0d1091ee48a5ce1644a3992a72fd65ef2590a1189b3ed19ecf4640aa20834b
+  .agents/skills/benchmark-checklist/SKILL.md: sha256:d46693b0921c6b26d022b9d7ba3aff4dbec5fdcfba9c238c7d09c689f38e141f
+  .agents/skills/create-verification-skill/SKILL.md: sha256:f3111aeea0fb22b70e98587dd55fb8cb2c30688bc20e4f8dcd8481d7c4cd7108
+  .agents/skills/create-verification-skill/references/feature-map-example/README.md: sha256:e6d025499928c89b39df80108ed976c0be87120eb9bd15d851e5e5d91e7c6e65
+  .agents/skills/create-verification-skill/references/feature-map-example/create-note.md: sha256:8752c69fe2e1ff8cb0d42b85fae3e89a99e61fe87c200a36d51ee604da8c4535
+  .agents/skills/create-verification-skill/references/feature-map-example/search.md: sha256:e6b504775ae7bc281ca33da67fc177f2a506691c0bebba6faca9081cafb856bc
+  .agents/skills/figure-it-out/SKILL.md: sha256:19fd11750bee39f485734e50c2c475df0a736a7e5ff410d0bbb8a3611e97a35a
+  .agents/skills/how/SKILL.md: sha256:0278be14b65788108d585f9e94095efdb53d1b5ff66b9b05a3be08a6e5b755a1
+  .agents/skills/how/references/explainer-prompt.md: sha256:23c079f1ccd081aeabdd6254cd8d1b356d43371bea6775af7f4c0c695a117755
+  .agents/skills/how/references/explorer-prompt.md: sha256:676c796e7777716facd3719fb99c435a485b21a5230afb9b6fc0ea2505acf44e
+  .agents/skills/interrogate/SKILL.md: sha256:77c9cdc3a8a9d7815482a02f7e623e8c8d0b3308132303eebddb53acfd31e580
+  .agents/skills/interrogate/references/code-quality-review.md: sha256:c5f55e9377ac1869e32cd7bbb9c95744ea219e90dd20bb9ad63a7e3a2bbbd118
+  .agents/skills/interrogate/references/lead-judgment.md: sha256:569913b3f69413ef41d0703920bbf7f633e76765a4459c282177ee92cf1f60f6
+  .agents/skills/interrogate/references/reviewer-prompt.md: sha256:28ef7f0d799eeb91e9ae43165624c6a7be21f33a00e68d2c50aad876e26afef1
+  .agents/skills/interrogate/references/rubric.md: sha256:ca4306b66510e88c30d038829e43d77ff9955adbf1657d18763e33f05364073e
+  .agents/skills/maintain-verification-skill/SKILL.md: sha256:1015a6d697fe2b9385833b53bc8777c0e4a70ba0361bd04a68044721bfb70811
+  .agents/skills/no-comments/SKILL.md: sha256:f3c8e97545d88a70342ff43de701bcca42f98c8aadb92bd84cbe5f3149d459ae
+  .agents/skills/poteto-help/SKILL.md: sha256:182abdda9c527c56a05c5cfbc99063d2942545655358e986741d1fa604f60d80
+  .agents/skills/poteto-help/references/prompting.md: sha256:73c7194d60fda18f3bab88c1e00c282d85c9a5a6f4e3f0c991f6e083b076dbdc
+  .agents/skills/poteto-help/references/recipes.md: sha256:a4be697dc71a35c483d5336be766e54f4c5fd988cb74b0a18be155391a2a9543
+  .agents/skills/poteto-mode/SKILL.md: sha256:dcd419670b2c93f4193ba253ad69111b27569ef8e1d88b7ba5e364827e19244e
+  .agents/skills/poteto-mode/playbooks/authoring-a-skill.md: sha256:713f6155d4946a0d4bd4b16a8cff1421da58b121cde08197c97518a58562cfb8
+  .agents/skills/poteto-mode/playbooks/autonomous-run.md: sha256:a565b6187cdf8ef76ed262d4586e81cd4e5212b13cfbde854b69a850320e5b98
+  .agents/skills/poteto-mode/playbooks/autopilot-full.md: sha256:493acc6d98e06b414ca3c20f9a59682c4ac7fc14e8d536c4efa314710b4a5cac
+  .agents/skills/poteto-mode/playbooks/autopilot-stack.md: sha256:57af2d4fa903ce2cb2ad6aaca8a2e48a97ff669b6c688ec1416ba872ac9b399a
+  .agents/skills/poteto-mode/playbooks/babysit.md: sha256:31f2b1c64f30f5ed9c5ff7b5e0db26ac86b86da61a5ee8d3f813855372d7f062
+  .agents/skills/poteto-mode/playbooks/bug-fix.md: sha256:c0a51dd2922ef6c279f0d9ab4e941862cc19810a65b6d6489f73edfcc85b2bc6
+  .agents/skills/poteto-mode/playbooks/eval.md: sha256:468f597e354b894f70a2740fc561f7790342070fef3e764ebd23564a5cb82f05
+  .agents/skills/poteto-mode/playbooks/feature.md: sha256:5b15452a08ab83fa0d907e488711b3303ba54a8f1fcdd7da2e9e69bdc0a989be
+  .agents/skills/poteto-mode/playbooks/hillclimb.md: sha256:8fce67ff3b37771405a17b85d76dc3766645ba42652f59f93dc56543fa24ddcc
+  .agents/skills/poteto-mode/playbooks/investigation.md: sha256:78f700edaafb438eb40592f46dae82bfeecd5468956fabee2e78cda6cae7b5d9
+  .agents/skills/poteto-mode/playbooks/multi-phase-plan.md: sha256:fca50d912f42446386c7e4aab1007c4bb97972469c9e98ed4d50b1a0527c416f
+  .agents/skills/poteto-mode/playbooks/opening-a-pr.md: sha256:e9e11082fe7d59e1efea6e3450714a8ffec731d44dba61372b83e075209931b5
+  .agents/skills/poteto-mode/playbooks/orchestrate.md: sha256:64849dc9b20c80a7c5298d69b5c6162c5c3cb4770abef9a1c85d8bbf5f442880
+  .agents/skills/poteto-mode/playbooks/pause-safely.md: sha256:509da62f0dad29b08996830b309a5d0d2142f959bb494c31b228b1cf4e324428
+  .agents/skills/poteto-mode/playbooks/perf-issue.md: sha256:aa85e5f4d13ea64d0afe381bbcaede3c632516d2864ecf17ba40d07d365004c5
+  .agents/skills/poteto-mode/playbooks/prototype.md: sha256:66d69fe873674c96acd828dd09aa81ce6a55114796492edf3ac74d1ee660d5e0
+  .agents/skills/poteto-mode/playbooks/refactoring.md: sha256:a3f4ac1db40692be88b2a446b4504efe50aa674afcb1cb84f32ad7b0c13cabdb
+  .agents/skills/poteto-mode/playbooks/runtime-forensics.md: sha256:4de81477902fd85efedb90721b67298513ce4fc5995fd05719846c94c74318a4
+  .agents/skills/poteto-mode/playbooks/session-pickup.md: sha256:55ac7719520866a50e381b6610df10d2a61a34bf4a9d43ae51e6506707cf2c72
+  .agents/skills/poteto-mode/playbooks/shipping.md: sha256:a9d3e8a85be1c8284f3b73b0f2a67363d2ff37e62a9f6ea7cf2fa3b75fdc45fc
+  .agents/skills/poteto-mode/playbooks/trace-forensics.md: sha256:9a0cd7f952011c1a5eed81c76c9271174d8d8d3f8f37c05c8cb6b488adfa93ff
+  .agents/skills/poteto-mode/playbooks/visual-parity.md: sha256:7d20f5f4ae9fd2ea92d2fdabf14637ce69d5ba1a4e110d8e3beadc8f3aa5e56d
+  .agents/skills/poteto-mode/playbooks/worktree-cleanup.md: sha256:4eb0abbe223f28563fbc3877e1dcbc98d0a586092d965b4569bcc74e5a6a66e4
+  .agents/skills/poteto-mode/references/bugbot-triage.md: sha256:0ace79be55c7149ffa7c65977f6fa215991d238f90ce1da540233fbf079f1a94
+  .agents/skills/poteto-mode/references/opencode-tools.md: sha256:1c906cff2d9126f97fe6cdbe0043cf9b9180af9432c00c89eab9c222022f652e
+  .agents/skills/poteto-mode/scripts/bootstrap.ts: sha256:2470f6e874fcc2d34acd0d6d5351c64c8ac077229100e18c7c31250a5128a4f5
+  .agents/skills/poteto-mode/scripts/check-plan.mjs: sha256:70e583f6f8bfa500899cd390de6ea228d94f885d06d6adbf63bad364e7e44617
+  .agents/skills/poteto-mode/scripts/check-plan.test.ts: sha256:d57684d9a39a310766c763948fca70ece1a0ad92f3d544273481af34930d2c59
+  .agents/skills/poteto-mode/scripts/orch/orch.test.ts: sha256:234668333d5184324be7231b17636d3502041460ca57c9aaab44104dfc23ed09
+  .agents/skills/poteto-mode/scripts/orch/orch.ts: sha256:ffa225e4e9c61e9731b819f3e07e6b56ccea7ec3ef9cb9143caeae6d3e7e07f5
+  .agents/skills/poteto-mode/scripts/orch/store.ts: sha256:8831d17aaefaf14f236908a9de2194fb428666247dd91051439ed85334e60786
+  .agents/skills/poteto-mode/scripts/package.json: sha256:1a382754c266de74629d48822c93e1795a12efb79c654863c413f9fc8b6f07d8
+  .agents/skills/poteto-mode/scripts/watch-pr/cli.test.ts: sha256:9d0edc2a3a312e87d0fb5acd5bbaf918b00490d8315c4cd82573460f59b501eb
+  .agents/skills/poteto-mode/scripts/watch-pr/cli.ts: sha256:a50a766103a0bdf0684ef792c04bf3292b0bd0efd4e4712d248f5363d4333d95
+  .agents/skills/poteto-mode/scripts/watch-pr/fakes.test-helper.ts: sha256:6bef77b16ed4b0d385f440b5503b5462e8623f7caaed86e29966b99216e207eb
+  .agents/skills/poteto-mode/scripts/watch-pr/github.test.ts: sha256:957b369e1b3af2050255aaf9f100a4d3a06b6eefac10504d09ca3c5f02889a90
+  .agents/skills/poteto-mode/scripts/watch-pr/github.ts: sha256:0e11dad2bbe36114e4d613fcf4a2e9555556e3ace001d56b159f9a76126ea38c
+  .agents/skills/poteto-mode/scripts/watch-pr/policy.test.ts: sha256:a07cb6cb51aaf171deecd1a978a66d16d7d05f9ac5f427ca893b08d2ad4bde26
+  .agents/skills/poteto-mode/scripts/watch-pr/policy.ts: sha256:11a2a83d32b783f354b478bc9ee76ff8d4e04276163d417faf1785712fc418ef
+  .agents/skills/poteto-mode/scripts/watch-pr/render.ts: sha256:3135d32509ccb676dd16d6a97be9c482587003f8326eb85dd00989702a83c5f3
+  .agents/skills/poteto-mode/scripts/watch-pr/tsconfig.json: sha256:d9d19c3f84d4e1e62c7e94ae26ab9f674386118e54e02afb58423063c8ee04ca
+  .agents/skills/poteto-mode/scripts/watch-pr/types.compile.ts: sha256:5e4c8ee8510b552b42a5280d3dd3dd0bf40dcfcddef14007f53e8d6ab5afb716
+  .agents/skills/poteto-mode/scripts/watch-pr/types.ts: sha256:a70eda8ac791f5221f297cb678382738b4b1caa8d9561d0b391883e4bcf7f2d0
+  .agents/skills/poteto-mode/scripts/watch-pr/watch-pr: sha256:1f76b1e9426c26c902473e2a21430b6345667fc95ab98a56286c0e81285934e0
+  .agents/skills/poteto-mode/scripts/worktree-audit.sh: sha256:875739ccfbefc80f2363c5c7e220d62e2556f4f8fc8e3feca3cfcaa4b6680c4f
+  .agents/skills/principle-boundary-discipline/SKILL.md: sha256:bd8545ae7e1df85bd63ea558dd2d135c45238790a882d5a55bd7bb03999df9b1
+  .agents/skills/principle-build-the-lever/SKILL.md: sha256:425b07fcd896c7b03b30c6a96337b387547f0eaac2e18bf817441cfb8684ecfa
+  .agents/skills/principle-encode-lessons-in-structure/SKILL.md: sha256:251e9815459d58b57afafc04b43da1f4fadbae314b0b402af375c740cc14045d
+  .agents/skills/principle-exhaust-the-design-space/SKILL.md: sha256:13cbdf61fdb60a958c5ab7eceac68823238e37e5dc6e712ecdb82625cab74027
+  .agents/skills/principle-fix-root-causes/SKILL.md: sha256:c93cf05a8cb7e92afee2884e49078fdacb047cccb5a5b669a59726d1c04e25c5
+  .agents/skills/principle-foundational-thinking/SKILL.md: sha256:3fd8939bcdbf0746edce789573949227d86c3602168e072e1dacd08218fa7fd7
+  .agents/skills/principle-guard-the-context-window/SKILL.md: sha256:fb37c4afdf966812d59ab74bd6d0730f2366a6923433f9b06e4df0decb755770
+  .agents/skills/principle-laziness-protocol/SKILL.md: sha256:c350b45aa96af42ef98547355955ab8d2ccc6708ee5424bb8a056b20c0fa28c8
+  .agents/skills/principle-make-operations-idempotent/SKILL.md: sha256:99aa7530ce47f9e3d93d12b6d3807e59035bbe4beb4311003ffc809685d97b25
+  .agents/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md: sha256:391b398bbc85ba160805e8538fc06d233bed4133d5e0968aff2fc42259758986
+  .agents/skills/principle-minimize-reader-load/SKILL.md: sha256:f925a247bb990048be483398780a9237e5aaaec2fb67b42782976ef2ff525409
+  .agents/skills/principle-model-the-domain/SKILL.md: sha256:0b53effece5c2a0b7ecd28e06fe46e15d22d53f9dc5074a4059333aed23017f8
+  .agents/skills/principle-never-block-on-the-human/SKILL.md: sha256:40a15b121b3c3b2398770fef35a7b58c968bc3c998b2f49fecb4fafc828922c1
+  .agents/skills/principle-outcome-oriented-execution/SKILL.md: sha256:546bac522d15bc43f935842fe8147882b7e56aa873e743262cc7b39178ac4feb
+  .agents/skills/principle-prove-it-works/SKILL.md: sha256:2b57f0699ea0f2c25f6257068b01eb53398eebd75c9a0112fbe04364b482bf5f
+  .agents/skills/principle-redesign-from-first-principles/SKILL.md: sha256:8ac14de703d4c722ababdcf83882ae13fa5ec72a333d16b44aa12dcfc8f438d9
+  .agents/skills/principle-separate-before-serializing-shared-state/SKILL.md: sha256:f59591d1f552d0011cb573c76213b8032d28919f91fcdc5e84ded1adea3b81ca
+  .agents/skills/principle-sequence-verifiable-units/SKILL.md: sha256:e8e217358c913e5710d023bd8f8923166dddb20fa6276c55b7e0189cf0ed1d66
+  .agents/skills/principle-subtract-before-you-add/SKILL.md: sha256:8568b0b230fac69ac77dbe678fcf6148c6086669a90231815f92dbad2830c0da
+  .agents/skills/reflect/SKILL.md: sha256:ca5ff43c7df8d91f8990c732c213230ca0bf559656704979aad77e39a5fe9844
+  .agents/skills/reflect/references/divergent-reviewer.md: sha256:81ccdbc02ffc7498eb96435763fa89c6eb10a137a61d243df9548f05f597a29f
+  .agents/skills/reflect/references/judgment-reviewer.md: sha256:2a05bbbee6313b78aa567b4ac2f78e104615a23827ae1aefa8a58d7f7b2ceccf
+  .agents/skills/reflect/references/synthesizer.md: sha256:08915d2e9508446c3142d2f36b23c80988f35430e0df04b040c0db1f8a583c04
+  .agents/skills/reflect/references/tooling-reviewer.md: sha256:514cdfbe3751d7b727bf9dc116c3c79fb28b111ab53ecd3a1812130a91c1be2a
+  .agents/skills/setup-pstack/SKILL.md: sha256:9e5ce6ba626edbbd32767ff7695d1a8e5b41f17e944ebd8396e849eecdf80359
+  .agents/skills/show-me-your-work/SKILL.md: sha256:72ca5a1f7ce03ec927482d04b0dbc5c706e05b4537d7f57b190d5afc5d5cbe71
+  .agents/skills/show-me-your-work/references/decision-log-template.tsv: sha256:ce5219fde74b7be36fe9ac72af67986135194ec9c97e27db30cb1273c639261e
+  .agents/skills/show-me-your-work/scripts/log.sh: sha256:970555e61e673fa395d7a0caa0438e7414d6489c635328c7f2d89cda8acce855
+  .agents/skills/swarm/SKILL.md: sha256:111d363684585f5f6b6e7793d1c36d5ea2822c2fbcb88e0eb1175dc422a49fab
+  .agents/skills/tdd/SKILL.md: sha256:98b890e82d7280c7c0a56b5ccc06480e8955120b81ec7343791a11909d5ef3c4
+  .agents/skills/technical-writing/SKILL.md: sha256:1f0414857b63d0ef496bb9f7f67d956a7b07dd64412264fe0cd5d317beb871c0
+  .agents/skills/unslop/SKILL.md: sha256:a0f31dc023a3255a93d7bd900d0f2268c8397d7ab49ff0e843175847306233c5
+  .agents/skills/why/SKILL.md: sha256:7ff800fb229fa129f767d6f50dec7fec7c9b30d945cac5ff39aa6b29d4f50224
+  .agents/skills/why/references/epistemics.md: sha256:9b5a789f9d87bfcef2ef4ba6f2f23a9df2ad03aa2277ceef017fefd2cbe606d8
+  .agents/skills/why/references/investigator-prompt.md: sha256:1839b98828b3d3df2d8e0ec3af7e2b79bdaecd9f9c69bab03188fb1e1cc8a9e2
+  .agents/skills/why/references/source-playbook.md: sha256:3dcfa7d843993722110800b9d4c794ae21b317934537157def9523d2ec912509
+  .agents/skills/why/references/sources/code-archaeology.md: sha256:13169fc6f2f879d2ecf65f7e8310f399836f64f6c2b8497b3467520360091032
+  .agents/skills/why/references/sources/databricks.md: sha256:0791e368573941d310cd9bf907bb1c61b48317c0fb217a2e4bdc86c47aba3418
+  .agents/skills/why/references/sources/datadog.md: sha256:3147df3faff33addd9bdbe49280f343cfa319e1d5606500d05d9fd620bac0f6a
+  .agents/skills/why/references/sources/incident-postmortem.md: sha256:1dfab3deb553139407101fa40cdf32eae4ed4b4a1abb2570e6e48b6708a575f2
+  .agents/skills/why/references/sources/linear.md: sha256:88fb454b1a33b03f9af8713da3ecf3abe101fc8861a876b32cb9f116b5f24a33
+  .agents/skills/why/references/sources/notion.md: sha256:dc8c3f7f9c527481c4b4e3911de6ca705b3737262a9a3ab8da27287ba85ba6f1
+  .agents/skills/why/references/sources/sentry.md: sha256:b230e80c71df451a2fb181a523e62c9bf71bde62ad01e7758a43aa25878466ce
+  .agents/skills/why/references/sources/slack.md: sha256:963ac4fd166664d4d0b2cef873489c6f481b15e86407cad0e6b5107aab4f0a71
+  .agents/skills/why/references/synthesizer-prompt.md: sha256:7feec4d622526aab2401eb413e6749f687e56cad41825aebec981b9187d4de1b
+  .opencode/agents/comment-sicko.md: sha256:93576c2b49178ef165d7ee97349809b1f07198eca30b9fc2713309b3a8b88b38
+  .opencode/agents/poteto-agent.md: sha256:3ddbc918d206f566ce1245d839a1b00bc9cd71aa809cba4c9ba8d5e50c0df641

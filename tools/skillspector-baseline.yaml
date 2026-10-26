@@ -44,3 +44,82 @@
 - rule: MP3
   path: "show-me-your-work/SKILL.md"
   reason: "append-only rule (never edit/delete history)"
+
+# --- Third-party skills deployed through APM ---------------------------------
+# pstack-opencode/apm.lock.yaml installs the skills below from their upstream
+# repositories; their text cannot be edited here. A lockfile change makes
+# tools/skills-verify.mjs stage every deployed skill, and SkillSpector then reads
+# upstream docs, CLI references and helper scripts as if they were agent
+# instructions. Every entry below was reviewed by hand on the 2026-10-26 lock
+# update and is a false positive. Each one is scoped to a single file and rule,
+# so a finding in SKILL.md, a new file, or another rule still gates.
+
+# apm-usage: the APM CLI reference. It documents APM's own `config`,
+# `self-update`, `mcp` and install commands, so phrases such as "set a config
+# value" or "run the installer" read as self-modification / config access.
+- rule: RA1
+  path: "apm-usage/commands.md"
+  reason: "documents `apm config` / `apm self-update`, not agent self-modification"
+- rule: RA1
+  path: "apm-usage/governance.md"
+  reason: "policy prose about APM configuration, not agent self-modification"
+- rule: RA1
+  path: "apm-usage/installation.md"
+  reason: "install steps for the APM binary, not agent self-modification"
+- rule: RA1
+  path: "apm-usage/troubleshooting.md"
+  reason: "troubleshooting APM config, not agent self-modification"
+- rule: AS1
+  path: "apm-usage/commands.md"
+  reason: "documents APM-managed config directories"
+- rule: AS1
+  path: "apm-usage/package-authoring.md"
+  reason: "documents where APM deploys package files"
+- rule: AS2
+  path: "apm-usage/commands.md"
+  reason: "documents `apm mcp` commands"
+- rule: SC2
+  path: "apm-usage/installation.md"
+  reason: "quotes the upstream APM installer (`install.sh`); this skill does not fetch it"
+- rule: TM2
+  path: "apm-usage/installation.md"
+  reason: "install one-liner piping the upstream installer; documentation only"
+- rule: AR2
+  path: "apm-usage/governance.md"
+  reason: "quotes an anti-refusal policy as guidance, not as an instruction to the agent"
+- rule: YR4
+  path: "apm-usage/commands.md"
+  reason: "YARA 'hidden instructions' matches CLI reference prose"
+
+# ax: a CLI for fetching pages. It documents flags (`--fresh`, bare `curl`) and
+# explicitly forbids SSRF targets; both prohibitions are read as the risk itself.
+- rule: TM1
+  path: "ax/SKILL.md"
+  reason: "CLI flags (`--fresh`, bare `curl`) misread as tool-parameter abuse"
+- rule: P6
+  path: "ax/SKILL.md"
+  reason: "output/extraction wording, not prompt extraction"
+- rule: SSRF1
+  path: "ax/SKILL.md"
+  reason: "explicitly forbids cloud-metadata endpoints (prohibition misread)"
+
+# explainer: the D2 skills document flags and template HTML comments, and the
+# book verifier's own comments describe exercise markers.
+- rule: SC2
+  path: "d2-diagram/SKILL.md"
+  reason: "documents the `D2_LAYOUT` env var; no script is fetched"
+- rule: P2
+  path: "d2-slides/SKILL.md"
+  reason: "HTML comment in the slide template (`<!-- notes: -->`)"
+- rule: P2
+  path: "explainer-book/scripts/verify-book.mjs"
+  reason: "comments document the `<!-- exercise -->` markers the script checks"
+
+# yomiyasu: the linter passes its environment to a subprocess and the hook
+# returns the host's prompt text; neither extracts secrets or prompts.
+- rule: E2
+  path: "yomiyasu/scripts/yomiyasu_check.py"
+  reason: "passes os.environ to a subprocess for PYTHONIOENCODING; no exfiltration"
+- rule: P6
+  path: "yomiyasu/scripts/yomiyasu_hook.py"
+  reason: "hook returns the host prompt, it does not extract a system prompt"
