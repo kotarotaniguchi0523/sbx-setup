@@ -61,6 +61,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: skills-verify-report
+          path: ${{ runner.temp }}/skills-verify-report
           path: skills-verify-report.md
           retention-days: 7
 
@@ -86,7 +87,7 @@ jobs:
         with:
           name: skills-verify-report
       - name: Restore report location
-        run: mkdir -p .cache/skills-verify && cp skills-verify-report.md .cache/skills-verify/report.md
+        run: mkdir -p .cache/skills-verify && cp "$RUNNER_TEMP/skills-verify-report/skills-verify-report.md" .cache/skills-verify/report.md
 
       - name: Post the result to the pull request
         if: ${{ github.event_name == 'pull_request' }}
