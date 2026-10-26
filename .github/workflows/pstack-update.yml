@@ -9,6 +9,11 @@ on:
   schedule:
     - cron: "17 3 * * *" # daily 03:17 UTC
   workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild the converted skills even if the upstream commit is unchanged
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -44,16 +49,30 @@ jobs:
           uv tool install --python 3.13 "apm-cli==0.33.0"
           uv tool install --python 3.13 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
 
+      - name: Resolve upstream commit
+        id: upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          ref="$(git ls-remote https://github.com/cursor/plugins.git refs/heads/main | cut -f1)"
+          [[ "$ref" =~ ^[a-f0-9]{40}$ ]] || { echo "::error::unable to resolve upstream commit"; exit 1; }
+          old="$(jq -r .ref pstack-opencode/SOURCE.json)"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          if [ "$old" != "$ref" ]; then echo "changed=true" >> "$GITHUB_OUTPUT"; else echo "changed=false" >> "$GITHUB_OUTPUT"; fi
+
       - name: Regenerate the converted package from 本家 cursor/plugins/pstack
+        if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
         working-directory: pstack-opencode
         env:
-          PSTACK_REFRESH: "1"
+          PSTACK_REF: ${{ steps.upstream.outputs.ref }}
         run: node tools/convert.mjs
 
       - name: Verify the delta
+        if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
         run: node tools/skills-verify.mjs --base origin/main
 
       - name: Open a pull request if 本家 changed
+        if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
         id: pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
@@ -83,4 +102,5 @@ jobs:
         run: node tools/skills-verify.mjs --post ${{ steps.pr.outputs.pull-request-number }}
 
       - name: Gate on critical findings
+        if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
         run: node tools/skills-verify.mjs --gate
