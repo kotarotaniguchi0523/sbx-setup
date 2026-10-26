@@ -45,6 +45,8 @@ jobs:
 
       - name: Regenerate the converted package from 本家 cursor/plugins/pstack
         working-directory: pstack-opencode
+        env:
+          PSTACK_REFRESH: "1"
         run: node tools/convert.mjs
 
       - name: Verify the delta
