@@ -241,30 +241,88 @@ function verify() {
     return;
   }
 
-  // Enable APM's external-scanner integration, then run one audit over the
-  // staged delta. APM invokes SkillSpector (offline, deterministic) and merges
-  // its findings into the report.
+  // APM's SkillSpector adapter imposes a fixed 300s timeout on each
+  // subprocess, so an audit of all ~50 installed skills can fail even when
+  // the scanner is correctly installed. Split the stage into independent,
+  // bounded batches and merge their SARIF runs without dropping findings.
   run("apm", ["experimental", "enable", "external-scanners"]);
   rmSync(SARIF_OUT, { force: true });
-  log("apm audit --external skillspector");
-  const audit = spawnSync(
-    "apm",
-    ["audit", "--external", "skillspector", "--format", "sarif", "--output", SARIF_OUT],
-    { cwd: STAGE, encoding: "utf8" },
-  );
-  if (audit.status !== 0 && audit.stdout) process.stderr.write(audit.stdout);
-  const exitCode = audit.status;
+  const batchSize = 5;
+  const groups = [];
+  for (let i = 0; i < staged.length; i += batchSize) groups.push(staged.slice(i, i + batchSize));
+  log(`auditing ${staged.length} skills in ${groups.length} batches of at most ${batchSize}`);
 
-  let results = [];
-  let sarifValid = false;
-  if (existsSync(SARIF_OUT)) {
+  const mergedRuns = [];
+  let sarifValid = true;
+  let exitCode = 0;
+  let scannedCount = 0;
+  let auditError = "";
+  for (const [i, names] of groups.entries()) {
+    const batchRoot = join(tmpdir(), `skills-verify-batch-${process.pid}-${i}`);
+    const batchSarif = join(CACHE, `apm-audit-batch-${i}.sarif`);
+    rmSync(batchRoot, { recursive: true, force: true });
+    rmSync(batchSarif, { force: true });
+    mkdirSync(batchRoot, { recursive: true });
     try {
-      results = JSON.parse(readFileSync(SARIF_OUT, "utf8")).runs?.flatMap((r) => r.results || []) ?? [];
-      sarifValid = true;
-    } catch (err) {
-      log(`could not parse APM SARIF: ${err.message}`);
+      for (const name of names) cpSync(join(STAGE, name), join(batchRoot, name), { recursive: true });
+      log(`batch ${i + 1}/${groups.length}: ${names.join(", ")}`);
+      const audit = spawnSync(
+        "apm",
+        ["audit", "--external", "skillspector", "--no-external-llm", "--format", "sarif", "--output", batchSarif],
+        { cwd: batchRoot, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 },
+      );
+      const code = audit.status;
+      if (code === null || ![0, 1, 2].includes(code) || audit.error) {
+        exitCode = 3;
+        auditError = `batch ${i + 1} (${names.join(", ")}) failed: ${audit.error?.message || `exit ${code}`}`;
+        // APM redacts scanner error messages, but subprocess streams were
+        // previously discarded and masked the underlying timeout.
+        for (const output of [audit.stderr, audit.stdout]) {
+          if (output?.trim()) log(output.trim().slice(-5000));
+        }
+        log(auditError);
+        sarifValid = false;
+        break;
+      }
+      if (code === 1) exitCode = 1;
+      else if (code === 2 && exitCode === 0) exitCode = 2;
+      if (!existsSync(batchSarif)) {
+        auditError = `batch ${i + 1} produced no SARIF`;
+        sarifValid = false;
+        break;
+      }
+      let document;
+      try {
+        document = JSON.parse(readFileSync(batchSarif, "utf8"));
+        if (document.version !== "2.1.0" || !Array.isArray(document.runs)) {
+          throw new Error("invalid SARIF 2.1.0 document");
+        }
+      } catch (err) {
+        auditError = `batch ${i + 1}: ${err.message}`;
+        sarifValid = false;
+        break;
+      }
+      mergedRuns.push(...document.runs);
+      scannedCount += names.length;
+      log(`batch ${i + 1} complete (exit=${code})`);
+    } finally {
+      rmSync(batchRoot, { recursive: true, force: true });
+      rmSync(batchSarif, { force: true });
     }
   }
+  if (sarifValid && scannedCount === staged.length) {
+    writeFileSync(SARIF_OUT, JSON.stringify({
+      $schema: "https://json.schemastore.org/sarif-2.1.0.json",
+      version: "2.1.0",
+      runs: mergedRuns,
+    }, null, 2) + "\n");
+  } else {
+    sarifValid = false;
+    if (!auditError) auditError = `incomplete audit: ${scannedCount}/${staged.length} skills scanned`;
+    log(auditError);
+    exitCode = 3;
+  }
+  const results = mergedRuns.flatMap((r) => r.results || []);
 
   // Extract findings with their location, then apply the baseline: a matching
   // finding is reported under "Suppressed (baseline)" and never gates.
@@ -357,6 +415,8 @@ function verify() {
     "## Findings",
     "",
     `- \`apm audit\` exit code: ${exitCode} (\`0\` clean, \`1\` critical, \`2\` warning, \`3\` infrastructure)`,
+    `- Batches: ${groups.length}; completed: ${scannedCount}/${staged.length} skills`,
+    ...(auditError ? [`- Scanner error: ${auditError}`] : []),
     `- Active: ${active.length} (error ${critical}, warning ${byLevel.warning || 0}, note ${byLevel.note || 0}) · Suppressed by baseline: ${suppressed.length}`,
     "",
     "| Level | Rule | Count |",
