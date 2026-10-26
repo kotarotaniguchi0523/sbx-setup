@@ -11,12 +11,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   lock:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
