@@ -4,7 +4,7 @@ name: build
 # The opencode image runs the pstack conversion inside its build.
 # Consumers pull with: sbx run --template ghcr.io/<owner>/common-opencode:dev
 #
-# The images only build when build-relevant paths change; a `changes` job detects
+# Only affected images build; the `changes` job detects
 # that and a small aggregator job named `build` always runs, so the required
 # "build" status check is always reported (GitHub blocks PRs whose required check
 # is never reported). The two images build in parallel (matrix -> one runner
@@ -28,9 +28,9 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
-      build: ${{ steps.filter.outputs.build }}
+      targets: ${{ steps.matrix.outputs.targets }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -40,15 +40,39 @@ jobs:
         id: filter
         with:
           filters: |
-            build:
+            opencode:
               - 'common-opencode/**'
-              - 'common-codex/**'
               - 'pstack-opencode/**'
-              - 'tools/**'
+            codex:
+              - 'common-codex/**'
+            shared:
+              - 'tools/npm/cli/**'
               - 'flake.nix'
               - 'flake.lock'
-              - 'docker-bake.hcl'
+              - '.dockerignore'
               - '.github/workflows/build.yml'
+      - name: Generate image matrix
+        id: matrix
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          OPENCODE: ${{ steps.filter.outputs.opencode }}
+          CODEX: ${{ steps.filter.outputs.codex }}
+          SHARED: ${{ steps.filter.outputs.shared }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          targets='[]'
+          if [[ "$EVENT_NAME" == "workflow_dispatch" || "$SHARED" == "true" ]]; then
+            targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"},{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
+          elif [[ "$OPENCODE" == "true" && "$CODEX" == "true" ]]; then
+            targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"},{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
+          elif [[ "$OPENCODE" == "true" ]]; then
+            targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"}]'
+          elif [[ "$CODEX" == "true" ]]; then
+            targets='[{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
+          fi
+          echo "targets=$targets" >> "$GITHUB_OUTPUT"
+          echo "Target matrix: $targets"
 
   image:
     permissions:
@@ -56,22 +80,13 @@ jobs:
       packages: read
     name: image (${{ matrix.name }})
     needs: changes
-    if: ${{ github.event_name != 'push' && (needs.changes.outputs.build == 'true' || github.event_name == 'workflow_dispatch') }}
-    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'push' && needs.changes.result == 'success' && needs.changes.outputs.targets != '[]' }}
+    runs-on: ubuntu-26.04
+    cache-mode: read
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: opencode
-            context: .
-            file: common-opencode/common-opencode.yaml
-            image: common-opencode
-            scope: opencode
-          - name: codex
-            context: .
-            file: common-codex/common-codex.yaml
-            image: common-codex
-            scope: codex
+        include: ${{ fromJSON(needs.changes.outputs.targets) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -88,7 +103,7 @@ jobs:
       - name: Build ${{ matrix.image }}
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
-          context: ${{ matrix.context }}
+          context: .
           file: ${{ matrix.file }}
           push: false
           provenance: false
@@ -106,22 +121,13 @@ jobs:
       packages: write
     name: publish (${{ matrix.name }})
     needs: changes
-    if: ${{ github.event_name == 'push' && needs.changes.outputs.build == 'true' }}
-    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && needs.changes.result == 'success' && needs.changes.outputs.targets != '[]' }}
+    runs-on: ubuntu-26.04
+    cache-mode: read
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: opencode
-            context: .
-            file: common-opencode/common-opencode.yaml
-            image: common-opencode
-            scope: opencode
-          - name: codex
-            context: .
-            file: common-codex/common-codex.yaml
-            image: common-codex
-            scope: codex
+        include: ${{ fromJSON(needs.changes.outputs.targets) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -138,7 +144,7 @@ jobs:
       - name: Build ${{ matrix.image }}
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
-          context: ${{ matrix.context }}
+          context: .
           file: ${{ matrix.file }}
           push: ${{ github.event_name == 'push' }}
           provenance: ${{ github.event_name == 'push' }}
@@ -151,20 +157,20 @@ jobs:
             type=gha,scope=${{ matrix.scope }}
           cache-to: |
             type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:buildcache,mode=max
-            type=gha,mode=max,scope=${{ matrix.scope }}
 
   # Aggregator so the required status check stays a single, stable "build".
   build:
     permissions: {}
     needs: [changes, image, image-publish]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
+    cache-mode: none
     steps:
       - name: Evaluate result
         env:
           EVENT_NAME: ${{ github.event_name }}
           CHANGES_RESULT: ${{ needs.changes.result }}
-          BUILD_REQUIRED: ${{ needs.changes.outputs.build }}
+          TARGETS: ${{ needs.changes.outputs.targets }}
           IMAGE_RESULT: ${{ needs.image.result }}
           PUBLISH_RESULT: ${{ needs['image-publish'].result }}
         run: |
@@ -173,7 +179,7 @@ jobs:
             echo "::error::change detection: $CHANGES_RESULT"
             exit 1
           fi
-          if [ "$EVENT_NAME" = "workflow_dispatch" ] || [ "$BUILD_REQUIRED" = "true" ]; then
+          if [ "$TARGETS" != "[]" ]; then
             result="$IMAGE_RESULT"
             if [ "$EVENT_NAME" = "push" ]; then result="$PUBLISH_RESULT"; fi
             if [ "$result" != "success" ]; then
