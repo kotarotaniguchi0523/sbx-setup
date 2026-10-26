@@ -16,6 +16,16 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      image:
+        description: "Which sandbox image to build without publishing"
+        type: choice
+        required: true
+        default: both
+        options:
+          - both
+          - opencode
+          - codex
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -56,6 +66,7 @@ jobs:
         id: matrix
         env:
           EVENT_NAME: ${{ github.event_name }}
+          IMAGE_CHOICE: ${{ inputs.image || 'both' }}
           OPENCODE: ${{ steps.filter.outputs.opencode }}
           CODEX: ${{ steps.filter.outputs.codex }}
           SHARED: ${{ steps.filter.outputs.shared }}
@@ -63,7 +74,11 @@ jobs:
         run: |
           set -euo pipefail
           targets='[]'
-          if [[ "$EVENT_NAME" == "workflow_dispatch" || "$SHARED" == "true" ]]; then
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$IMAGE_CHOICE" == "opencode" ]]; then
+            targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"}]'
+          elif [[ "$EVENT_NAME" == "workflow_dispatch" && "$IMAGE_CHOICE" == "codex" ]]; then
+            targets='[{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
+          elif [[ "$EVENT_NAME" == "workflow_dispatch" || "$SHARED" == "true" ]]; then
             targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"},{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
           elif [[ "$OPENCODE" == "true" && "$CODEX" == "true" ]]; then
             targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"},{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
