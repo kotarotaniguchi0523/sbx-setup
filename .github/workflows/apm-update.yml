@@ -18,13 +18,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: write
-  pull-requests: write
-  actions: write # Dispatch checks for PRs created with GITHUB_TOKEN.
+permissions: {}
 
 jobs:
   update:
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
