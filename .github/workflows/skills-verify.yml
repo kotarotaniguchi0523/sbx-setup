@@ -11,7 +11,9 @@ on:
     paths:
       - "pstack-opencode/**"
       - "tools/skills-verify.mjs"
+      - "tools/skillspector-baseline.mjs"
       - "tools/skillspector-baseline.yaml"
+      - "tools/filter-sarif.mjs"
       - ".github/workflows/skills-verify.yml"
   workflow_dispatch:
 

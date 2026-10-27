@@ -1,6 +1,21 @@
 lockfile_version: '1'
 apm_version: 0.33.0
 dependencies:
+- repo_url: _local/agent-browser
+  name: agent-browser
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/agent-browser
+  - .agents/skills/agent-browser/LICENSE
+  - .agents/skills/agent-browser/SKILL.md
+  - .agents/skills/agent-browser/SOURCE.md
+  deployed_file_hashes:
+    .agents/skills/agent-browser/LICENSE: sha256:014bb31e83d5c2e76aea1cc6e82217346ab41362f32cb355ad0f5c10aa0aeaff
+    .agents/skills/agent-browser/SKILL.md: sha256:fd4ddd37ddb69f37ebc62e086566fcf606bbd09a5b4e4e7d7a6c4f0f94fdee47
+    .agents/skills/agent-browser/SOURCE.md: sha256:ae33832ae4044ab09245a8bed90ea0ff0eb18cc419ee17df0d9b67bd994cf23a
+  source: local
+  local_path: ./vendor/agent-browser
 - repo_url: microsoft/apm
   name: apm-usage
   host: github.com
@@ -239,18 +254,6 @@ dependencies:
     .agents/skills/yomiyasu/scripts/yomiyasu_lint.py: sha256:b02c21464353b726a8c4e366f89bdfd2f341613f7bf75f779e83cc4dfbc54c9e
   content_hash: sha256:86c7eb7843a794bddc2617adf42018c759720ea9e635f976ade44e153cb04e8d
   declared_license: MIT
-- repo_url: vercel-labs/agent-browser
-  name: agent-browser
-  host: github.com
-  resolved_commit: 04ba5264dade678062c3cdcce0f4f293e748249f
-  version: 04ba526
-  package_type: marketplace_plugin
-  deployed_files:
-  - .agents/skills/agent-browser
-  - .agents/skills/agent-browser/SKILL.md
-  deployed_file_hashes:
-    .agents/skills/agent-browser/SKILL.md: sha256:3a7520e64de2dfaa516b6721c001e84e06e3c06a187b82af029ae721540ebfac
-  content_hash: sha256:28afe40e893364172dfda2577f004dc89dedd5d38af97acb6ae4af9ab9d40fa5
 - repo_url: yusukebe/ax
   name: ax
   host: github.com
@@ -1647,18 +1650,36 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - vercel-labs/agent-browser
-  active_owner: vercel-labs/agent-browser
+  - ./vendor/agent-browser
+  active_owner: ./vendor/agent-browser
   content_hash: null
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/agent-browser/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - ./vendor/agent-browser
+  active_owner: ./vendor/agent-browser
+  content_hash: sha256:014bb31e83d5c2e76aea1cc6e82217346ab41362f32cb355ad0f5c10aa0aeaff
 - kind: project-relative
   target: opencode
   value: .agents/skills/agent-browser/SKILL.md
   runtime: null
   scope: project
   owners:
-  - vercel-labs/agent-browser
-  active_owner: vercel-labs/agent-browser
-  content_hash: sha256:3a7520e64de2dfaa516b6721c001e84e06e3c06a187b82af029ae721540ebfac
+  - ./vendor/agent-browser
+  active_owner: ./vendor/agent-browser
+  content_hash: sha256:fd4ddd37ddb69f37ebc62e086566fcf606bbd09a5b4e4e7d7a6c4f0f94fdee47
+- kind: project-relative
+  target: opencode
+  value: .agents/skills/agent-browser/SOURCE.md
+  runtime: null
+  scope: project
+  owners:
+  - ./vendor/agent-browser
+  active_owner: ./vendor/agent-browser
+  content_hash: sha256:ae33832ae4044ab09245a8bed90ea0ff0eb18cc419ee17df0d9b67bd994cf23a
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage

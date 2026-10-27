@@ -4,7 +4,8 @@
 // Scanning is delegated to APM's built-in external-scanner integration
 // (`apm audit --external skillspector`), which runs SkillSpector offline and
 // merges its SARIF into APM's own report. We do NOT call SkillSpector
-// directly and we keep no bespoke baseline: APM owns the contract.
+// directly; reviewed false positives are applied from
+// tools/skillspector-baseline.yaml.
 //
 // The delta is the Git diff against the base branch. APM always hands the
 // scanner its whole project root, so we stage only the changed skills into a
@@ -20,6 +21,7 @@ import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, write
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseBaseline, splitFindings } from "./skillspector-baseline.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PROJECT = "pstack-opencode";
@@ -84,6 +86,7 @@ function changedTargets(base) {
   let auditAll = process.argv.includes("--all");
   for (const path of changed) {
     if (path === "tools/skillspector-baseline.yaml" ||
+        path === "tools/skillspector-baseline.mjs" ||
         path === "tools/skills-verify.mjs" ||
         path === ".github/workflows/skills-verify.yml") auditAll = true;
     if (path.startsWith(`${PROJECT}/.apm/skills/`)) {
@@ -132,52 +135,6 @@ function changeStatus(base) {
     if (m && !status.has(m[1])) status.set(m[1], "A");
   }
   return status;
-}
-
-// --- baseline (false-positive suppression) ----------------------------------
-function unquote(value) {
-  return String(value).replace(/^["']|["']$/g, "").trim();
-}
-
-// Minimal parser for the baseline's YAML list (rule / path / message / reason).
-function parseBaseline() {
-  if (!existsSync(BASELINE)) return [];
-  const entries = [];
-  let cur = null;
-  for (const raw of readFileSync(BASELINE, "utf8").split(/\r?\n/)) {
-    const line = raw.replace(/#.*$/, "").trimEnd();
-    if (!line.trim()) continue;
-    const start = line.match(/^\s*-\s*([A-Za-z0-9_]+):\s*(.*)$/);
-    if (start) {
-      cur = { [start[1]]: unquote(start[2]) };
-      entries.push(cur);
-      continue;
-    }
-    const kv = line.match(/^\s+([A-Za-z0-9_]+):\s*(.*)$/);
-    if (kv && cur) cur[kv[1]] = unquote(kv[2]);
-  }
-  return entries;
-}
-
-function globToRe(glob) {
-  const re = glob
-    .replace(/[.+^${}()|[\]\\]/g, "\\$&")
-    .replace(/\*\*/g, "\u0000")
-    .replace(/\*/g, "[^/]*")
-    .replace(/\u0000/g, ".*")
-    .replace(/\?/g, ".");
-  return new RegExp(`^${re}$`);
-}
-
-// Returns the matching baseline entry for a finding, or null.
-function matchedBaseline(finding, entries) {
-  for (const e of entries) {
-    if (e.rule && e.rule !== finding.rule) continue;
-    if (e.path && !globToRe(e.path).test(finding.uri)) continue;
-    if (e.message && !finding.msg.toLowerCase().includes(e.message.toLowerCase())) continue;
-    return e;
-  }
-  return null;
 }
 
 // Stage the changed skills into a minimal root. APM audits its project root,
@@ -326,24 +283,8 @@ function verify() {
 
   // Extract findings with their location, then apply the baseline: a matching
   // finding is reported under "Suppressed (baseline)" and never gates.
-  const findings = results.map((res) => {
-    const pl = ((res.locations || [])[0] || {}).physicalLocation || {};
-    return {
-      level: res.level || "?",
-      rule: String(res.ruleId || "?").split("/").pop(),
-      uri: (pl.artifactLocation || {}).uri || "",
-      line: (pl.region || {}).startLine,
-      msg: String((res.message || {}).text || "").replace(/\s+/g, " ").trim(),
-    };
-  });
-  const baseline = parseBaseline();
-  const active = [];
-  const suppressed = [];
-  for (const f of findings) {
-    const hit = matchedBaseline(f, baseline);
-    if (hit) suppressed.push({ ...f, reason: hit.reason || "baseline" });
-    else active.push(f);
-  }
+  const baseline = parseBaseline(BASELINE);
+  const { active, suppressed } = splitFindings(results, baseline);
   const byLevel = {};
   const byLevelRule = new Map();
   for (const f of active) {

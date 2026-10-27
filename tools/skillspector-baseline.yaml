@@ -1,9 +1,9 @@
 # False-positive suppression for the APM-mediated SkillSpector scan.
 #
 # APM's external-scanner contract does not let us pass SkillSpector's own
-# `--baseline`, so tools/skills-verify.mjs applies this list to the SARIF it gets
-# back: a matching finding is reported under "Suppressed (baseline)" and never
-# gates.
+# `--baseline`, so tools/filter-sarif.mjs applies this list to the SARIF it gets
+# back for the weekly audit, and tools/skills-verify.mjs applies it to the PR
+# delta: a matching finding is reported as suppressed and never gates.
 #
 # Each entry matches a finding by `rule`, `path` (a glob against the staged,
 # skill-relative path; `**` spans directories) and/or `message` (case-insensitive
@@ -123,3 +123,81 @@
 - rule: P6
   path: "yomiyasu/scripts/yomiyasu_hook.py"
   reason: "hook returns the host prompt, it does not extract a system prompt"
+
+# --- Warning-level false positives from the 2026-10-26 full audit -----------
+# The rules below match prose out of context: CLI reference tables, explicit
+# prohibitions, and documentation examples. None describes hidden persistence,
+# autonomous execution, or data transmission.
+
+# RA2 "Session Persistence": APM documentation describes config/cache writes,
+# and the reflect reviewers explicitly forbid editing. show-me-your-work writes
+# an append-only log, and setup-pstack writes the user-requested model rule.
+- rule: RA2
+  path: "apm-usage/commands.md"
+  reason: "APM CLI reference: `--force`, config and cache writes, not agent persistence"
+- rule: RA2
+  path: "apm-usage/installation.md"
+  reason: "APM install docs: shell profile blocks and self-update, not agent persistence"
+- rule: RA2
+  path: "apm-usage/package-authoring.md"
+  reason: "APM package-authoring docs: user-scope config writes, not agent persistence"
+- rule: RA2
+  path: "reflect/references/*-reviewer.md"
+  reason: "explicit prohibition ('Do not modify files, write code...') misread as persistence"
+- rule: RA2
+  path: "setup-pstack/SKILL.md"
+  reason: "documented, user-invoked write of the pstack model rule; no background persistence"
+- rule: RA2
+  path: "show-me-your-work/SKILL.md"
+  reason: "append-only task log, not state persisted across agent sessions"
+
+# EA2 "Autonomous Decision Making": CLI flags and warnings, not instructions to
+# skip confirmation.
+- rule: EA2
+  path: "apm-usage/commands.md"
+  reason: "documents the `-y` prompt-skip flag, not an instruction to skip confirmation"
+- rule: EA2
+  path: "apm-usage/governance.md"
+  reason: "describes fleet policy as prose, not an agent auto-deploy instruction"
+- rule: EA2
+  path: "ax/SKILL.md"
+  reason: "warns that `-o` overwrites files without asking; the prohibition is the point"
+
+# E1 "External Transmission": ax cheatsheet examples post to api.site.example;
+# no skill code performs that request.
+- rule: E1
+  path: "ax/SKILL.md"
+  reason: "documentation examples only; the skill does not transmit data"
+
+# RP1 unpinned references: two APM docs say "Docker run options" (matched as a
+# docker command), and two files show an install/help string for the `skills`
+# CLI. The agent-browser npx permission was fixed locally, not baselined.
+- rule: RP1
+  path: "apm-usage/commands.md"
+  message: "Docker image referenced without tag"
+  reason: "prose 'Docker run options' misread as a docker command"
+- rule: RP1
+  path: "apm-usage/dependencies.md"
+  message: "Docker image referenced without tag"
+  reason: "prose 'Docker run options' misread as a docker command"
+- rule: RP1
+  path: "first-reader/README.md"
+  message: "npx skills"
+  reason: "install instruction, not a command the skill executes"
+- rule: RP1
+  path: "explainer/scripts/verify-doc.mjs"
+  message: "npx skills"
+  reason: "help text printed when yomiyasu is absent; not executed"
+
+# EA3 "Scope Creep": the Unicode license's "INCLUDING BUT NOT LIMITED TO".
+- rule: EA3
+  path: "yomiyasu/UNICODE-LICENSE.txt"
+  reason: "standard license wording, not a scope-expansion instruction"
+
+# --- Owner-approved exceptions (not false positives) ------------------------
+# poteto-mode deliberately proceeds without asking for reversible work and
+# external actions. The next paragraph still pauses for irreversible writes
+# (shared-branch force-push, deploys, data deletion, customer messages).
+- rule: EA2
+  path: "poteto-mode/SKILL.md"
+  reason: "owner-approved autonomy policy; irreversible writes still require a pause"
