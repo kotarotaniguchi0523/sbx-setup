@@ -11,6 +11,7 @@ on:
     paths:
       - "pstack-opencode/**"
       - "tools/skills-verify.mjs"
+      - "tools/skillspector-baseline.yaml"
       - ".github/workflows/skills-verify.yml"
   workflow_dispatch:
 
@@ -18,12 +19,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  pull-requests: write
+permissions: {}
 
 jobs:
   verify:
+    permissions:
+      contents: read
+    outputs:
+      report_ready: ${{ steps.report_artifact.outcome }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -45,15 +48,56 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           uv tool install --python 3.13 "apm-cli==0.33.0"
           uv tool install --python 3.13 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
+          # Verify both CLIs are on PATH before running the APM adapter.
+          export PATH="$HOME/.local/bin:$PATH"
+          command -v apm
+          apm --version
+          command -v skillspector
+          skillspector --version
 
       - name: Verify the changed skills
-        run: node tools/skills-verify.mjs --base "origin/${{ github.base_ref || 'main' }}"
+        run: node tools/skills-verify.mjs --base "origin/${{ github.base_ref || 'main' }}" ${{ github.event_name == 'workflow_dispatch' && '--all' || '' }}
+
+      - name: Stage verification report
+        if: ${{ always() && hashFiles('.cache/skills-verify/report.md') != '' }}
+        run: cp .cache/skills-verify/report.md skills-verify-report.md
+
+      - name: Upload verification report
+        id: report_artifact
+        if: ${{ always() && hashFiles('skills-verify-report.md') != '' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: skills-verify-report
+          path: skills-verify-report.md
+          retention-days: 7
+
+      - name: Gate on critical findings
+        run: node tools/skills-verify.mjs --gate
+
+  report:
+    needs: verify
+    if: ${{ always() && github.event_name == 'pull_request' && needs.verify.outputs.report_ready == 'success' }}
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: skills-verify-report
+          path: ${{ runner.temp }}/skills-verify-report
+      - name: Restore report location
+        run: mkdir -p .cache/skills-verify && cp "$RUNNER_TEMP/skills-verify-report/skills-verify-report.md" .cache/skills-verify/report.md
 
       - name: Post the result to the pull request
         if: ${{ github.event_name == 'pull_request' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node tools/skills-verify.mjs --post ${{ github.event.pull_request.number }}
-
-      - name: Gate on critical findings
-        run: node tools/skills-verify.mjs --gate
