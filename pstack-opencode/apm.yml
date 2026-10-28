@@ -8,7 +8,7 @@ dependencies:
   apm:
     - mizchi/explainer
     - nanaism/yomiyasu
-    - vercel-labs/agent-browser
+    - path: ./vendor/agent-browser
     - yusukebe/ax
     - microsoft/waza
     - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage

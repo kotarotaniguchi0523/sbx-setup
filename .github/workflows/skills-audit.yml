@@ -10,7 +10,9 @@ name: skills-audit
 #
 # SkillSpector is folded in through APM's own external-scanner integration
 # (`apm audit --external skillspector`). APM runs it offline and deterministic
-# (`--no-llm`): no API key, no OpenCode credentials, no bespoke baseline file.
+# (`--no-llm`): no API key, no OpenCode credentials. Reviewed false positives
+# in tools/skillspector-baseline.yaml are applied to the merged SARIF before
+# the report and Code Scanning upload.
 # Because APM always hands the scanner its whole project root, the deployed
 # skills are first staged into a throwaway root that contains only skills.
 #
@@ -88,6 +90,18 @@ jobs:
           echo "exit=$code" >> "$GITHUB_OUTPUT"
           echo "APM external scanner result: exit $code"
 
+      # The verifier applies the baseline to its report and gate, but its
+      # merged SARIF is raw. Filter it before the report and Code Scanning so
+      # reviewed false positives are not published again.
+      - name: Apply SkillSpector baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/filter-sarif.mjs skillspector.sarif skillspector.active.sarif > baseline-summary.json
+          mv skillspector.sarif skillspector-raw.sarif
+          mv skillspector.active.sarif skillspector.sarif
+          cat baseline-summary.json
+
       - name: Build report
         shell: bash
         run: |
@@ -107,8 +121,12 @@ jobs:
             echo
             echo "## SkillSpector findings"
             echo
-            echo "- \`apm audit --external\` exit: ${{ steps.scan.outputs.exit }} (\`0\` clean, \`1\` critical, \`2\` warning, \`3\` infrastructure)"
-            echo "- Total: $(jq '[.runs[].results[]?] | length' skillspector.sarif)"
+            echo "**Baseline** \`tools/skillspector-baseline.yaml\` (reviewed false positives)"
+            echo
+            echo "- \`apm audit --external\` raw exit: ${{ steps.scan.outputs.exit }} (\`0\` clean, \`1\` critical, \`2\` warning, \`3\` infrastructure)"
+            echo "- Suppressed by baseline: $(jq -r '.suppressed' baseline-summary.json) / $(jq -r '.total' baseline-summary.json)"
+            echo "- Active after baseline: $(jq -r '.active' baseline-summary.json) (error $(jq -r '.byLevel.error // 0' baseline-summary.json), warning $(jq -r '.byLevel.warning // 0' baseline-summary.json), note $(jq -r '.byLevel.note // 0' baseline-summary.json))"
+            echo "- Effective exit: $(jq -r '.effectiveExit' baseline-summary.json) (\`0\` clean, \`1\` critical, \`2\` warning)"
             echo
             echo "| Level | Rule | Count |"
             echo "|---|---|---|"
@@ -122,8 +140,9 @@ jobs:
             echo
             echo "## Rules"
             echo
-            echo "- Periodic audit is informational: **infrastructure errors only** fail the job (exit 3); critical/warning are reported."
-            echo "- Scanner: the APM external-scanner contract (\`skillspector scan --format sarif --no-llm\`); no bespoke baseline."
+            echo "- Periodic audit is informational: **infrastructure errors only** fail the job (exit 3); active critical/warning are reported."
+            echo "- Scanner: the APM external-scanner contract (\`skillspector scan --format sarif --no-llm\`)."
+            echo "- Baseline: \`tools/skillspector-baseline.yaml\` suppresses reviewed false positives (rule + path glob + optional message)."
           } > report.md
           cat report.md
 
@@ -137,6 +156,8 @@ jobs:
             report.md
             apm-audit.sarif
             skillspector.sarif
+            skillspector-raw.sarif
+            baseline-summary.json
           retention-days: 7
 
       # Gate: the scheduled full-set audit reports; it fails only on an
@@ -148,7 +169,8 @@ jobs:
           set -euo pipefail
           code="${{ steps.scan.outputs.exit }}"
           errors="$(jq '[.runs[].results[]? | select(.level == "error")] | length' skillspector.sarif 2>/dev/null || echo 0)"
-          echo "APM external scanner exit=${code}; error-level findings=${errors}"
+          warnings="$(jq '[.runs[].results[]? | select(.level == "warning")] | length' skillspector.sarif 2>/dev/null || echo 0)"
+          echo "APM external scanner raw exit=${code}; active error=${errors}; active warning=${warnings}"
           if [ "${code}" = "3" ]; then
             echo "::error::APM external scanner reported an infrastructure error (exit 3)"
             exit 1
@@ -176,6 +198,12 @@ jobs:
         run: |
           cp "$RUNNER_TEMP/skills-audit-report/report.md" report.md
           cp "$RUNNER_TEMP/skills-audit-report/skillspector.sarif" skillspector.sarif
+          if [ -f "$RUNNER_TEMP/skills-audit-report/skillspector-raw.sarif" ]; then
+            cp "$RUNNER_TEMP/skills-audit-report/skillspector-raw.sarif" skillspector-raw.sarif
+          fi
+          if [ -f "$RUNNER_TEMP/skills-audit-report/baseline-summary.json" ]; then
+            cp "$RUNNER_TEMP/skills-audit-report/baseline-summary.json" baseline-summary.json
+          fi
           if [ -f "$RUNNER_TEMP/skills-audit-report/apm-audit.sarif" ]; then
             cp "$RUNNER_TEMP/skills-audit-report/apm-audit.sarif" apm-audit.sarif
           fi
@@ -217,6 +245,8 @@ jobs:
           cp report.md "audit/skills/report-${stamp}.md"
           cp report.md audit/skills/latest.md
           cp skillspector.sarif "audit/skills/skillspector-${stamp}.sarif"
+          [ -f skillspector-raw.sarif ] && cp skillspector-raw.sarif "audit/skills/skillspector-raw-${stamp}.sarif" || true
+          [ -f baseline-summary.json ] && cp baseline-summary.json "audit/skills/baseline-${stamp}.json" || true
           [ -f apm-audit.sarif ] && cp apm-audit.sarif "audit/skills/apm-audit-${stamp}.sarif" || true
           git add audit/skills
           if ! git diff --cached --quiet; then

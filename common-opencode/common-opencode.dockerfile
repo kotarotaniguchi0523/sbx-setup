@@ -110,8 +110,11 @@ RUN touch /etc/sandbox-persistent.sh \
 # image build time (Repomix fetch + tools/convert.mjs), then install it plus the
 # third-party skills in one APM call (parallel downloads). The .apm/ tree is not
 # committed; it is produced here so the conversion happens on every build.
-#   third-party: mizchi/explainer, nanaism/yomiyasu, vercel-labs/agent-browser,
+#   third-party: mizchi/explainer, nanaism/yomiyasu,
 #                yusukebe/ax, microsoft/waza, microsoft/apm (apm-usage)
+#   agent-browser comes from pstack-opencode/vendor/agent-browser via its
+#   apm.yml; do not add vercel-labs/agent-browser here, or it overrides the
+#   locally pinned copy (and restores the unpinned npx permission).
 COPY --chown=agent:agent pstack-opencode /opt/pstack-opencode
 RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH" \
  && cd /opt/pstack-opencode \
@@ -121,7 +124,6 @@ RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH" \
       /opt/pstack-opencode \
       mizchi/explainer \
       nanaism/yomiyasu \
-      vercel-labs/agent-browser \
       yusukebe/ax \
       microsoft/waza \
       microsoft/apm/packages/apm-guide/.apm/skills/apm-usage \
