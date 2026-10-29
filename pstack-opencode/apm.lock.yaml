@@ -49,7 +49,7 @@ dependencies:
 - repo_url: microsoft/waza
   name: waza
   host: github.com
-  resolved_commit: 1b763c094145f2dd7e5148898bee957737c6922b
+  resolved_commit: 6e8c54d64ea11b037f90ffcaa5a9f6bac0e03187
   version: unknown
   package_type: skill_bundle
   deployed_files:
@@ -65,7 +65,7 @@ dependencies:
     .agents/skills/waza-interactive/SKILL.md: sha256:6976d7c90efce2fa934871265085abaceb59bc722d6218307c7a1d962838be71
     .agents/skills/waza-interactive/tests/eval.yaml: sha256:fdb84af4a57da4ad360f1bbf35d34b7ae786586f3c73f8abff2a5ff63ced8e00
     .agents/skills/waza/SKILL.md: sha256:e7ef60562bbf3535d7ca4b8b8b9d5c65bd210a37a03ef00e19e43be16b4f960e
-  content_hash: sha256:680fed6f275cd587ee51f79d002480030989afc466ed3bf995130fb39577f805
+  content_hash: sha256:14ae2fdad231eb5dbcd1e10c41e6fbef7005899e9f648aec43cf419107c8498f
 - repo_url: mizchi/explainer
   name: explainer
   host: github.com
@@ -160,7 +160,7 @@ dependencies:
 - repo_url: nanaism/yomiyasu
   name: yomiyasu
   host: github.com
-  resolved_commit: 552c12c472ddfb79e2ee7a15219847782686a945
+  resolved_commit: 41e5aec228f080fe24e5f795efee2ac3fda61839
   version: 2.4.0
   package_type: marketplace_plugin
   deployed_files:
@@ -252,7 +252,7 @@ dependencies:
     .agents/skills/yomiyasu/scripts/yomiyasu_diff.py: sha256:31c46a98bcd987c0a2dda7d9712fb830f3a70b1e0636b6a034ae191530d51ab5
     .agents/skills/yomiyasu/scripts/yomiyasu_hook.py: sha256:689ffbeecbaf0380ac99e37b6093f136364b7c7bbf014ada961c8e0781e8ab8b
     .agents/skills/yomiyasu/scripts/yomiyasu_lint.py: sha256:b02c21464353b726a8c4e366f89bdfd2f341613f7bf75f779e83cc4dfbc54c9e
-  content_hash: sha256:86c7eb7843a794bddc2617adf42018c759720ea9e635f976ade44e153cb04e8d
+  content_hash: sha256:36fd1e6a77fbadeed7159a27cf10c7d14c633e2daa89b2176ac5b6c493a90526
   declared_license: MIT
 - repo_url: yusukebe/ax
   name: ax
