@@ -15,9 +15,11 @@ permissions: {}
 
 jobs:
   lock:
+    if: ${{ github.ref == 'refs/heads/main' }}
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -37,8 +39,10 @@ jobs:
         run: nix flake check
 
       - name: Open a pull request with flake.lock
+        id: pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
+          sign-commits: true
           branch: chore/nix-flake-lock
           delete-branch: true
           title: "chore: update flake.lock"
@@ -47,3 +51,12 @@ jobs:
             Automated `nix flake update` (refreshes the pinned nixpkgs revision).
           add-paths: |
             flake.lock
+
+      # Dispatch only checks that are missing or failed at the current PR SHA.
+      # GITHUB_TOKEN-created pull_request runs can remain approval-required.
+      - name: Start CI without maintainer approval
+        if: ${{ steps.pr.outputs.pull-request-number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.pull-request-number }}
+        run: node tools/dispatch-pr-ci.mjs "$PR_NUMBER" chore/nix-flake-lock nix

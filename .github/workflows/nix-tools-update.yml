@@ -17,9 +17,11 @@ permissions: {}
 
 jobs:
   update:
+    if: ${{ github.ref == 'refs/heads/main' }}
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -60,8 +62,10 @@ jobs:
 
       - name: Open a pull request if flake.nix changed
         if: ${{ steps.changes.outputs.changed == 'true' }}
+        id: pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
+          sign-commits: true
           branch: chore/nix-tools-update
           delete-branch: true
           title: "chore: update pinned Nix CLI tools"
@@ -72,3 +76,12 @@ jobs:
             `checksums.txt`). Validated by the `nix` workflow.
           add-paths: |
             flake.nix
+
+      # Dispatch only checks that are missing or failed at the current PR SHA.
+      # GITHUB_TOKEN-created pull_request runs can remain approval-required.
+      - name: Start CI without maintainer approval
+        if: ${{ steps.pr.outputs.pull-request-number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.pull-request-number }}
+        run: node tools/dispatch-pr-ci.mjs "$PR_NUMBER" chore/nix-tools-update nix

@@ -11,7 +11,7 @@ name: apm-update
 
 on:
   schedule:
-    - cron: "30 3 * * *" # Daily 03:30 UTC (12:30 Asia/Tokyo)
+    - cron: "30 3 * * 1" # Mondays 03:30 UTC (12:30 Asia/Tokyo)
   workflow_dispatch:
 
 concurrency:
@@ -22,6 +22,7 @@ permissions: {}
 
 jobs:
   update:
+    if: ${{ github.ref == 'refs/heads/main' }}
     permissions:
       contents: write
       pull-requests: write
@@ -67,6 +68,7 @@ jobs:
         id: pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
+          sign-commits: true
           branch: chore/apm-update
           delete-branch: true
           title: "chore: update APM skill lockfile"
@@ -80,13 +82,15 @@ jobs:
             pstack-opencode/apm.yml
             pstack-opencode/apm.lock.yaml
 
-      # GITHUB_TOKEN-created PRs do not trigger pull_request workflows.
-      # Explicit dispatch attaches the required build check to the branch SHA.
-      - name: Start build checks for the updated PR
-        if: ${{ steps.pr.outputs.pull-request-operation == 'created' || steps.pr.outputs.pull-request-operation == 'updated' }}
+
+      # Dispatch only checks that are missing or failed at the current PR SHA.
+      # GITHUB_TOKEN-created pull_request runs can remain approval-required.
+      - name: Start CI without maintainer approval
+        if: ${{ steps.pr.outputs.pull-request-number }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run build.yml --ref chore/apm-update -f image=opencode
+          PR_NUMBER: ${{ steps.pr.outputs.pull-request-number }}
+        run: node tools/dispatch-pr-ci.mjs "$PR_NUMBER" chore/apm-update skills
 
       - name: Post the verification to the pull request
         if: ${{ steps.pr.outputs.pull-request-number }}

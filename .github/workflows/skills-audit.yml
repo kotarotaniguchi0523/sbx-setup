@@ -21,7 +21,7 @@ name: skills-audit
 # branch, and SARIF uploaded to Code Scanning. All actions are pinned to SHAs.
 
 # Trigger policy (decided): scheduled weekly + manual only — NOT on every push
-# or PR. Skill content changes at most weekly and the LLM pass costs tokens.
+# or PR. The full offline scan belongs here; PRs scan only their delta.
 on:
   schedule:
     - cron: "0 0 * * 1" # Mondays 00:00 UTC = 09:00 JST
@@ -35,6 +35,7 @@ permissions: {}
 
 jobs:
   audit:
+    if: ${{ github.ref == 'refs/heads/main' }}
     permissions:
       contents: read
     outputs:

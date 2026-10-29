@@ -23,6 +23,7 @@ permissions: {}
 
 jobs:
   sync:
+    if: ${{ github.ref == 'refs/heads/main' }}
     permissions:
       contents: write
       pull-requests: write
@@ -35,20 +36,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: "24"
-
-      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
-
-      # APM runs SkillSpector itself, offline (no API key, no opencode_cli).
-      - name: Install tooling
-        shell: bash
-        run: |
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          uv tool install --python 3.13 "apm-cli==0.33.0"
-          uv tool install --python 3.13 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
-
       - name: Resolve upstream commit
         id: upstream
         shell: bash
@@ -59,6 +46,23 @@ jobs:
           old="$(jq -r .ref pstack-opencode/SOURCE.json)"
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
           if [ "$old" != "$ref" ]; then echo "changed=true" >> "$GITHUB_OUTPUT"; else echo "changed=false" >> "$GITHUB_OUTPUT"; fi
+
+      - if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+
+      - if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+
+      # APM runs SkillSpector itself, offline (no API key, no opencode_cli).
+      - name: Install tooling
+        if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
+        shell: bash
+        run: |
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          uv tool install --python 3.13 "apm-cli==0.33.0"
+          uv tool install --python 3.13 "git+https://github.com/nvidia/skillspector.git@v2.12.0"
 
       - name: Regenerate the converted package from 本家 cursor/plugins/pstack
         if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
@@ -76,6 +80,7 @@ jobs:
         id: pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
+          sign-commits: true
           branch: chore/pstack-upstream
           delete-branch: true
           title: "chore: sync pstack from 本家 cursor/plugins"
@@ -88,12 +93,14 @@ jobs:
             pstack-opencode/.apm
             pstack-opencode/SOURCE.json
 
-      # Token-created PRs may not start the pull_request workflow automatically.
-      - name: Build updated OpenCode image without publishing
-        if: ${{ steps.pr.outputs.pull-request-operation == 'created' || steps.pr.outputs.pull-request-operation == 'updated' }}
+      # Dispatch only checks that are missing or failed at the current PR SHA.
+      # GITHUB_TOKEN-created pull_request runs can remain approval-required.
+      - name: Start CI without maintainer approval
+        if: ${{ steps.pr.outputs.pull-request-number }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run build.yml --ref chore/pstack-upstream -f image=opencode
+          PR_NUMBER: ${{ steps.pr.outputs.pull-request-number }}
+        run: node tools/dispatch-pr-ci.mjs "$PR_NUMBER" chore/pstack-upstream skills
 
       - name: Post the verification to the pull request
         if: ${{ steps.pr.outputs.pull-request-number }}

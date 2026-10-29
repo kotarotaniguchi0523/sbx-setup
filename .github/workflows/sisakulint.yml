@@ -13,6 +13,7 @@ name: sisakulint
 
 on:
   pull_request:
+    branches: [main]
     paths:
       - ".github/workflows/**"
       - ".github/sisakulint.yaml"
@@ -20,11 +21,17 @@ on:
       - "tools/sisakulint.version"
       - "tools/golang.version"
       - "tools/sisakulint.ignore"
+      - "tools/dispatch-pr-ci*.mjs"
   push:
     branches: [main]
     paths:
       - ".github/workflows/**"
       - ".github/sisakulint.yaml"
+      - "tools/sisakulint.mjs"
+      - "tools/sisakulint.version"
+      - "tools/golang.version"
+      - "tools/sisakulint.ignore"
+      - "tools/dispatch-pr-ci*.mjs"
   workflow_dispatch:
 
 concurrency:
@@ -49,6 +56,9 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Test automatic CI routing
+        run: node --test tools/dispatch-pr-ci.test.mjs
+
       # Repo-local sisakulint (installs itself under .tools/). Emits SARIF.
       - name: Generate SARIF
         id: sarif
@@ -62,7 +72,7 @@ jobs:
           fi
 
       - name: Upload SARIF to Code Scanning
-        if: steps.sarif.outputs.has_results == 'true'
+        if: ${{ steps.sarif.outputs.has_results == 'true' && github.event_name != 'pull_request' }}
         uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
           sarif_file: sisakulint.sarif

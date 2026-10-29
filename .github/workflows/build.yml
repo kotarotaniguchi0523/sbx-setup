@@ -14,7 +14,17 @@ name: build
 on:
   push:
     branches: [main]
+    paths:
+      - 'common-opencode/**'
+      - 'common-codex/**'
+      - 'pstack-opencode/**'
+      - 'tools/npm/**'
+      - 'flake.nix'
+      - 'flake.lock'
+      - '.dockerignore'
+      - '.github/workflows/build.yml'
   pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       image:
@@ -39,6 +49,7 @@ jobs:
       contents: read
       pull-requests: read
     runs-on: ubuntu-26.04
+    timeout-minutes: 5
     outputs:
       targets: ${{ steps.matrix.outputs.targets }}
     steps:
@@ -95,10 +106,10 @@ jobs:
       contents: read
       packages: read
     name: image (${{ matrix.name }})
+    timeout-minutes: 45
     needs: changes
     if: ${{ github.event_name != 'push' && needs.changes.result == 'success' && needs.changes.outputs.targets != '[]' }}
     runs-on: ubuntu-26.04
-    cache-mode: read
     strategy:
       fail-fast: false
       matrix:
@@ -136,10 +147,10 @@ jobs:
       contents: read
       packages: write
     name: publish (${{ matrix.name }})
+    timeout-minutes: 45
     needs: changes
     if: ${{ github.event_name == 'push' && needs.changes.result == 'success' && needs.changes.outputs.targets != '[]' }}
     runs-on: ubuntu-26.04
-    cache-mode: read
     strategy:
       fail-fast: false
       matrix:
@@ -180,7 +191,7 @@ jobs:
     needs: [changes, image, image-publish]
     if: always()
     runs-on: ubuntu-26.04
-    cache-mode: none
+    timeout-minutes: 5
     steps:
       - name: Evaluate result
         env:
