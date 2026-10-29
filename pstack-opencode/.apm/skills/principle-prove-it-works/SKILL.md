@@ -5,6 +5,7 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
+
 # Prove It Works
 
 Verify every task output by checking the real thing directly. Do not infer from proxies, self-reports, or "it compiles."

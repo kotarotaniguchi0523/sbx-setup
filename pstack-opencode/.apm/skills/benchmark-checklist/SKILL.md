@@ -5,6 +5,7 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
+
 # Benchmark checklist
 
 Use this when you produce a performance number: a PR's before and after, a regression claim, a hillclimb harness, or a library or config choice. Answer each question with evidence from a run, not a guess about the code.

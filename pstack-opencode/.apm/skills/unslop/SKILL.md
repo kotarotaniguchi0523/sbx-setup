@@ -5,6 +5,7 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
+
 # Unslop
 
 Edit text to remove AI patterns. Scan for the patterns below, then rewrite. Preserve meaning and match the intended tone.

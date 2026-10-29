@@ -194,6 +194,35 @@
   path: "yomiyasu/UNICODE-LICENSE.txt"
   reason: "standard license wording, not a scope-expansion instruction"
 
+# --- New upstream pstack skills (2026-10-29 sync) ---------------------------
+# statechart ships TypeScript/TLA+ sources and fixtures. The scanner reads code
+# identifiers and shell cleanup as agent instructions; none of it reads a
+# prompt, exfiltrates data, or abuses a tool parameter.
+
+# P6 "Direct Prompt Extraction": `return rule` / `return rules` in the IR and
+# rule-resolution code is parsed as prompt extraction.
+- rule: P6
+  path: "statechart/scripts/**"
+  reason: "returns a rule object in TypeScript/TLA tooling; no prompt is read"
+
+# TM2 "Chaining Abuse": the process-tree cleanup snippet kills a group and
+# removes its own temp directories with `;` and `&&`.
+- rule: TM2
+  path: "statechart/scripts/statechart.ts"
+  reason: "cleanup of the process group and temp dirs created by the script"
+
+# TM1 "Tool Parameter Abuse": TLA+ operators (`\\subseteq`, `--`) in the
+# bundled specs and fixtures are read as CLI flags.
+- rule: TM1
+  path: "statechart/scripts/test/corpus/**"
+  reason: "TLA+ spec fixtures; operators misread as tool parameters"
+
+# YR4 "tool metadata poisoning": a TypeScript type alias that names the three
+# render backends (render / mermaid / html).
+- rule: YR4
+  path: "statechart/scripts/test/labels.ts"
+  reason: "type alias listing render backends, not tool metadata"
+
 # --- Owner-approved exceptions (not false positives) ------------------------
 # poteto-mode deliberately proceeds without asking for reversible work and
 # external actions. The next paragraph still pauses for irreversible writes
@@ -201,3 +230,19 @@
 - rule: EA2
   path: "poteto-mode/SKILL.md"
   reason: "owner-approved autonomy policy; irreversible writes still require a pause"
+
+# make-bot-ui documents Tailscale setup for exposing a bot UI to the owner's
+# devices: the upstream installer is fetched with `curl | sudo sh` and the node
+# is started with `sudo tailscale up`. It is a real instruction, not a false
+# positive, and is accepted because the skill only runs when the user asks for a
+# reachable bot UI; it never handles Tailscale credentials (the user approves
+# the login URL in the browser).
+- rule: SC2
+  path: "make-bot-ui/SKILL.md"
+  reason: "owner-approved: upstream Tailscale installer one-liner"
+- rule: TM2
+  path: "make-bot-ui/SKILL.md"
+  reason: "owner-approved: install one-liner pipes a remote script to sh"
+- rule: PE2
+  path: "make-bot-ui/SKILL.md"
+  reason: "owner-approved: sudo for the Tailscale installer and `tailscale up`"

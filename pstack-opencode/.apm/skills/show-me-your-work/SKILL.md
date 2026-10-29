@@ -5,6 +5,7 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
+
 # Show me your work
 
 Keep one canonical log.

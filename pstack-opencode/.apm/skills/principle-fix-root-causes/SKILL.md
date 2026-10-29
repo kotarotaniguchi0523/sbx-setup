@@ -5,6 +5,7 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
+
 # Fix Root Causes
 
 When debugging, fix the fault, not the place where it surfaced. The symptom is where a wrong state became visible. The root cause is the first place the system did something it should not do, or failed to handle a state it should handle.

@@ -154,7 +154,7 @@ Renovate の APM manager は `#<ref>` のない依存をスキップするため
 
 | パッケージ | 形 | 対象 | skills |
 |---|---|---|---|
-| `pstack-opencode` | ビルド内生成（ローカル `/opt`） | opencode | 38 |
+| `pstack-opencode` | ビルド内生成（ローカル `/opt`） | opencode | 58 |
 | `mizchi/explainer` | GitHub 依存 | opencode / codex | 5 |
 | `nanaism/yomiyasu` | GitHub 依存 | opencode / codex | 1 |
 | `vercel-labs/agent-browser` | GitHub 依存 | opencode / codex | 1 |

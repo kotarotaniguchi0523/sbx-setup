@@ -7,11 +7,11 @@
 あり、ツール名・サブエージェント・モデル名も別物。このパッケージは本家を取り込み、
 OpenCode の規約に合わせて正規化したうえで配布する。
 
-**収録範囲**: 本家の全 skill のうち、**`poteto-mode` から参照が到達するもの（37）＋
-索引 `poteto-help`** だけを収録する（`convert.mjs` の `INCLUDE_SKILLS`）。到達判定は
-`poteto-mode` の付属ファイル（`playbooks/` / `references/` / `scripts/`）を含めて行う。
-`poteto-help` のカタログは収録セットに合わせて自動でトリムする。上流に新 skill が
-増えても収録リストが明示的なので、意図せず同梱されることはない。
+**収録範囲**: 本家 `pstack/skills` の **全 skill（58）をそのまま収録する**。以前は
+`poteto-mode` から到達する skill だけに絞る許可リストを持っていたが、上流が新しい
+principle や `ketchup` などを追加し、`poteto-mode` 本文がそれらを参照するようになって
+許可リストが古くなり、参照先の無い skill が生成物から欠落した。現在は上流の増減を
+そのまま反映するので、新しい skill も自動で入る。
 
 ## 構成
 
@@ -20,7 +20,7 @@ pstack-opencode/
 ├── apm.yml                  # targets: [opencode]
 ├── SOURCE.json              # 変換元と生成物の一覧
 ├── .apm/                    # 生成物（ここは手で編集しない）
-│   ├── skills/<id>/...      # 38 skill（poteto-mode 到達＋poteto-help。playbooks / references / scripts 込み）
+│   ├── skills/<id>/...      # 58 skill（上流 pstack の全 skill。playbooks / references / scripts 込み）
 │   └── agents/*.agent.md    # poteto-agent, comment-sicko（mode: subagent）
 ├── opencode/AGENTS.md       # routing 常設指示（~/.config/opencode/AGENTS.md に配置）
 └── tools/
