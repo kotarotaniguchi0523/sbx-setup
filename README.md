@@ -288,4 +288,14 @@ lefthook install
 - Nix 由来ツールとサンドボックス内 `nix` の動作はローカル/CI で確認済み（単一ユーザー install は `/nix` を agent 所有にして解決）。
 - 本家 poteto-mode は Cursor 前提部分があり、OpenCode でマルチモデル連携の挙動は未検証。
 - pstack は OpenCode のみ（codex には未導入）。
-- 自動化 PR（`pstack-update` / `nix-lock` / `nix-tools-update`）はコミット未署名。ruleset の `required_signatures` 下で squash マージできるか未検証（問題時は GPG/SSH 署名に対応）。
+- 自動更新 PR は `sign-commits: true` で GitHub に署名させ、main の署名必須ルールに対応する。
+
+## 自動更新PRのCI
+
+`apm-update` / `pstack-update` / `nix-lock` / `nix-tools-update` は main 上で実行し、署名付きコミットで PR を作成・更新する。
+`tools/dispatch-pr-ci.mjs` は同じコミットの成功済み・実行中の CI を確認し、不足・失敗・承認待ちの場合だけ更新ブランチへ `workflow_dispatch` する。APM・pstack は OpenCode の `build` と差分の `skills-verify`、Nix 更新は両イメージの `build` と `nix` を実行する。PAT や追加シークレットは不要。
+
+GitHub の仕様上、`GITHUB_TOKEN` が作る PR の `pull_request` 実行は承認待ちになることがある。必要なチェックは上記の dispatch で実行するので、その実行のために手動承認する必要はない。表示上の承認待ちもなくすには、PR 作成用の GitHub App トークンが別途必要。
+
+通常の PR と Renovate PR は `pull_request` で同じ検証を受ける。必須の `build` は全 PR に結果を返し、Docker ビルド自体は変更したイメージだけ実行する。ドキュメントのみならイメージのビルドを省略する。
+詳しい起動条件、定期処理、ルールセットの運用は [CI 運用方針](docs/ci-policy.md) を参照。

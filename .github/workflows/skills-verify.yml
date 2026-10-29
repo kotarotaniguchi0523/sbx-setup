@@ -8,14 +8,24 @@ name: skills-verify
 
 on:
   pull_request:
+    branches: [main]
     paths:
-      - "pstack-opencode/**"
+      - "pstack-opencode/.apm/**"
+      - "pstack-opencode/vendor/**"
+      - "pstack-opencode/apm.yml"
+      - "pstack-opencode/apm.lock.yaml"
+      - "pstack-opencode/tools/**"
       - "tools/skills-verify.mjs"
       - "tools/skillspector-baseline.mjs"
       - "tools/skillspector-baseline.yaml"
       - "tools/filter-sarif.mjs"
       - ".github/workflows/skills-verify.yml"
   workflow_dispatch:
+    inputs:
+      full:
+        description: Audit all skills instead of only the PR delta
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -58,7 +68,13 @@ jobs:
           skillspector --version
 
       - name: Verify the changed skills
-        run: node tools/skills-verify.mjs --base "origin/${{ github.base_ref || 'main' }}" ${{ github.event_name == 'workflow_dispatch' && '--all' || '' }}
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+          FULL_AUDIT: ${{ inputs.full || false }}
+        run: |
+          args=()
+          if [ "$FULL_AUDIT" = "true" ]; then args+=(--all); fi
+          node tools/skills-verify.mjs --base "origin/$BASE_REF" "${args[@]}"
 
       - name: Stage verification report
         if: ${{ always() && hashFiles('.cache/skills-verify/report.md') != '' }}
@@ -78,7 +94,7 @@ jobs:
 
   report:
     needs: verify
-    if: ${{ always() && github.event_name == 'pull_request' && needs.verify.outputs.report_ready == 'success' }}
+    if: ${{ always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]' && needs.verify.outputs.report_ready == 'success' }}
     permissions:
       contents: read
       pull-requests: write

@@ -77,8 +77,9 @@ function changedTargets(base) {
   // regen) leave uncommitted changes that a commit-to-commit diff would miss,
   // while a committed PR checkout sees the same set either way.
   // Include newly generated, not-yet-added pstack skills from update runs.
+  const comparisonBase = run("git", ["merge-base", "HEAD", base]).trim();
   const changed = [...new Set([
-    ...run("git", ["diff", "--name-only", base]).split("\n"),
+    ...run("git", ["diff", "--name-only", comparisonBase]).split("\n"),
     ...run("git", ["ls-files", "--others", "--exclude-standard"]).split("\n"),
   ].map((s) => s.trim()).filter(Boolean))];
   const skills = new Set();
@@ -87,7 +88,11 @@ function changedTargets(base) {
   for (const path of changed) {
     if (path === "tools/skillspector-baseline.yaml" ||
         path === "tools/skillspector-baseline.mjs" ||
+        path === "tools/filter-sarif.mjs" ||
         path === "tools/skills-verify.mjs" ||
+        path === `${PROJECT}/apm.yml` ||
+        path.startsWith(`${PROJECT}/vendor/`) ||
+        path.startsWith(`${PROJECT}/tools/`) ||
         path === ".github/workflows/skills-verify.yml") auditAll = true;
     if (path.startsWith(`${PROJECT}/.apm/skills/`)) {
       const name = path.slice(`${PROJECT}/.apm/skills/`.length).split("/")[0];
