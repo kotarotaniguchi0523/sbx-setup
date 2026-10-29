@@ -7,6 +7,7 @@ metadata:
 
 > **OpenCode note.** This skill was authored for Cursor / Claude Code. Where it names a tool, a subagent, or a model, use the OpenCode equivalent in the `poteto-mode` skill's `references/opencode-tools.md`.
 
+
 # Architect
 
 Sketch types, function signatures, class shapes, and module boundaries with `not implemented` bodies and pseudocode. Synthesize across multiple model perspectives, then fill in code against the chosen sketch.

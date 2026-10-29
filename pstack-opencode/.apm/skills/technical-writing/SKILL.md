@@ -5,6 +5,7 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
+
 # Technical writing
 
 Write so a tired engineer understands on the first read. Apply all four layers.
