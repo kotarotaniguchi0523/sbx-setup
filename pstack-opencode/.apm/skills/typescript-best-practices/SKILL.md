@@ -5,7 +5,6 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
-
 # TypeScript best practices
 
 Apply the **type-system-discipline** principle skill first.

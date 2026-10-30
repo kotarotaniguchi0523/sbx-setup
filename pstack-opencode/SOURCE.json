@@ -1,7 +1,7 @@
 {
   "repository": "cursor/plugins",
   "include": "pstack/**",
-  "ref": "c742dd61706fbacc1b95f1a20b7b988cf096ce6c",
+  "ref": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe",
   "skills": [
     "architect",
     "arena",
