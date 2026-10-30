@@ -5,7 +5,6 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
-
 # Interrogate
 
 Adversaries try to break a change or a design. A finding survives only when a run proves it. Report the findings. Do not apply fixes.

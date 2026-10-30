@@ -5,7 +5,6 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
-
 # Attack the Premise
 
 When two or more fixes that share one premise have failed the same gate, suspect the premise, not the fixes.

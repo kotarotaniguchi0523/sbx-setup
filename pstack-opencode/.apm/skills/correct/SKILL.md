@@ -5,7 +5,6 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
-
 # Correct
 
 The operator keeps correcting agents in this repo for the same mistakes. Change the repo so the next agent can't make them.
