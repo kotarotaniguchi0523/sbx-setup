@@ -25,15 +25,15 @@
         let
           system = final.stdenv.hostPlatform.system;
 
-          wazaVersion = "0.39.0";
+          wazaVersion = "0.39.1";
           axVersion = "0.1.25";
           sisakulintVersion = "0.3.8";
 
           wazaAssets = {
-            x86_64-linux = { name = "waza-linux-amd64"; sha256 = "a80138c3d37d48e947ef5b414a1ba4657935b7334d2cebe47cf71d004680f250"; };
-            aarch64-linux = { name = "waza-linux-arm64"; sha256 = "1cf67885d7ddb6047aac9da932c5169c8c89eea00926f3fec37069e0249e625d"; };
-            x86_64-darwin = { name = "waza-darwin-amd64"; sha256 = "22f6d715af18904d6e68fee767b21d0b0c1a35baab85f42deec671fef4749a5e"; };
-            aarch64-darwin = { name = "waza-darwin-arm64"; sha256 = "f4732e350a61e22f440ddfe7fcedc2e781661fd7c039cf3005af90bab5d52c0f"; };
+            x86_64-linux = { name = "waza-linux-amd64"; sha256 = "43fedb4405851021663d75309bd2b6f5df317239859c8c6e741da20565b55fc1"; };
+            aarch64-linux = { name = "waza-linux-arm64"; sha256 = "2c55cfb17db4c6bdad6e9b6c8dd69595f6b8df263d0b9750bad43bfa30221ded"; };
+            x86_64-darwin = { name = "waza-darwin-amd64"; sha256 = "053e9fac1a62e59b50f3be0779c34906a55f674aeb9a567b7c7efe82e5ce42a4"; };
+            aarch64-darwin = { name = "waza-darwin-arm64"; sha256 = "1f8407ee7c6d27fc042ee72c7d6e9c7c1babe6baf0d61e7403ad6ebbdc85eaa5"; };
           };
           axAssets = {
             x86_64-linux = { name = "ax-linux-x64"; sha256 = "6e72297182074038a202d94e1cca9d61e8908d8a4fd5206b3c25ab91957cae2f"; };
