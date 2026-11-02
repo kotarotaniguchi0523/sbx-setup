@@ -1,0 +1,3736 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/EA2",
+              "shortDescription": {
+                "text": "Skillspector/Ea2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA2",
+          "level": "warning",
+          "message": {
+            "text": "Autonomous Decision Making ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "automate-me/SKILL.md"
+                },
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA2"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/MP3",
+              "shortDescription": {
+                "text": "Skillspector/Mp3"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/MP3",
+          "level": "error",
+          "message": {
+            "text": "Memory Manipulation ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "create-verification-skill/references/feature-map-example/README.md"
+                },
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 98
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/MP3"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/SC2",
+              "shortDescription": {
+                "text": "Skillspector/Sc2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/TM2",
+              "shortDescription": {
+                "text": "Skillspector/Tm2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/PE2",
+              "shortDescription": {
+                "text": "Skillspector/Pe2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC2",
+          "level": "error",
+          "message": {
+            "text": "External Script Fetching ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "make-bot-ui/SKILL.md"
+                },
+                "region": {
+                  "startLine": 88,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM2",
+          "level": "error",
+          "message": {
+            "text": "Chaining Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "make-bot-ui/SKILL.md"
+                },
+                "region": {
+                  "startLine": 88,
+                  "startColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/PE2",
+          "level": "warning",
+          "message": {
+            "text": "Sudo/Root Execution ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "make-bot-ui/SKILL.md"
+                },
+                "region": {
+                  "startLine": 88,
+                  "startColumn": 47
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/PE2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/PE2",
+          "level": "warning",
+          "message": {
+            "text": "Sudo/Root Execution ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "make-bot-ui/SKILL.md"
+                },
+                "region": {
+                  "startLine": 94,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/PE2"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/TM1",
+              "shortDescription": {
+                "text": "Skillspector/Tm1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA2",
+              "shortDescription": {
+                "text": "Skillspector/Ea2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA2",
+              "shortDescription": {
+                "text": "Skillspector/Ra2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AS3",
+              "shortDescription": {
+                "text": "Skillspector/As3"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/SC1",
+              "shortDescription": {
+                "text": "Skillspector/Sc1"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM1",
+          "level": "error",
+          "message": {
+            "text": "Tool Parameter Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/playbooks/babysit.md"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 391
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM1",
+          "level": "error",
+          "message": {
+            "text": "Tool Parameter Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/playbooks/opening-a-pr.md"
+                },
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 159
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA2",
+          "level": "warning",
+          "message": {
+            "text": "Autonomous Decision Making ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/SKILL.md"
+                },
+                "region": {
+                  "startLine": 86,
+                  "startColumn": 127
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/playbooks/eval.md"
+                },
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 85
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS3",
+          "level": "warning",
+          "message": {
+            "text": "Skill Enumeration ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/playbooks/multi-phase-plan.md"
+                },
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS3",
+          "level": "warning",
+          "message": {
+            "text": "Skill Enumeration ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/playbooks/multi-phase-plan.md"
+                },
+                "region": {
+                  "startLine": 65,
+                  "startColumn": 298
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS3",
+          "level": "warning",
+          "message": {
+            "text": "Skill Enumeration ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/playbooks/multi-phase-plan.md"
+                },
+                "region": {
+                  "startLine": 152,
+                  "startColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS3",
+          "level": "warning",
+          "message": {
+            "text": "Skill Enumeration ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/playbooks/multi-phase-plan.md"
+                },
+                "region": {
+                  "startLine": 152,
+                  "startColumn": 86
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS3",
+          "level": "warning",
+          "message": {
+            "text": "Skill Enumeration ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/playbooks/multi-phase-plan.md"
+                },
+                "region": {
+                  "startLine": 152,
+                  "startColumn": 138
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC1",
+          "level": "note",
+          "message": {
+            "text": "Unpinned Dependencies ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/scripts/package.json"
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC1",
+          "level": "note",
+          "message": {
+            "text": "Unpinned Dependencies ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/scripts/package.json"
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC1"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/RA1",
+              "shortDescription": {
+                "text": "Skillspector/Ra1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA2",
+              "shortDescription": {
+                "text": "Skillspector/Ra2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/MP3",
+              "shortDescription": {
+                "text": "Skillspector/Mp3"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "reflect/references/divergent-reviewer.md"
+                },
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "reflect/references/divergent-reviewer.md"
+                },
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "reflect/references/judgment-reviewer.md"
+                },
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "reflect/references/judgment-reviewer.md"
+                },
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "reflect/references/tooling-reviewer.md"
+                },
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "reflect/references/tooling-reviewer.md"
+                },
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/MP3",
+          "level": "error",
+          "message": {
+            "text": "Memory Manipulation ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "show-me-your-work/SKILL.md"
+                },
+                "region": {
+                  "startLine": 54,
+                  "startColumn": 78
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/MP3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "show-me-your-work/SKILL.md"
+                },
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "setup-pstack/SKILL.md"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/P6",
+              "shortDescription": {
+                "text": "Skillspector/P6"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/TM2",
+              "shortDescription": {
+                "text": "Skillspector/Tm2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/TM1",
+              "shortDescription": {
+                "text": "Skillspector/Tm1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/YR4",
+              "shortDescription": {
+                "text": "Skillspector/Yr4"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P6",
+          "level": "error",
+          "message": {
+            "text": "Direct Prompt Extraction ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/ir.ts"
+                },
+                "region": {
+                  "startLine": 546,
+                  "startColumn": 3
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P6"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P6",
+          "level": "error",
+          "message": {
+            "text": "Direct Prompt Extraction ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/run.ts"
+                },
+                "region": {
+                  "startLine": 256,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P6"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P6",
+          "level": "error",
+          "message": {
+            "text": "Direct Prompt Extraction ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/run.ts"
+                },
+                "region": {
+                  "startLine": 258,
+                  "startColumn": 89
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P6"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P6",
+          "level": "error",
+          "message": {
+            "text": "Direct Prompt Extraction ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/test/differential.test.ts"
+                },
+                "region": {
+                  "startLine": 181,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P6"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM2",
+          "level": "error",
+          "message": {
+            "text": "Chaining Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/statechart.ts"
+                },
+                "region": {
+                  "startLine": 120,
+                  "startColumn": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM1",
+          "level": "error",
+          "message": {
+            "text": "Tool Parameter Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/test/corpus/TwoPhase/TwoPhase.tla"
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM1",
+          "level": "error",
+          "message": {
+            "text": "Tool Parameter Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/test/corpus/TwoPhaseFixed/TwoPhaseFixed.tla"
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM1",
+          "level": "error",
+          "message": {
+            "text": "Tool Parameter Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/test/corpus/TwoPhaseFixed/TwoPhaseFixed.tla"
+                },
+                "region": {
+                  "startLine": 31,
+                  "startColumn": 19
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/YR4",
+          "level": "error",
+          "message": {
+            "text": "YARA rule 'agent_skill_mcp_tool_poisoning_metadata': MCP/tool metadata poisoning indicators in tool schemas or skill manifests [agent_skills] ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "statechart/scripts/test/labels.ts"
+                },
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/YR4"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/YR4",
+              "shortDescription": {
+                "text": "Skillspector/Yr4"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AS1",
+              "shortDescription": {
+                "text": "Skillspector/As1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AS2",
+              "shortDescription": {
+                "text": "Skillspector/As2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA1",
+              "shortDescription": {
+                "text": "Skillspector/Ra1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA2",
+              "shortDescription": {
+                "text": "Skillspector/Ea2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA2",
+              "shortDescription": {
+                "text": "Skillspector/Ra2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RP1",
+              "shortDescription": {
+                "text": "Skillspector/Rp1"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AS3",
+              "shortDescription": {
+                "text": "Skillspector/As3"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AR2",
+              "shortDescription": {
+                "text": "Skillspector/Ar2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/SC2",
+              "shortDescription": {
+                "text": "Skillspector/Sc2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/TM2",
+              "shortDescription": {
+                "text": "Skillspector/Tm2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/YR4",
+          "level": "error",
+          "message": {
+            "text": "YARA rule 'agent_skill_prompt_injection_hidden_instructions': Prompt injection or hidden instructions embedded in AI agent skill text [agent_skills] ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 151,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/YR4"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS1",
+          "level": "error",
+          "message": {
+            "text": "Agent Config Directory Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 453,
+                  "startColumn": 144
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS2",
+          "level": "error",
+          "message": {
+            "text": "MCP Config Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 592,
+                  "startColumn": 464
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS2",
+          "level": "error",
+          "message": {
+            "text": "MCP Config Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 592,
+                  "startColumn": 2972
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS2",
+          "level": "error",
+          "message": {
+            "text": "MCP Config Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 592,
+                  "startColumn": 3627
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS2",
+          "level": "error",
+          "message": {
+            "text": "MCP Config Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 689,
+                  "startColumn": 20
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 779,
+                  "startColumn": 242
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 779,
+                  "startColumn": 265
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 781,
+                  "startColumn": 81
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 781,
+                  "startColumn": 104
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 782,
+                  "startColumn": 69
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 782,
+                  "startColumn": 92
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 788,
+                  "startColumn": 8
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 794,
+                  "startColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 794,
+                  "startColumn": 83
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 796,
+                  "startColumn": 17
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 798,
+                  "startColumn": 6
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 800,
+                  "startColumn": 6
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 802,
+                  "startColumn": 6
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 802,
+                  "startColumn": 458
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 794,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 794,
+                  "startColumn": 333
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA2",
+          "level": "warning",
+          "message": {
+            "text": "Autonomous Decision Making ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 195
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA2",
+          "level": "warning",
+          "message": {
+            "text": "Autonomous Decision Making ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 440
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 1150
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 47,
+                  "startColumn": 2537
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 77,
+                  "startColumn": 31
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 403,
+                  "startColumn": 591
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 410,
+                  "startColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RP1",
+          "level": "warning",
+          "message": {
+            "text": "Docker image referenced without tag or digest: 'Docker run options'. ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 698,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RP1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS3",
+          "level": "warning",
+          "message": {
+            "text": "Skill Enumeration ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/commands.md"
+                },
+                "region": {
+                  "startLine": 761,
+                  "startColumn": 92
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/governance.md"
+                },
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 45
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/governance.md"
+                },
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 3
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/governance.md"
+                },
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/governance.md"
+                },
+                "region": {
+                  "startLine": 22,
+                  "startColumn": 64
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AR2",
+          "level": "error",
+          "message": {
+            "text": "Anti-Refusal Statement ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/governance.md"
+                },
+                "region": {
+                  "startLine": 648,
+                  "startColumn": 59
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AR2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA2",
+          "level": "warning",
+          "message": {
+            "text": "Autonomous Decision Making ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/governance.md"
+                },
+                "region": {
+                  "startLine": 196,
+                  "startColumn": 238
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 69,
+                  "startColumn": 31
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 79,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 80,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 106,
+                  "startColumn": 576
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 106,
+                  "startColumn": 668
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 148,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 153,
+                  "startColumn": 157
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC2",
+          "level": "error",
+          "message": {
+            "text": "External Script Fetching ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC2",
+          "level": "error",
+          "message": {
+            "text": "External Script Fetching ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 87,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC2",
+          "level": "error",
+          "message": {
+            "text": "External Script Fetching ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 90,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM2",
+          "level": "error",
+          "message": {
+            "text": "Chaining Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM2",
+          "level": "error",
+          "message": {
+            "text": "Chaining Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 147,
+                  "startColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC2",
+          "level": "error",
+          "message": {
+            "text": "External Script Fetching ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 147,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/installation.md"
+                },
+                "region": {
+                  "startLine": 151,
+                  "startColumn": 201
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA1",
+          "level": "error",
+          "message": {
+            "text": "Self-Modification ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/troubleshooting.md"
+                },
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS1",
+          "level": "error",
+          "message": {
+            "text": "Agent Config Directory Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/package-authoring.md"
+                },
+                "region": {
+                  "startLine": 293,
+                  "startColumn": 49
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS1",
+          "level": "error",
+          "message": {
+            "text": "Agent Config Directory Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/package-authoring.md"
+                },
+                "region": {
+                  "startLine": 299,
+                  "startColumn": 2
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/package-authoring.md"
+                },
+                "region": {
+                  "startLine": 669,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AS3",
+          "level": "warning",
+          "message": {
+            "text": "Skill Enumeration ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "agent-browser/SOURCE.md"
+                },
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 17
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AS3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RP1",
+          "level": "warning",
+          "message": {
+            "text": "Docker image referenced without tag or digest: 'Docker\nrun options'. ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "apm-usage/dependencies.md"
+                },
+                "region": {
+                  "startLine": 653,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RP1"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/TM1",
+              "shortDescription": {
+                "text": "Skillspector/Tm1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/P6",
+              "shortDescription": {
+                "text": "Skillspector/P6"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/SSRF1",
+              "shortDescription": {
+                "text": "Skillspector/Ssrf1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/E1",
+              "shortDescription": {
+                "text": "Skillspector/E1"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA2",
+              "shortDescription": {
+                "text": "Skillspector/Ea2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/SC2",
+              "shortDescription": {
+                "text": "Skillspector/Sc2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/P2",
+              "shortDescription": {
+                "text": "Skillspector/P2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RP1",
+              "shortDescription": {
+                "text": "Skillspector/Rp1"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/TM1",
+          "level": "error",
+          "message": {
+            "text": "Tool Parameter Abuse ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ax/SKILL.md"
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/TM1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P6",
+          "level": "error",
+          "message": {
+            "text": "Direct Prompt Extraction ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ax/SKILL.md"
+                },
+                "region": {
+                  "startLine": 40,
+                  "startColumn": 4
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P6"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SSRF1",
+          "level": "error",
+          "message": {
+            "text": "Cloud Metadata Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ax/SKILL.md"
+                },
+                "region": {
+                  "startLine": 59,
+                  "startColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SSRF1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/E1",
+          "level": "warning",
+          "message": {
+            "text": "External Transmission ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ax/SKILL.md"
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/E1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/E1",
+          "level": "warning",
+          "message": {
+            "text": "External Transmission ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ax/SKILL.md"
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 4
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/E1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/E1",
+          "level": "warning",
+          "message": {
+            "text": "External Transmission ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ax/SKILL.md"
+                },
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 4
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/E1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/E1",
+          "level": "warning",
+          "message": {
+            "text": "External Transmission ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ax/SKILL.md"
+                },
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 4
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/E1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA2",
+          "level": "warning",
+          "message": {
+            "text": "Autonomous Decision Making ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "ax/SKILL.md"
+                },
+                "region": {
+                  "startLine": 66,
+                  "startColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC2",
+          "level": "error",
+          "message": {
+            "text": "External Script Fetching ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "d2-diagram/SKILL.md"
+                },
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P2",
+          "level": "error",
+          "message": {
+            "text": "Hidden Instructions ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "d2-slides/SKILL.md"
+                },
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P2",
+          "level": "error",
+          "message": {
+            "text": "Hidden Instructions ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "d2-slides/SKILL.md"
+                },
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RP1",
+          "level": "warning",
+          "message": {
+            "text": "MCP server referenced without pinned version: 'npx skills'. ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "explainer/scripts/verify-doc.mjs"
+                },
+                "region": {
+                  "startLine": 149,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RP1"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/P2",
+              "shortDescription": {
+                "text": "Skillspector/P2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/E2",
+              "shortDescription": {
+                "text": "Skillspector/E2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AST4",
+              "shortDescription": {
+                "text": "Skillspector/Ast4"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA4",
+              "shortDescription": {
+                "text": "Skillspector/Ea4"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA2",
+              "shortDescription": {
+                "text": "Skillspector/Ra2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AST7",
+              "shortDescription": {
+                "text": "Skillspector/Ast7"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/P6",
+              "shortDescription": {
+                "text": "Skillspector/P6"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RP1",
+              "shortDescription": {
+                "text": "Skillspector/Rp1"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AE4",
+              "shortDescription": {
+                "text": "Skillspector/Ae4"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA3",
+              "shortDescription": {
+                "text": "Skillspector/Ea3"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P2",
+          "level": "error",
+          "message": {
+            "text": "Hidden Instructions ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "explainer-book/scripts/verify-book.mjs"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P2",
+          "level": "error",
+          "message": {
+            "text": "Hidden Instructions ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "explainer-book/scripts/verify-book.mjs"
+                },
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 66
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P2",
+          "level": "error",
+          "message": {
+            "text": "Hidden Instructions ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "explainer-book/scripts/verify-book.mjs"
+                },
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 66
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P2",
+          "level": "error",
+          "message": {
+            "text": "Hidden Instructions ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "explainer-book/scripts/verify-book.mjs"
+                },
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 172
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P2",
+          "level": "error",
+          "message": {
+            "text": "Hidden Instructions ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "explainer-book/scripts/verify-book.mjs"
+                },
+                "region": {
+                  "startLine": 106,
+                  "startColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P2",
+          "level": "error",
+          "message": {
+            "text": "Hidden Instructions ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "explainer-book/scripts/verify-book.mjs"
+                },
+                "region": {
+                  "startLine": 106,
+                  "startColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/E2",
+          "level": "error",
+          "message": {
+            "text": "Env Variable Harvesting ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 1718,
+                  "startColumn": 19
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/E2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/E2",
+          "level": "error",
+          "message": {
+            "text": "Env Variable Harvesting ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 3901,
+                  "startColumn": 19
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/E2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST4",
+          "level": "warning",
+          "message": {
+            "text": "subprocess module call ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 1437,
+                  "startColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST4"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA4",
+          "level": "warning",
+          "message": {
+            "text": "Unbounded Resource Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 4780,
+                  "startColumn": 59
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA4"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 5243,
+                  "startColumn": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST7",
+          "level": "note",
+          "message": {
+            "text": "Dynamic attribute access via getattr() ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 4811,
+                  "startColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST7"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST7",
+          "level": "note",
+          "message": {
+            "text": "Dynamic attribute access via getattr() ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 5248,
+                  "startColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST7"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P6",
+          "level": "error",
+          "message": {
+            "text": "Direct Prompt Extraction ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_hook.py"
+                },
+                "region": {
+                  "startLine": 142,
+                  "startColumn": 21
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P6"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/P6",
+          "level": "error",
+          "message": {
+            "text": "Direct Prompt Extraction ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_hook.py"
+                },
+                "region": {
+                  "startLine": 146,
+                  "startColumn": 21
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/P6"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RP1",
+          "level": "warning",
+          "message": {
+            "text": "MCP server referenced without pinned version: 'npx skills'. ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "first-reader/README.md"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RP1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AE4",
+          "level": "warning",
+          "message": {
+            "text": "Suspicious Unicode normalization or mixed-script content ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_diff.py"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AE4"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA3",
+          "level": "note",
+          "message": {
+            "text": "Scope Creep ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/UNICODE-LICENSE.txt"
+                },
+                "region": {
+                  "startLine": 25,
+                  "startColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA3"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST7",
+          "level": "note",
+          "message": {
+            "text": "Dynamic attribute access via getattr() ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_lint.py"
+                },
+                "region": {
+                  "startLine": 3297,
+                  "startColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST7"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST7",
+          "level": "note",
+          "message": {
+            "text": "Dynamic attribute access via getattr() ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_lint.py"
+                },
+                "region": {
+                  "startLine": 3298,
+                  "startColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST7"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    }
+  ]
+}

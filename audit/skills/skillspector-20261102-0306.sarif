@@ -1,0 +1,994 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/EA2",
+              "shortDescription": {
+                "text": "Skillspector/Ea2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA2",
+          "level": "warning",
+          "message": {
+            "text": "Autonomous Decision Making ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "automate-me/SKILL.md"
+                },
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA2"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/MP3",
+              "shortDescription": {
+                "text": "Skillspector/Mp3"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/SC2",
+              "shortDescription": {
+                "text": "Skillspector/Sc2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/TM2",
+              "shortDescription": {
+                "text": "Skillspector/Tm2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/PE2",
+              "shortDescription": {
+                "text": "Skillspector/Pe2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/TM1",
+              "shortDescription": {
+                "text": "Skillspector/Tm1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA2",
+              "shortDescription": {
+                "text": "Skillspector/Ea2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA2",
+              "shortDescription": {
+                "text": "Skillspector/Ra2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AS3",
+              "shortDescription": {
+                "text": "Skillspector/As3"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/SC1",
+              "shortDescription": {
+                "text": "Skillspector/Sc1"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC1",
+          "level": "note",
+          "message": {
+            "text": "Unpinned Dependencies ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/scripts/package.json"
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC1"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/SC1",
+          "level": "note",
+          "message": {
+            "text": "Unpinned Dependencies ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "poteto-mode/scripts/package.json"
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/SC1"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": []
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/RA1",
+              "shortDescription": {
+                "text": "Skillspector/Ra1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA2",
+              "shortDescription": {
+                "text": "Skillspector/Ra2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/MP3",
+              "shortDescription": {
+                "text": "Skillspector/Mp3"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/P6",
+              "shortDescription": {
+                "text": "Skillspector/P6"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/TM2",
+              "shortDescription": {
+                "text": "Skillspector/Tm2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/TM1",
+              "shortDescription": {
+                "text": "Skillspector/Tm1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/YR4",
+              "shortDescription": {
+                "text": "Skillspector/Yr4"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/YR4",
+              "shortDescription": {
+                "text": "Skillspector/Yr4"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AS1",
+              "shortDescription": {
+                "text": "Skillspector/As1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AS2",
+              "shortDescription": {
+                "text": "Skillspector/As2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA1",
+              "shortDescription": {
+                "text": "Skillspector/Ra1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA2",
+              "shortDescription": {
+                "text": "Skillspector/Ea2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA2",
+              "shortDescription": {
+                "text": "Skillspector/Ra2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RP1",
+              "shortDescription": {
+                "text": "Skillspector/Rp1"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AS3",
+              "shortDescription": {
+                "text": "Skillspector/As3"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AR2",
+              "shortDescription": {
+                "text": "Skillspector/Ar2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/SC2",
+              "shortDescription": {
+                "text": "Skillspector/Sc2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/TM2",
+              "shortDescription": {
+                "text": "Skillspector/Tm2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/TM1",
+              "shortDescription": {
+                "text": "Skillspector/Tm1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/P6",
+              "shortDescription": {
+                "text": "Skillspector/P6"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/SSRF1",
+              "shortDescription": {
+                "text": "Skillspector/Ssrf1"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/E1",
+              "shortDescription": {
+                "text": "Skillspector/E1"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA2",
+              "shortDescription": {
+                "text": "Skillspector/Ea2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/SC2",
+              "shortDescription": {
+                "text": "Skillspector/Sc2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/P2",
+              "shortDescription": {
+                "text": "Skillspector/P2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RP1",
+              "shortDescription": {
+                "text": "Skillspector/Rp1"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "apm-audit",
+          "informationUri": "https://apm.github.io/apm/enterprise/security/",
+          "rules": [
+            {
+              "id": "apm/hidden-unicode/skillspector/P2",
+              "shortDescription": {
+                "text": "Skillspector/P2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/E2",
+              "shortDescription": {
+                "text": "Skillspector/E2"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AST4",
+              "shortDescription": {
+                "text": "Skillspector/Ast4"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA4",
+              "shortDescription": {
+                "text": "Skillspector/Ea4"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RA2",
+              "shortDescription": {
+                "text": "Skillspector/Ra2"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AST7",
+              "shortDescription": {
+                "text": "Skillspector/Ast7"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/P6",
+              "shortDescription": {
+                "text": "Skillspector/P6"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/RP1",
+              "shortDescription": {
+                "text": "Skillspector/Rp1"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/AE4",
+              "shortDescription": {
+                "text": "Skillspector/Ae4"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            },
+            {
+              "id": "apm/hidden-unicode/skillspector/EA3",
+              "shortDescription": {
+                "text": "Skillspector/Ea3"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://apm.github.io/apm/enterprise/security/"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST4",
+          "level": "warning",
+          "message": {
+            "text": "subprocess module call ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 1437,
+                  "startColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST4"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/EA4",
+          "level": "warning",
+          "message": {
+            "text": "Unbounded Resource Access ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 4780,
+                  "startColumn": 59
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/EA4"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/RA2",
+          "level": "warning",
+          "message": {
+            "text": "Session Persistence ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 5243,
+                  "startColumn": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/RA2"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST7",
+          "level": "note",
+          "message": {
+            "text": "Dynamic attribute access via getattr() ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 4811,
+                  "startColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST7"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST7",
+          "level": "note",
+          "message": {
+            "text": "Dynamic attribute access via getattr() ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_check.py"
+                },
+                "region": {
+                  "startLine": 5248,
+                  "startColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST7"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AE4",
+          "level": "warning",
+          "message": {
+            "text": "Suspicious Unicode normalization or mixed-script content ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_diff.py"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AE4"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST7",
+          "level": "note",
+          "message": {
+            "text": "Dynamic attribute access via getattr() ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_lint.py"
+                },
+                "region": {
+                  "startLine": 3297,
+                  "startColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST7"
+          }
+        },
+        {
+          "ruleId": "apm/hidden-unicode/skillspector/AST7",
+          "level": "note",
+          "message": {
+            "text": "Dynamic attribute access via getattr() ()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "yomiyasu/scripts/yomiyasu_lint.py"
+                },
+                "region": {
+                  "startLine": 3298,
+                  "startColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "codepoint": "",
+            "category": "skillspector/AST7"
+          }
+        }
+      ],
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "properties": {
+            "filesScanned": 0
+          }
+        }
+      ]
+    }
+  ]
+}
