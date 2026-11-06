@@ -4,7 +4,7 @@
   "private": true,
   "description": "OpenCode v2 CLI for the sbx common image",
   "dependencies": {
-    "@opencode/cli": "2.1.3"
+    "@opencode/cli": "2.2.5"
   },
   "allowScripts": {
     "@opencode/cli": true
