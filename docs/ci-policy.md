@@ -34,9 +34,9 @@ schedule は変更パスのフィルターと組み合わせられないため�
 ## Bot の承認不要 CI
 
 自動更新のコミットは `create-pull-request` の `sign-commits: true` で署名する。
-PR 作成直後は `tools/dispatch-pr-ci.mjs` が PR の作者、同一リポジトリ、main 宛て、既知の更新ブランチを確認してチェックを起動する。成功済み・実行中は再起動せず、失敗・キャンセル・承認待ちは再試行の対象にする。APM / pstack は OpenCode とスキル検証、Nix 更新は両イメージと flake 検証に限定する。
+PR 作成直後は `tools/dispatch-pr-ci.mjs` が PR の作者、同一リポジトリ、main 宛て、既知の更新ブランチを確認してチェックを起動する。成功済み・実行中は再起動しない。失敗・キャンセルは dispatch で再試行する。`GITHUB_TOKEN` による PR の通常イベントが承認待ち（`action_required`）になっている場合は、その実行を `actions/runs/{id}/approve` で承認し、同じコミットのチェックを二重に起動しない。承認が拒否された場合だけ dispatch にフォールバックする。APM / pstack は OpenCode とスキル検証、Nix 更新は両イメージと flake 検証に限定する。
 
-GitHub が `GITHUB_TOKEN` による PR の通常イベントを承認待ちにする場合も、dispatch のチェックは別に実行される。通常イベントを手動承認すると重複実行になり得る。承認待ちの表示までなくすには、PR 作成を専用 GitHub App トークンへ切り替える必要がある。
+そのため自動更新 PR のチェックに管理者の手動承認は要らない。承認待ちの表示自体を出さない（PR 作成を専用 GitHub App トークンへ切り替える）のは将来の選択肢で、必須ではない。
 
 GitHub の Actions 設定は、Actions を有効にし、使用する外部 Action を許可し、`can_approve_pull_request_reviews: true`（UI の「Allow GitHub Actions to create and approve pull requests」）を有効にする。既定トークンは read、書き込み権限は必要なジョブで個別に宣言する。fork 向け承認方針はこの自動更新の承認制御とは別の設定で、所有者・同一リポジトリの Renovate PR を承認不要にするために緩める必要はない。
 

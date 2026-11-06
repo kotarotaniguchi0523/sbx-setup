@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checksFor, hasCoverage } from './dispatch-pr-ci.mjs';
+import { checksFor, hasCoverage, approvalRequired } from './dispatch-pr-ci.mjs';
 
 test('skill updates build only OpenCode and run delta verification', () => {
   for (const branch of ['chore/apm-update', 'chore/pstack-upstream']) {
@@ -43,4 +43,14 @@ test('current successful or running CI prevents duplicate dispatch', () => {
     { status: 'queued', conclusion: null },
     { status: 'in_progress', conclusion: null },
   ]) assert.equal(hasCoverage([{ head_sha: 'head', ...run }], 'head'), true);
+});
+
+test('a run waiting for approval is approved for the same commit only', () => {
+  const pending = { id: 42, head_sha: 'head', status: 'completed', conclusion: 'action_required' };
+  assert.equal(approvalRequired([pending], 'head'), pending);
+  assert.equal(approvalRequired([{ ...pending, head_sha: 'old' }], 'head'), null);
+  assert.equal(approvalRequired([
+    { id: 1, head_sha: 'head', status: 'completed', conclusion: 'cancelled' },
+    { id: 2, head_sha: 'head', status: 'queued', conclusion: null },
+  ], 'head'), null);
 });
