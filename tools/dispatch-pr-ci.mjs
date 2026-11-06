@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// GITHUB_TOKEN-created PR runs can require approval. Dispatch the same checks
-// on the bot branch, without repeating checks already running or successful.
+// GITHUB_TOKEN-created PR runs can require approval. Approve that pending run
+// when it exists, otherwise dispatch the same checks on the bot branch,
+// without repeating checks already running or successful.
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
@@ -28,6 +29,14 @@ export function hasCoverage(runs, sha) {
   ));
 }
 
+// Runs created by GITHUB_TOKEN PR events wait for a maintainer approval. When
+// one exists for the same commit, approve it instead of dispatching a second
+// run: the checks are identical and a duplicate build is expensive.
+export function approvalRequired(runs, sha) {
+  return runs.find(run => run.head_sha === sha &&
+    run.status === 'completed' && run.conclusion === 'action_required') ?? null;
+}
+
 function gh(...args) {
   return execFileSync('gh', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] });
 }
@@ -44,9 +53,22 @@ function main() {
   for (const { workflow, inputs } of checks) {
     const pages = JSON.parse(gh('api', '--paginate', '--slurp',
       `repos/{owner}/{repo}/actions/workflows/${workflow}/runs?head_sha=${pr.head.sha}&per_page=100`));
-    if (hasCoverage(pages.flatMap(page => page.workflow_runs), pr.head.sha)) {
+    const runs = pages.flatMap(page => page.workflow_runs);
+    if (hasCoverage(runs, pr.head.sha)) {
       console.log(`${workflow}: already running or successful at ${pr.head.sha}`);
       continue;
+    }
+    const pending = approvalRequired(runs, pr.head.sha);
+    if (pending) {
+      try {
+        gh('api', '--method', 'POST',
+          `repos/{owner}/{repo}/actions/runs/${pending.id}/approve`);
+        console.log(`${workflow}: approved pending run ${pending.id} at ${pr.head.sha}`);
+        continue;
+      } catch {
+        // Approval can be refused (e.g. fork policy); dispatching still works.
+        console.error(`${workflow}: could not approve run ${pending.id}; dispatching instead`);
+      }
     }
     // Check the branch again before dispatch: never intentionally target a
     // different commit than the one whose existing CI was inspected.
