@@ -5,7 +5,6 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
-
 # Explain the Number
 
 - **Write the decision before you run.** Name the result that would change a decision, and the noise floor. Stop when the run-to-run spread is larger than the effect.
