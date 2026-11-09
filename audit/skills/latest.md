@@ -1,4 +1,4 @@
-# Skill security audit · 2026-11-02T03:05Z
+# Skill security audit · 2026-11-09T03:25Z
 
 **Version** `pstack-opencode 0.1.0` · upstream `cursor/plugins@c742dd61706f`
 **Scanner** APM external scanner — `apm audit --external skillspector` (offline, deterministic)
@@ -34,13 +34,13 @@
 | note | apm/hidden-unicode/skillspector/SC1 | poteto-mode/scripts/package.json:13 |
 | note | apm/hidden-unicode/skillspector/SC1 | poteto-mode/scripts/package.json:14 |
 | warning | apm/hidden-unicode/skillspector/AST4 | yomiyasu/scripts/yomiyasu_check.py:1437 |
-| warning | apm/hidden-unicode/skillspector/EA4 | yomiyasu/scripts/yomiyasu_check.py:4780 |
-| warning | apm/hidden-unicode/skillspector/RA2 | yomiyasu/scripts/yomiyasu_check.py:5243 |
-| note | apm/hidden-unicode/skillspector/AST7 | yomiyasu/scripts/yomiyasu_check.py:4811 |
-| note | apm/hidden-unicode/skillspector/AST7 | yomiyasu/scripts/yomiyasu_check.py:5248 |
+| warning | apm/hidden-unicode/skillspector/EA4 | yomiyasu/scripts/yomiyasu_check.py:4831 |
+| warning | apm/hidden-unicode/skillspector/RA2 | yomiyasu/scripts/yomiyasu_check.py:5294 |
+| note | apm/hidden-unicode/skillspector/AST7 | yomiyasu/scripts/yomiyasu_check.py:4862 |
+| note | apm/hidden-unicode/skillspector/AST7 | yomiyasu/scripts/yomiyasu_check.py:5299 |
 | warning | apm/hidden-unicode/skillspector/AE4 | yomiyasu/scripts/yomiyasu_diff.py:1 |
-| note | apm/hidden-unicode/skillspector/AST7 | yomiyasu/scripts/yomiyasu_lint.py:3297 |
-| note | apm/hidden-unicode/skillspector/AST7 | yomiyasu/scripts/yomiyasu_lint.py:3298 |
+| note | apm/hidden-unicode/skillspector/AST7 | yomiyasu/scripts/yomiyasu_lint.py:3378 |
+| note | apm/hidden-unicode/skillspector/AST7 | yomiyasu/scripts/yomiyasu_lint.py:3379 |
 
 ## Rules
 
