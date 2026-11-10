@@ -5,7 +5,6 @@ description: "Configure which models pstack uses per role and at what reasoning 
 
 > **OpenCode note.** This skill was authored for Cursor / Claude Code. Where it names a tool, a subagent, or a model, use the OpenCode equivalent in the `poteto-mode` skill's `references/opencode-tools.md`.
 
-
 # Setup pstack
 
 Write `~/.cursor/rules/pstack-models.mdc`, an always-applied rule that sets pstack's model per role.

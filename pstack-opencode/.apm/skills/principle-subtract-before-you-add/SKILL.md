@@ -5,7 +5,6 @@ metadata:
   opencode/autoinvoke: "false"
 ---
 
-
 # Subtract Before You Add
 
 When evolving a system, remove complexity first, then build. Default to subtraction.
