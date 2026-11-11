@@ -6,7 +6,7 @@
 
 | Workflow | PR で検証する変更 | main 更新後 |
 |---|---|---|
-| build | 全 PR に必須チェックを返す。OpenCode / Codex / 共通入力の変更に応じて対象イメージだけビルド | 同じ入力パスの変更時だけ対象イメージを GHCR に公開 |
+| build | 全 PR に必須チェックを返す。OpenCode / Codex / Claude Code / 共通入力の変更に応じて対象イメージだけビルド | 同じ入力パスの変更時だけ対象イメージを GHCR に公開 |
 | nix | flake.nix、flake.lock、nix.yml | PR で検証済みのため再実行しない |
 | sisakulint | Workflow、lint 設定・実装・バージョン、自動 CI 起動スクリプト | 同じパスに限定し、SARIF を公開 |
 | skills-verify | APM manifest / lock、変換・vendor・スキル本体、検証コード・baseline | 再実行しない |
@@ -34,7 +34,7 @@ schedule は変更パスのフィルターと組み合わせられないため�
 ## Bot の承認不要 CI
 
 自動更新のコミットは `create-pull-request` の `sign-commits: true` で署名する。
-PR 作成直後は `tools/dispatch-pr-ci.mjs` が PR の作者、同一リポジトリ、main 宛て、既知の更新ブランチを確認してチェックを起動する。成功済み・実行中は再起動しない。失敗・キャンセルは dispatch で再試行する。`GITHUB_TOKEN` による PR の通常イベントが承認待ち（`action_required`）になっている場合は、その実行を `actions/runs/{id}/approve` で承認し、同じコミットのチェックを二重に起動しない。承認が拒否された場合だけ dispatch にフォールバックする。APM / pstack は OpenCode とスキル検証、Nix 更新は両イメージと flake 検証に限定する。
+PR 作成直後は `tools/dispatch-pr-ci.mjs` が PR の作者、同一リポジトリ、main 宛て、既知の更新ブランチを確認してチェックを起動する。成功済み・実行中は再起動しない。失敗・キャンセルは dispatch で再試行する。`GITHUB_TOKEN` による PR の通常イベントが承認待ち（`action_required`）になっている場合は、その実行を `actions/runs/{id}/approve` で承認し、同じコミットのチェックを二重に起動しない。承認が拒否された場合だけ dispatch にフォールバックする。APM / pstack は OpenCode とスキル検証、Nix 更新は全イメージと flake 検証に限定する。
 
 そのため自動更新 PR のチェックに管理者の手動承認は要らない。承認待ちの表示自体を出さない（PR 作成を専用 GitHub App トークンへ切り替える）のは将来の選択肢で、必須ではない。
 

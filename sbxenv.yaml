@@ -12,6 +12,11 @@ schemaVersion: "1"
 #       --env-arg agent=codex --env-arg template=common-codex:dev \
 #       --env-arg workspace=%USERPROFILE%\projects
 #
+#   Claude Code:
+#     sbx env run sbx-setup/sbxenv.yaml --name common-claude \
+#       --env-arg agent=claude --env-arg template=common-claude:dev \
+#       --env-arg workspace=%USERPROFILE%\projects
+#
 # lifecycle.initialize runs on the host before the sandbox is created, so the
 # build + load happen as part of the same command. sbx has no build verb and
 # its runtime does not share the host Docker image store, so the images are
@@ -21,7 +26,7 @@ schemaVersion: "1"
 args:
   agent:
     default: opencode
-    enum: [opencode, codex]
+    enum: [opencode, codex, claude]
   template:
     default: common-opencode:dev
   workspace:
@@ -36,8 +41,8 @@ sandboxOptions:
   pullPolicy: never
   skills: off
 
-# 自作 kit（common-opencode / common-codex）が credential@1 で github を
-# 宣言しているため、その注入ドメインを承認する（opencode / codex 共通）。
+# 自作 kit（common-opencode / common-codex / common-claude）が credential@1 で github を
+# 宣言しているため、その注入ドメインを承認する（opencode / codex / claude 共通）。
 # 承認は host 全体の credentials.yaml にマージされる（sbx env rm でも残る）。
 bindings:
   github:
@@ -65,6 +70,6 @@ lifecycle:
       command: docker buildx bake
       workdir: ${{ env.fileDir }}
     - name: Save templates (single tar)
-      command: docker image save common-opencode:dev common-codex:dev -o "${{ env.fileDir }}/templates.tar"
+      command: docker image save common-opencode:dev common-codex:dev common-claude:dev -o "${{ env.fileDir }}/templates.tar"
     - name: Load templates into sbx (single tar)
       command: sbx template load "${{ env.fileDir }}/templates.tar"

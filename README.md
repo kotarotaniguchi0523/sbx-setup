@@ -12,6 +12,7 @@ sbx-setup/
 ├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node 24 LTS）
 ├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
 ├── common-codex/           # Codex 用 kit
+├── common-claude/          # Claude Code 用 kit（Claude Code 本体は base テンプレート同梱のものを使用）
 ├── pstack-opencode/        # 本家 pstack を OpenCode 向けに変換する APM パッケージ
 │   ├── tools/convert.mjs            # Repomix で本家を取得し .apm/ を生成
 │   ├── tools/templates/AGENTS.md    # routing（opencode/AGENTS.md の元）
@@ -31,7 +32,7 @@ sbx-setup/
 | 項目 | 決定 |
 |------|------|
 | 入口 | `sbx env run` / `sbx env create`（`sbx-setup/sbxenv.yaml`） |
-| エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`） |
+| エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code` 同梱のもの） |
 | MCP | context7 のみ |
 | CLI | git/gh, uv, mise, nix, cf, mo, difit, waza, apm, agent-browser, ax, node/npm（**Node 24 LTS + npm 12**） |
 | 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |
@@ -73,7 +74,7 @@ sbx-setup/
 | Docker Sandboxes (sbx) | 実行基盤 | Docker | https://docs.docker.com/ai/sandboxes/ |
 | Renovate | 依存更新 | Mend App | https://github.com/renovatebot/renovate |
 
-- 一覧は**このリポジトリで追加・管理しているもの**のみ。base イメージ（`docker/sandbox-templates`）が元から提供する **エージェント（opencode / codex）・Node/npm・jq / ripgrep / gh / uv・python / git / curl** は除外（base は digest ピンなので据え置き。Node/npm のみ npm 12 のため Nix で上書き）。
+- 一覧は**このリポジトリで追加・管理しているもの**のみ。base イメージ（`docker/sandbox-templates`）が元から提供する **エージェント（opencode / codex / claude）・Node/npm・jq / ripgrep / gh / uv・python / git / curl** は除外（base は digest ピンなので据え置き。Node/npm のみ npm 12 のため Nix で上書き）。
 - **pnpm**: ワークスペースは virtiofs で symlink 不可のため、`pnpm` を**薄いラッパー**で包み、**pnpm 実行時だけ** `PNPM_CONFIG_NODE_LINKER=hoisted` ＋ `PNPM_CONFIG_PREFER_SYMLINKED_EXECUTABLES=false` を当てる。`PNPM_CONFIG_*` は **pnpm 専用の環境変数名前空間**で、pnpm 専用のグローバル設定ファイルは置かない → npm / yarn / Go / uv / 他言語には**一切関与しない**。
 
 ## 実行（入口は `sbx env`）
@@ -88,12 +89,14 @@ sbx env run
 テンプレートのビルド（並列 bake）→ save → load → サンドボックス作成 までを1コマンドで行う。
 サンドボックス名は自動（`<agent>-<workspace-basename>`）。
 
-opencode / codex を切り替えたい場合は、リポジトリ同梱のパラメータ付きファイルを使う:
+opencode / codex / Claude Code を切り替えたい場合は、リポジトリ同梱のパラメータ付きファイルを使う:
 
 ```bat
 sbx env run sbx-setup\sbxenv.yaml --name common-opencode --env-arg workspace=%USERPROFILE%\projects
 sbx env run sbx-setup\sbxenv.yaml --name common-codex ^
   --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=%USERPROFILE%\projects
+sbx env run sbx-setup\sbxenv.yaml --name common-claude ^
+  --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=%USERPROFILE%\projects
 ```
 
 未アタッチで作成だけなら `sbx env create --auto-approve ...`、削除は `sbx env rm ...`。
@@ -105,9 +108,9 @@ sbx env run sbx-setup\sbxenv.yaml --name common-codex ^
 
 サンドボックスの作成前に **host 側**で実行される:
 
-1. `docker buildx bake`（`docker-bake.hcl`）で `common-opencode` / `common-codex` を**並列ビルド**
+1. `docker buildx bake`（`docker-bake.hcl`）で `common-opencode` / `common-codex` / `common-claude` を**並列ビルド**
    （**opencode はこの中で本家 pstack の変換も実行**）
-2. `docker image save` で**両イメージを1つの tar** に保存
+2. `docker image save` で**全イメージを1つの tar** に保存
 3. `sbx template load` **1回**で sbx のランタイムへ取り込み
 
 > `lifecycle.initialize` のコマンドは**順次実行**（並列不可）なので、並列化は `docker buildx bake`
@@ -120,7 +123,8 @@ sbx env run sbx-setup\sbxenv.yaml --name common-codex ^
 cd sbx-setup
 docker buildx build -f common-opencode\common-opencode.yaml -t common-opencode:dev .
 docker buildx build -f common-codex\common-codex.yaml       -t common-codex:dev    .
-docker image save common-opencode:dev common-codex:dev -o "%TEMP%\templates.tar"
+docker buildx build -f common-claude\common-claude.yaml     -t common-claude:dev   .
+docker image save common-opencode:dev common-codex:dev common-claude:dev -o "%TEMP%\templates.tar"
 sbx template load "%TEMP%\templates.tar"
 sbx template ls
 ```
@@ -135,6 +139,7 @@ sbx template ls
 REM 既にロード済みテンプレートで直接起動（ビルドしない）
 sbx run --pull never -t common-opencode:dev opencode %USERPROFILE%\projects
 sbx run --pull never -t common-codex:dev    codex    %USERPROFILE%\projects
+sbx run --pull never -t common-claude:dev   claude   %USERPROFILE%\projects
 
 REM TUI ダッシュボード（作成/一覧/attach）。テンプレート選択が出れば上記の :dev を選ぶ
 sbx tui
@@ -155,15 +160,15 @@ Renovate の APM manager は `#<ref>` のない依存をスキップするため
 | パッケージ | 形 | 対象 | skills |
 |---|---|---|---|
 | `pstack-opencode` | ビルド内生成（ローカル `/opt`） | opencode | 58 |
-| `mizchi/explainer` | GitHub 依存 | opencode / codex | 5 |
-| `nanaism/yomiyasu` | GitHub 依存 | opencode / codex | 1 |
-| `vercel-labs/agent-browser` | GitHub 依存 | opencode / codex | 1 |
-| `yusukebe/ax` | GitHub 依存 | opencode / codex | 1 |
-| `microsoft/waza` | GitHub 依存 | opencode / codex | 3 |
-| `microsoft/apm`（`apm-usage`） | GitHub 依存（パス指定） | opencode / codex | 1 |
+| `mizchi/explainer` | GitHub 依存 | opencode / codex / claude | 5 |
+| `nanaism/yomiyasu` | GitHub 依存 | opencode / codex / claude | 1 |
+| `vercel-labs/agent-browser` | GitHub 依存 | opencode / codex / claude | 1 |
+| `yusukebe/ax` | GitHub 依存 | opencode / codex / claude | 1 |
+| `microsoft/waza` | GitHub 依存 | opencode / codex / claude | 3 |
+| `microsoft/apm`（`apm-usage`） | GitHub 依存（パス指定） | opencode / codex / claude | 1 |
 
 配置先: opencode → `~/.config/opencode/skills/`（agents は `~/.config/opencode/agents/`）、
-codex → `~/.agents/skills/`。
+codex → `~/.agents/skills/`、claude → `~/.claude/skills/`。
 
 ### pstack の変換（自動・決定的）
 
@@ -175,7 +180,7 @@ codex → `~/.agents/skills/`。
 ## ネットワーク許可
 
 サンドボックスの許可ホストは **kit 記述子**（`common-opencode/common-opencode.yaml` /
-`common-codex/common-codex.yaml` の `network-policy` capability）で宣言する。
+`common-codex/common-codex.yaml` / `common-claude/common-claude.yaml` の `network-policy` capability）で宣言する。
 `sbxenv.yaml` には書けない（`network:` は未知フィールド）。
 
 既定で許可:
@@ -200,7 +205,7 @@ context7 の API キーは平文保存を避け、`sbx secret set` を使う。
 
 ## GitHub 認証（gh / git）
 
-サンドボックス内で `gh auth login` は不要。ホスト側プロキシが GitHub トークンを `GH_TOKEN` として注入する（opencode/codex 両 descriptor で `github` credential を宣言済み）。
+サンドボックス内で `gh auth login` は不要。ホスト側プロキシが GitHub トークンを `GH_TOKEN` として注入する（opencode/codex/claude 全 descriptor で `github` credential を宣言済み）。
 
 ```bat
 sbx secret set github --command "gh auth token"
@@ -243,7 +248,7 @@ lefthook install
 
 ## CI / セキュリティ / 依存更新
 
-- `.github/workflows/build.yml` … opencode / codex を **matrix で並列**ビルド。集約ジョブ `build` が必須チェック。PR はビルドのみ、main はビルド＋ghcr push（**provenance + SBOM** 付き）
+- `.github/workflows/build.yml` … opencode / codex / claude を **matrix で並列**ビルド。集約ジョブ `build` が必須チェック。PR はビルドのみ、main はビルド＋ghcr push（**provenance + SBOM** 付き）
 - `.github/workflows/sisakulint.yml` … GH Actions の SAST（`fail-on: high`）。SARIF は自前生成し `codeql-action` v4 で Code Scanning へ
 - `.github/workflows/nix.yml` … `flake.nix` の devShell を検証
 - `.github/workflows/skills-audit.yml` … **週次（月曜 09:00 JST）＋手動**で全 skills を監査。SkillSpector は **APM の外部スキャナ統合**（`apm audit --external skillspector`。APM がオフライン＝`--no-llm` で実行し SARIF を取り込む。API キー・OpenCode ログインは**不要**）。**毎 push では走らせない**。結果は **GitHub Issue「Skill security audit」を毎回更新**（人間向け）＋ **`audit/skills` ブランチに日付付きで保存** ＋ SARIF を Code Scanning へ
@@ -287,13 +292,14 @@ lefthook install
 
 - Nix 由来ツールとサンドボックス内 `nix` の動作はローカル/CI で確認済み（単一ユーザー install は `/nix` を agent 所有にして解決）。
 - 本家 poteto-mode は Cursor 前提部分があり、OpenCode でマルチモデル連携の挙動は未検証。
-- pstack は OpenCode のみ（codex には未導入）。
+- pstack は OpenCode のみ（codex / claude には未導入）。
+- Claude Code はサンドボックス内で `claude --dangerously-skip-permissions` で起動する（base テンプレートと同じ。隔離はサンドボックスが担う）。Claude Code 本体のバージョンは base イメージの digest ピンに従い、Renovate が更新する。
 - 自動更新 PR は `sign-commits: true` で GitHub に署名させ、main の署名必須ルールに対応する。
 
 ## 自動更新PRのCI
 
 `apm-update` / `pstack-update` / `nix-lock` / `nix-tools-update` は main 上で実行し、署名付きコミットで PR を作成・更新する。
-`tools/dispatch-pr-ci.mjs` は同じコミットの成功済み・実行中の CI を確認し、不足・失敗・承認待ちの場合だけ更新ブランチへ `workflow_dispatch` する。APM・pstack は OpenCode の `build` と差分の `skills-verify`、Nix 更新は両イメージの `build` と `nix` を実行する。PAT や追加シークレットは不要。
+`tools/dispatch-pr-ci.mjs` は同じコミットの成功済み・実行中の CI を確認し、不足・失敗・承認待ちの場合だけ更新ブランチへ `workflow_dispatch` する。APM・pstack は OpenCode の `build` と差分の `skills-verify`、Nix 更新は全イメージの `build` と `nix` を実行する。PAT や追加シークレットは不要。
 
 GitHub の仕様上、`GITHUB_TOKEN` が作る PR の `pull_request` 実行は承認待ちになることがある。必要なチェックは上記の dispatch で実行するので、その実行のために手動承認する必要はない。表示上の承認待ちもなくすには、PR 作成用の GitHub App トークンが別途必要。
 
