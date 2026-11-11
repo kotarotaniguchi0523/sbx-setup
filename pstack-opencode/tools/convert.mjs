@@ -66,7 +66,7 @@ function repomix(ref) {
   process.stderr.write(`packing ${REPO} (${INCLUDE}) with repomix...\n`);
   // Write to a file rather than capturing stdout: a multi-hundred-KB pipe
   // capture crashes Node on Windows.
-  const cmd = `npx -y repomix@1.18.1 --remote ${REPO} --remote-branch "${ref}" --include "${INCLUDE}" --style json -o "${cache}"`;
+  const cmd = `npx -y repomix@1.19.0 --remote ${REPO} --remote-branch "${ref}" --include "${INCLUDE}" --style json -o "${cache}"`;
   try {
     execSync(cmd, { stdio: ["ignore", "inherit", "inherit"], shell: true });
   } catch (err) {
