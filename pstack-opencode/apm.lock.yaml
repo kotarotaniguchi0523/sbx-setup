@@ -49,7 +49,7 @@ dependencies:
 - repo_url: microsoft/waza
   name: waza
   host: github.com
-  resolved_commit: 0869f067a2b98503809df95f44d940962a04891f
+  resolved_commit: fab6106d06e3a3cb059bab35fbef9e8dc16040a5
   version: unknown
   package_type: skill_bundle
   deployed_files:
@@ -65,7 +65,7 @@ dependencies:
     .agents/skills/waza-interactive/SKILL.md: sha256:6976d7c90efce2fa934871265085abaceb59bc722d6218307c7a1d962838be71
     .agents/skills/waza-interactive/tests/eval.yaml: sha256:fdb84af4a57da4ad360f1bbf35d34b7ae786586f3c73f8abff2a5ff63ced8e00
     .agents/skills/waza/SKILL.md: sha256:e7ef60562bbf3535d7ca4b8b8b9d5c65bd210a37a03ef00e19e43be16b4f960e
-  content_hash: sha256:3caefb9d3cfa7af3cb12c3ec354745252efae1d618b28b348b46821bda978e27
+  content_hash: sha256:85b49057a375c84d37db23f18c6555c7c21b934a129acdef9baa284bf71d380c
 - repo_url: mizchi/explainer
   name: explainer
   host: github.com
@@ -160,7 +160,7 @@ dependencies:
 - repo_url: nanaism/yomiyasu
   name: yomiyasu
   host: github.com
-  resolved_commit: 29d67ccb05e370b5958d72920a9cd1aa829dee80
+  resolved_commit: 8394e099486aaa2e28cf89992e46f5ebe5ed839d
   version: 2.5.0
   package_type: marketplace_plugin
   deployed_files:
@@ -252,12 +252,12 @@ dependencies:
     .agents/skills/yomiyasu/scripts/yomiyasu_diff.py: sha256:44a95ce08115e424f5871dadc4dada38ac2683493c366d699b99586716936bb8
     .agents/skills/yomiyasu/scripts/yomiyasu_hook.py: sha256:dba402af0ff280417906f48586f446aa371d2dcfa7de9b55db1fa8885692a39d
     .agents/skills/yomiyasu/scripts/yomiyasu_lint.py: sha256:cfa03a806514ba050dcb526ed76e1114e879e27fee47f86dc64b010c865514db
-  content_hash: sha256:d93faf1565b2fd6e033c5ea36a862623f52730cab951bf6394bd23b2ab4fb9f7
+  content_hash: sha256:28fe119f14968df5ec579d9d0ae5732ac29018a83c6e00d9b41f45371e30b6e1
   declared_license: MIT
 - repo_url: yusukebe/ax
   name: ax
   host: github.com
-  resolved_commit: 8abbca2fc400c2ff4866248ba1ec9309b948812f
+  resolved_commit: d97681ea17be17118ba1fd8d75613fa2749bfc93
   version: unknown
   package_type: skill_bundle
   deployed_files:
@@ -265,7 +265,7 @@ dependencies:
   - .agents/skills/ax/SKILL.md
   deployed_file_hashes:
     .agents/skills/ax/SKILL.md: sha256:4acbbc5574e36a21c27fbc3099cc40638e074e7cada674e00d23698cef34d37c
-  content_hash: sha256:90a957026d94fd46b62a758428971c8377db8fe8b7d818cb6a1b7ed1cfbe6734
+  content_hash: sha256:68d0cfcb94676124e99227f7ade42548ad5deef96bd2c20fa642723b3dbd9371
 deployments:
 - kind: project-relative
   target: legacy
@@ -1013,7 +1013,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:667d9cf7222e9aae3fa42a4be383e657784216e9df115da02227fbc5ac7bbe46
+  content_hash: sha256:6edead64c37e326bd39b1d6a86518aa19f5d00d39e953edf7473d970abb3b7f4
 - kind: project-relative
   target: legacy
   value: .agents/skills/poteto-mode/scripts/check-plan.mjs
@@ -1067,7 +1067,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:c9db6bb9362c6e319e395b358b113ebc72ab06b6c5e3a095093f6ebfdafe1c57
+  content_hash: sha256:ce63908de71140d87aae7256c8620aebbbf9d8deae96b3758c7b4102628caa44
 - kind: project-relative
   target: legacy
   value: .agents/skills/poteto-mode/scripts/watch-pr/cli.test.ts
@@ -1922,7 +1922,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:2c36842f391275b0f343a38947560adee155fab4a744eacef1e595e9f07c4e3d
+  content_hash: sha256:47760217039f764e943a33042532318d80276e38fbf4ba7d3cbf7c1bba579f92
 - kind: project-relative
   target: legacy
   value: .agents/skills/statechart/scripts/passes/annotate.ts
@@ -7350,13 +7350,13 @@ local_deployed_file_hashes:
   .agents/skills/poteto-mode/references/bugbot-triage.md: sha256:b2d146c770d8d3593e1ef3d77b668039b8e1f78093ea1a86f1d45d7f99614309
   .agents/skills/poteto-mode/references/opencode-tools.md: sha256:1c906cff2d9126f97fe6cdbe0043cf9b9180af9432c00c89eab9c222022f652e
   .agents/skills/poteto-mode/scripts/bootstrap.ts: sha256:ccd2ed08fd9da9d0d942e5f2491cfc74bb92d8a08fa51755e0da1ac8de287361
-  .agents/skills/poteto-mode/scripts/bun.lock: sha256:667d9cf7222e9aae3fa42a4be383e657784216e9df115da02227fbc5ac7bbe46
+  .agents/skills/poteto-mode/scripts/bun.lock: sha256:6edead64c37e326bd39b1d6a86518aa19f5d00d39e953edf7473d970abb3b7f4
   .agents/skills/poteto-mode/scripts/check-plan.mjs: sha256:e3d4e9ca638c6fb4a2b52c434c17c7af30da4fdd44605ccfe9906f82fe37b555
   .agents/skills/poteto-mode/scripts/check-plan.test.ts: sha256:848d321f2b76299d1b2d7bb46c929dbaebef08ca4ba8669dbe09d1d5c86f96e2
   .agents/skills/poteto-mode/scripts/orch/orch.test.ts: sha256:234668333d5184324be7231b17636d3502041460ca57c9aaab44104dfc23ed09
   .agents/skills/poteto-mode/scripts/orch/orch.ts: sha256:ffa225e4e9c61e9731b819f3e07e6b56ccea7ec3ef9cb9143caeae6d3e7e07f5
   .agents/skills/poteto-mode/scripts/orch/store.ts: sha256:8831d17aaefaf14f236908a9de2194fb428666247dd91051439ed85334e60786
-  .agents/skills/poteto-mode/scripts/package.json: sha256:c9db6bb9362c6e319e395b358b113ebc72ab06b6c5e3a095093f6ebfdafe1c57
+  .agents/skills/poteto-mode/scripts/package.json: sha256:ce63908de71140d87aae7256c8620aebbbf9d8deae96b3758c7b4102628caa44
   .agents/skills/poteto-mode/scripts/watch-pr/cli.test.ts: sha256:a35592b4c6da96caf8d47987e9cd503fab6c7774ab87d11a43f24b4b5df2a9d1
   .agents/skills/poteto-mode/scripts/watch-pr/cli.ts: sha256:89c08863089181a232be782c4b2ed90a1552f44aeecb0dcb7aac2c623620e680
   .agents/skills/poteto-mode/scripts/watch-pr/fakes.test-helper.ts: sha256:cf0c5ee61b4a73444c1b775cfb6c81a40d312e055dd21a1f5eae6276e54de13f
@@ -7421,7 +7421,7 @@ local_deployed_file_hashes:
   .agents/skills/statechart/scripts/frontends/verdict.ts: sha256:0d0a9d6b6d6da5a7c48851b86d9d041f22982404dda6288795a1715138d7008b
   .agents/skills/statechart/scripts/frontends/view.ts: sha256:2c0af8939321c5aaed4b6ecac8ce6a98d0e6774d8bd15d4b02fe4f406b8c9620
   .agents/skills/statechart/scripts/ir.ts: sha256:5602beca4e4ac08421cfa07e4da989f0e75439f1d136cc923226909e771dc7ff
-  .agents/skills/statechart/scripts/package.json: sha256:2c36842f391275b0f343a38947560adee155fab4a744eacef1e595e9f07c4e3d
+  .agents/skills/statechart/scripts/package.json: sha256:47760217039f764e943a33042532318d80276e38fbf4ba7d3cbf7c1bba579f92
   .agents/skills/statechart/scripts/passes/annotate.ts: sha256:dc8eeee09c3a9a0c060f32fb1d554e01bd80e5265751cdeb041ef3e19561b92a
   .agents/skills/statechart/scripts/passes/label.ts: sha256:b5ef402369c5e7846be1fd39165e95cbfe715fc36eb9331a0401b26523c539c9
   .agents/skills/statechart/scripts/passes/lift.ts: sha256:8977dddc6c93bb2e3914d5b50760eb66876107ba51e2b8cf9e18611b4c40c89c
