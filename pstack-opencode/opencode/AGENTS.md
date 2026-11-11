@@ -21,5 +21,5 @@ Claude tool, subagent, or model, use the OpenCode equivalent in the
 
 - Skills are installed with APM (`apm`) under `~/.config/opencode/skills` (the
   pstack set plus the shared skills).
-- Extra CLIs beyond the base image: `mise`, `nix`, `pnpm`, `apm`, `cf`, `mo`,
+- Extra CLIs beyond the base image: `mise`, `nix`, `pnpm`, `apm`, `cf`,
   `difit`, `waza`, `ax`, `agent-browser`.
