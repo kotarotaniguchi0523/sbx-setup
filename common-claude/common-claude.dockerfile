@@ -84,7 +84,7 @@ RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- 
 # mo (k1LoW/mo) through mise's aqua backend instead of a hand-written Nix
 # derivation: the version is pinned here, Renovate tracks it (see renovate.json),
 # and the mise shims dir below puts `mo` on PATH.
-RUN mise use -g aqua:k1LoW/mo@1.6.9 \
+RUN mise use -g aqua:k1LoW/mo@1.7.0 \
  && export PATH="$HOME/.local/share/mise/shims:$PATH" \
  && mo --version
 
