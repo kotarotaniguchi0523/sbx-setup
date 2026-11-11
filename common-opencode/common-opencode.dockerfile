@@ -74,9 +74,13 @@ RUN real="$(readlink -f /usr/local/bin/pnpm)" \
 
 # npm 12 (latest) on top of the Nix-provided Node 24 LTS, which satisfies npm
 # 12's engine requirement (>= 24.15). Installed from the registry; Renovate
-# tracks the version. Installed into /usr/local so it replaces the Nix bundle's
-# npm link, leaving exactly one node and one npm on PATH.
-RUN npm install -g npm@12.2.2 --prefix /usr/local \
+# tracks the version. The Nix npm links are moved aside and used only to
+# bootstrap npm 12 into /usr/local (npm refuses to overwrite a link it does not
+# own), leaving exactly one node and one npm on PATH.
+RUN mkdir -p /tmp/npm-boot \
+ && mv /usr/local/bin/npm /usr/local/bin/npx /tmp/npm-boot/ \
+ && PATH="/tmp/npm-boot:$PATH" npm install -g npm@12.2.2 --prefix /usr/local \
+ && rm -rf /tmp/npm-boot \
  && test "$(which -a node | wc -l)" -eq 1 \
  && test "$(which -a npm | wc -l)" -eq 1 \
  && test "$(command -v npm)" = /usr/local/bin/npm \
