@@ -47,6 +47,7 @@
 | 実行時状態・ワークスペース | ❌ |
 | sbx のオーケストレーション | ❌ Docker/ランタイムの領分 |
 | Windows ホスト | ❌（Nix 非対応／WSL 必須） |
+| macOS ホスト | ✅（devShell・`nix build` とも可。`flake.nix` は darwin を対象に含む） |
 
 ## sbx 実装がどう変わるか
 

@@ -1,7 +1,9 @@
 schemaVersion: "1"
 
 # Common sbx environment. One command builds the template images (the pstack
-# conversion runs inside the opencode image build) and creates the sandbox:
+# conversion runs inside the opencode image build) and creates the sandbox.
+# Examples use the Windows workspace path; on macOS pass
+# `--env-arg workspace=$HOME/projects` instead.
 #
 #   OpenCode:
 #     sbx env run sbx-setup/sbxenv.yaml --name common-opencode \
