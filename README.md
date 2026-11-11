@@ -34,7 +34,7 @@ sbx-setup/
 | 入口 | `sbx env run` / `sbx env create`（`sbx-setup/sbxenv.yaml`） |
 | エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code` 同梱のもの） |
 | MCP | context7 のみ |
-| CLI | git/gh, uv, mise, nix, cf, mo, difit, waza, apm, agent-browser, ax, node/npm（**Node 24 LTS + npm 12**） |
+| CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, node/npm（**Node 24 LTS + npm 12**） |
 | 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |
 | Skill | すべて APM 経由（sbx skills ストアは使わない） |
 | pstack | ビルド時に本家 `cursor/plugins/pstack` を OpenCode 向けに変換（opencode のみ） |
@@ -55,7 +55,6 @@ sbx-setup/
 | Nix / nixpkgs | 依存管理 | flake | https://github.com/NixOS/nix · https://github.com/NixOS/nixpkgs |
 | mise | ランタイム管理 | 公式イメージ（jdxcode/mise） | https://github.com/jdx/mise |
 | APM (apm-cli) | Skill 管理 | Nix | https://github.com/microsoft/apm |
-| mo | Markdown プレビュー | mise（aqua backend） | https://github.com/k1LoW/mo |
 | pnpm | パッケージ管理 | 公式イメージ（ghcr.io/pnpm/pnpm） | https://github.com/pnpm/pnpm |
 | agent-browser | ブラウザ操作 | Nix | https://github.com/vercel-labs/agent-browser |
 | obscura | ヘッドレスブラウザ（agent-browser の engine） | Nix | https://github.com/h4ckf0r0day/obscura |
@@ -266,7 +265,6 @@ lefthook install
 - devShell: `nodejs_24` / `go` / `git` / `gh` / `curl` / `jq` / `lefthook` / `betterleaks`（Linux は `docker-client`）
 - `bundle`（イメージに入れる CLI 一式）: nixpkgs の `uv` `gh` `apm-cli` `agent-browser` ほか ＋ 自前導出 `waza` `ax` `sisakulint`
 - ※ `mise` / `pnpm` は Nix ではなく**ベンダー公式イメージ**から `COPY --from` で取り込む（`jdxcode/mise`, `ghcr.io/pnpm/pnpm`。どちらも単体バイナリで、nixpkgs より上流の追随が速い）。digest ピンは base イメージと同じく Renovate が更新
-- ※ `mo` は Nix ではなく **mise の aqua backend**（`mise use -g aqua:k1LoW/mo@<ver>`）で導入。バージョンピンは Dockerfile にあり、Renovate が追従
 - `nix build .#bundle`（個別は `.#waza` `.#ax` `.#sisakulint`）
 - ※ npm 固定版の例外: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`（npm パッケージが自己完結しないため）。`tools/npm/*/package.json` ＋ `package-lock.json` を **`npm ci`** で導入。**Node 24 LTS は Nix 管理**、**npm は `12.2.0`（最新）をレジストリから導入**（npm 12 は nixpkgs 未収録のため。Renovate が追従）
 - `.github/workflows/nix.yml` が検証、`.github/workflows/nix-lock.yml` が `flake.lock` を生成（PR）
@@ -285,7 +283,6 @@ lefthook install
 - npm の例外（`@opencode/cli` / cf / difit）: `tools/npm/*/package-lock.json` を Renovate が更新
 - base イメージ（`docker/sandbox-templates`）: digest ピンを Renovate が更新
 - 公式イメージ由来の CLI（`mise` / `pnpm`）: Dockerfile の `COPY --from` の digest を Renovate が更新
-- mise 経由の CLI（`mo`）: Dockerfile の `aqua:k1LoW/mo@<ver>` を Renovate（`github-releases`）が更新
 - ローカル pstack（パス依存）は `apm update` の対象外（`pstack-update` が再変換して PR）
 
 ## 未検証・注意

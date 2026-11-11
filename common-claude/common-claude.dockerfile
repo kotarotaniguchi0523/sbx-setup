@@ -7,7 +7,6 @@
 # mise and pnpm come from their vendors' official images instead: both ship a
 # single static binary and track upstream releases faster than nixpkgs does
 # (mise 2026.10.3 vs 2026.10.13, pnpm 12.9.0 vs 12.14.0 when this was written).
-# mo is installed through mise's aqua backend, for the same reason.
 FROM nixos/nix@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c AS tools
 WORKDIR /src
 COPY flake.nix flake.lock ./
@@ -80,13 +79,6 @@ RUN chown -R agent:agent /nix
 USER agent
 
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
-
-# mo (k1LoW/mo) through mise's aqua backend instead of a hand-written Nix
-# derivation: the version is pinned here, Renovate tracks it (see renovate.json),
-# and the mise shims dir below puts `mo` on PATH.
-RUN mise use -g aqua:k1LoW/mo@1.7.0 \
- && export PATH="$HOME/.local/share/mise/shims:$PATH" \
- && mo --version
 
 RUN touch /etc/sandbox-persistent.sh \
  && printf '%s\n' \

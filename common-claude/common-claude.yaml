@@ -2,7 +2,7 @@
 schemaVersion: "3"
 kind: workload
 displayName: Common Claude Code
-description: Claude Code with a pinned CLI toolchain (nix, uv, mise, gh, apm, cf, mo, difit, pnpm, node/npm, ...)
+description: Claude Code with a pinned CLI toolchain (nix, uv, mise, gh, apm, cf, difit, pnpm, node/npm, ...)
 
 capabilities:
   - type: com.docker.sandbox/sbx@1

@@ -107,8 +107,7 @@
           # mise and pnpm are not here either: the Dockerfiles copy those two
           # from the vendors' official images (jdxcode/mise, ghcr.io/pnpm/pnpm),
           # which ship a single static binary and track upstream faster than
-          # nixpkgs does. mo is installed through mise (aqua backend) in the
-          # Dockerfiles, where the version is pinned and Renovate tracks it.
+          # nixpkgs does.
           bundle = pkgs.buildEnv {
             name = "sbx-tools";
             paths = with pkgs; [

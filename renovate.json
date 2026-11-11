@@ -14,14 +14,6 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "mo installed through mise (aqua backend) in the kit Dockerfiles",
-      "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
-      "matchStrings": ["aqua:k1LoW/mo@(?<currentValue>[\\w.-]+)"],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "k1LoW/mo"
-    },
-    {
-      "customType": "regex",
       "description": "npm CLI version pinned in the kit Dockerfiles",
       "fileMatch": ["(^|/)common-.*\\.dockerfile$"],
       "matchStrings": ["npm install -g npm@(?<currentValue>[\\w.-]+)"],
@@ -85,13 +77,6 @@
       "description": "Pin base image digests and keep them updated",
       "matchDatasources": ["docker"],
       "pinDigests": true
-    },
-    {
-      "description": "Group the kit CLI tool pins (waza, ax, ...)",
-      "matchDatasources": ["github-releases"],
-      "matchFileNames": ["common-*/**"],
-      "groupName": "kit CLI tools",
-      "groupSlug": "kit-cli-tools"
     },
     {
       "description": "Group nixpkgs / flake.lock updates (Renovate nix manager)",
