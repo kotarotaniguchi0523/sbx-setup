@@ -120,7 +120,7 @@ RUN touch /etc/sandbox-persistent.sh \
       >> /etc/sandbox-persistent.sh
 
 # Generate the pstack-opencode APM package from 本家 cursor/plugins/pstack at
-# image build time (Repomix fetch + tools/convert.mjs), then install it plus the
+# image build time (git sparse fetch + tools/convert.mjs), then install it plus the
 # third-party skills in one APM call (parallel downloads). The .apm/ tree is not
 # committed; it is produced here so the conversion happens on every build.
 #   third-party: mizchi/explainer, nanaism/yomiyasu,

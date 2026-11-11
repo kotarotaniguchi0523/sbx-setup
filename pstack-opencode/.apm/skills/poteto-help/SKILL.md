@@ -7,7 +7,6 @@ metadata:
 
 > **OpenCode note.** This skill was authored for Cursor / Claude Code. Where it names a tool, a subagent, or a model, use the OpenCode equivalent in the `poteto-mode` skill's `references/opencode-tools.md`.
 
-
 # Poteto help
 
 Answer the user's question about pstack, hand them a prompt they can send, and link the file the answer came from. For a help question, don't start the work. The user asked how, and a pstack run spends real tokens, so let them send the prompt.

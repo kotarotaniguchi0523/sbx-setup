@@ -2,6 +2,7 @@
   "repository": "cursor/plugins",
   "include": "pstack/**",
   "ref": "c742dd61706fbacc1b95f1a20b7b988cf096ce6c",
+  "tree": "4719e1c4b4c43bac85d4206a8b41dd2899769c1c",
   "skills": [
     "architect",
     "arena",

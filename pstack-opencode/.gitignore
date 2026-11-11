@@ -1,4 +1,4 @@
-# Repomix cache (never commit). .apm/ IS committed so upstream updates show
+# Upstream fetch cache (never commit). .apm/ IS committed so upstream updates show
 # up as a reviewable pull request.
 .cache/
 

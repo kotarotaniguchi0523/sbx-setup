@@ -24,7 +24,7 @@ pstack-opencode/
 │   └── agents/*.agent.md    # poteto-agent, comment-sicko（mode: subagent）
 ├── opencode/AGENTS.md       # routing 常設指示（~/.config/opencode/AGENTS.md に配置）
 └── tools/
-    ├── convert.mjs          # 本家 → 本パッケージの自動変換（Repomix 使用）
+    ├── convert.mjs          # 本家 → 本パッケージの自動変換（git sparse fetch 使用）
     └── templates/           # 変換で注入する固定ファイル
 ```
 
@@ -35,7 +35,8 @@ pstack-opencode/
 `apm install -g --target opencode` する。本家が更新されたら `scripts/build.cmd`
 でイメージを再ビルドすれば、その中で再取得・再変換される。
 
-1. `npx repomix --remote cursor/plugins --include "pstack/**" --style json` で本家を取得
+1. `git fetch --depth 1 --filter=blob:none`（sparse-checkout で `pstack/` のみ）で `SOURCE.json` の commit をバイト単位で取得
+   （`.md` 以外は無変換コピー。`SOURCE.json` に `pstack/` の tree ID も記録）
 2. 各 `SKILL.md` の frontmatter を OpenCode 向けに正規化
    - `name` をディレクトリ名（kebab）へ
    - Cursor 専用フィールド（`mode`/`icon`/`color`/`reminder`）は破棄
