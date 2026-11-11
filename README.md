@@ -73,7 +73,8 @@ sbx-setup/
 | Docker Sandboxes (sbx) | 実行基盤 | Docker | https://docs.docker.com/ai/sandboxes/ |
 | Renovate | 依存更新 | Mend App | https://github.com/renovatebot/renovate |
 
-- 一覧は**このリポジトリで追加・管理しているもの**のみ。base イメージ（`docker/sandbox-templates`）が元から提供する **エージェント（opencode / codex / claude）・Node/npm・jq / ripgrep / gh / uv・python / git / curl** は除外（base は digest ピンなので据え置き。Node/npm のみ npm 12 のため Nix で上書き）。
+- 一覧は**このリポジトリで追加・管理しているもの**のみ。base イメージ（`docker/sandbox-templates`）が元から提供する **エージェント（opencode / codex / claude）・jq / ripgrep / gh / uv・python / git / curl** は除外（base は digest ピンなので据え置き）。
+- **Node.js / npm は1系統のみ**: base が持つ Node（claude-code は apt の nodejs/npm、codex / opencode は `/usr/local` の公式 Node）はビルド時に削除し、Nix の **Node 24 LTS** ＋ `/usr/local` に入れた **npm 12** だけを PATH に置く（`which -a node` / `which -a npm` が1件であることをビルドで検証）。
 - **pnpm**: ワークスペースは virtiofs で symlink 不可のため、`pnpm` を**薄いラッパー**で包み、**pnpm 実行時だけ** `PNPM_CONFIG_NODE_LINKER=hoisted` ＋ `PNPM_CONFIG_PREFER_SYMLINKED_EXECUTABLES=false` を当てる。`PNPM_CONFIG_*` は **pnpm 専用の環境変数名前空間**で、pnpm 専用のグローバル設定ファイルは置かない → npm / yarn / Go / uv / 他言語には**一切関与しない**。
 
 ## 実行（入口は `sbx env`）
