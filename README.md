@@ -14,7 +14,7 @@ sbx-setup/
 ├── common-codex/           # Codex 用 kit
 ├── common-claude/          # Claude Code 用 kit（Claude Code 本体は base テンプレート同梱のものを使用）
 ├── pstack-opencode/        # 本家 pstack を OpenCode 向けに変換する APM パッケージ
-│   ├── tools/convert.mjs            # Repomix で本家を取得し .apm/ を生成
+│   ├── tools/convert.mjs            # git（sparse・shallow）で本家を取得し .apm/ を生成
 │   ├── tools/templates/AGENTS.md    # routing（opencode/AGENTS.md の元）
 │   └── opencode/AGENTS.md           # routing（生成物）
 ├── tools/                  # sisakulint / portable Go / npm 固定 / flake 更新スクリプト
@@ -68,7 +68,6 @@ sbx-setup/
 | ax | HTTP クライアント | 自前導出 | https://github.com/yusukebe/ax |
 | cf | Cloudflare CLI | npm | https://github.com/cloudflare/cf |
 | difit | diff ビューア | npm | https://github.com/yoshiko-pg/difit |
-| repomix | 本家 pstack 取得 | npm（npx） | https://github.com/yamadashy/repomix |
 | pstack（本家） | 変換元 | 上流 | https://github.com/cursor/plugins |
 | Docker Sandboxes (sbx) | 実行基盤 | Docker | https://docs.docker.com/ai/sandboxes/ |
 | Renovate | 依存更新 | Mend App | https://github.com/renovatebot/renovate |
@@ -202,10 +201,15 @@ codex → `~/.agents/skills/`、claude → `~/.claude/skills/`。
 
 ### pstack の変換（自動・決定的）
 
-`pstack-opencode/tools/convert.mjs` が `npx repomix --remote cursor/plugins --include "pstack/**"` で
-本家を取得し、frontmatter 正規化・Cursor 専用フィールド除去・**本文の Claude ツール名／パス置換**・
+`pstack-opencode/tools/convert.mjs` が git の sparse・shallow fetch（`pstack/` のみ、`SOURCE.json` の commit 固定）で
+本家を**バイト単位でそのまま**取得し、frontmatter 正規化・Cursor 専用フィールド除去・**本文の Claude ツール名／パス置換**・
 `references/opencode-tools.md` 注入・agents の subagent 化・routing 生成を行って `.apm/` を出力する。
 モデル名（`opus`/`grok`）や `/loop`、`subagent_type` は複合IDを壊すため残置し、対応表で読み替える。
+scripts や lock ファイルなど `.md` 以外は無変換でコピーする（以前の Repomix 取得は lock / `.dot` を落とし末尾改行を削るため廃止）。
+`.apm/` は上流のミラーなので Renovate の更新対象外（`renovate.json` で無効化）。
+
+`pstack-update` は上流 commit ではなく **`pstack/` の tree ID**（`SOURCE.json` の `tree`）を比較するため、
+`cursor/plugins` の他プラグインだけが更新された日は PR を作らない。
 
 ## ネットワーク許可
 
@@ -291,7 +295,7 @@ lefthook install
 - `.github/workflows/skills-audit.yml` … **週次（月曜 09:00 JST）＋手動**で全 skills を監査。SkillSpector は **APM の外部スキャナ統合**（`apm audit --external skillspector`。APM がオフライン＝`--no-llm` で実行し SARIF を取り込む。API キー・OpenCode ログインは**不要**）。**毎 push では走らせない**。結果は **GitHub Issue「Skill security audit」を毎回更新**（人間向け）＋ **`audit/skills` ブランチに日付付きで保存** ＋ SARIF を Code Scanning へ
 - `.github/workflows/skills-verify.yml` … PR で **skill / lock の差分だけ**を APM 経由で検証し、結果を **PR にコメント**（upsert）。**Changelog 形式**（日付・バージョン・変更・**検出箇所**＝ファイル:行＋パーマリンク）で出力し、誤検知は **`tools/skillspector-baseline.yaml`** で抑制、**残った error のみゲート**
 - `.github/workflows/apm-update.yml` … 週次で `apm update`（外部 skill の ref を更新）→ 差分検証 → PR
-- `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins/pstack` の更新を検知し PR を作成
+- `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins` の `pstack/` の tree 変化を検知し PR を作成
 - `renovate.json` … Dependabot alerts 連携（`vulnerabilityAlerts`）／**非メジャーを1PRに集約**／Actions を `GitHub Actions` でまとめ／**リリース後3日待ってから PR**（`minimumReleaseAge: "3 days"` + `internalChecksFilter: strict`）。security 修正のみ即時
 - base イメージは **digest ピン**。pstack / base / npm / sisakulint / Go / waza / ax を追従
 - 署名: コミットは **SSH 署名**（`gpg.format=ssh`）。GitHub の Signing Key に `id_ed25519.pub` を登録すると Verified 表示

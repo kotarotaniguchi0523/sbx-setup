@@ -7,7 +7,6 @@ metadata:
 
 > **OpenCode note.** This skill was authored for Cursor / Claude Code. Where it names a tool, a subagent, or a model, use the OpenCode equivalent in the `poteto-mode` skill's `references/opencode-tools.md`.
 
-
 # Arena
 
 Open a todolist with one entry per phase (Frame, Fan out, Cross-judge, Pick, Graft, Verify) before launching anything.

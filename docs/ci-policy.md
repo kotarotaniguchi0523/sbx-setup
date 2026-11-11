@@ -23,7 +23,7 @@ schedule は変更パスのフィルターと組み合わせられないため�
 
 | Workflow | 頻度（UTC） | 対象と制限 |
 |---|---|---|
-| pstack-update | 毎日 03:17 | SOURCE.json の上流 ref を確認し、変更時または force 指定時だけツール導入・変換・検証。PR に含めるのは `.apm` と SOURCE.json |
+| pstack-update | 毎日 03:17 | 上流 `pstack/` の tree ID を SOURCE.json の `tree` と比較し、変更時または force 指定時だけツール導入・変換・検証。PR に含めるのは `.apm` と SOURCE.json |
 | apm-update | 月曜 03:30 | pstack-opencode の外部 APM 依存だけ更新。PR に含めるのは apm.yml と apm.lock.yaml |
 | nix-tools-update | 月曜 03:23 | flake.nix の CLI pin だけ更新。変更時だけ Nix 導入・検証 |
 | skills-audit | 月曜 00:00 | APM で固定したスキル群を専用の一時ディレクトリで全件監査。Issue・監査ブランチ・Code Scanning に報告 |

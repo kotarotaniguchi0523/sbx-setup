@@ -2,25 +2,31 @@
 // Convert cursor/plugins/pstack into an OpenCode-ready APM package.
 //
 // Pipeline:
-//   1. repomix --remote cursor/plugins --include "pstack/**" --style json
-//   2. split the packed JSON back into per-skill / per-agent files
+//   1. sparse, shallow git fetch of cursor/plugins at the pinned commit
+//      (only pstack/ is checked out; files arrive byte-for-byte)
+//   2. walk pstack/skills and pstack/agents
 //   3. normalise frontmatter for OpenCode and inject the OpenCode mapping
 //   4. write the .apm/ tree that `apm install` consumes
+//
+// Repomix was used for step 1 until it started dropping files (lock files,
+// .dot fixtures) and trimming trailing newlines, which made every regeneration
+// diverge from upstream. Plain git keeps the copy exact.
 //
 // Run:  node tools/convert.mjs
 //
 // Re-run whenever cursor/plugins/pstack changes; it regenerates .apm/ from
 // scratch.
 
-import { execSync } from "node:child_process";
-import { mkdirSync, writeFileSync, copyFileSync, readFileSync, existsSync } from "node:fs";
+import { execSync, execFileSync } from "node:child_process";
+import { mkdirSync, writeFileSync, copyFileSync, readFileSync, readdirSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const TPL = join(ROOT, "tools", "templates");
 const REPO = "cursor/plugins";
-const INCLUDE = "pstack/**";
+const SUBDIR = "pstack";
+const INCLUDE = `${SUBDIR}/**`;
 
 // Which OpenCode subagent tools each pstack agent may use. Anything not listed
 // keeps OpenCode's default (enabled).
@@ -56,24 +62,32 @@ function cleanDir(dir) {
   }
 }
 
-function repomix(ref) {
-  if (process.env.PSTACK_PACKED) {
-    process.stderr.write(`reading packed repo from ${process.env.PSTACK_PACKED}\n`);
-    return JSON.parse(readFileSync(process.env.PSTACK_PACKED, "utf8"));
+// Fetch only pstack/ at `ref` and return { files: { "pstack/...": Buffer }, tree }.
+// `tree` is the git tree id of pstack/, so callers can tell whether the
+// directory itself changed (the upstream repo hosts other plugins too).
+function fetchUpstream(ref) {
+  const dir = join(ROOT, ".cache", "upstream");
+  cleanDir(dir);
+  mkdirSync(dir, { recursive: true });
+  const git = (...args) =>
+    execFileSync("git", ["-C", dir, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] });
+  process.stderr.write(`fetching ${REPO}@${ref} (${SUBDIR}/ only) with git...\n`);
+  git("init", "-q");
+  // Byte-exact checkout on every host (no CRLF conversion on Windows).
+  git("config", "core.autocrlf", "false");
+  git("config", "core.eol", "lf");
+  git("sparse-checkout", "set", "--no-cone", `/${SUBDIR}/`);
+  git("fetch", "-q", "--depth", "1", "--filter=blob:none", `https://github.com/${REPO}.git`, ref);
+  git("checkout", "-q", "FETCH_HEAD");
+  const tree = git("rev-parse", `FETCH_HEAD:${SUBDIR}`).trim();
+  const files = {};
+  for (const entry of readdirSync(join(dir, SUBDIR), { recursive: true, withFileTypes: true })) {
+    if (!entry.isFile()) continue;
+    const abs = join(entry.parentPath ?? entry.path, entry.name);
+    const rel = abs.slice(dir.length + 1).split(/[\\/]/).join("/");
+    files[rel] = readFileSync(abs);
   }
-  const cache = join(ROOT, ".cache", "pstack-pack.json");
-  mkdirSync(dirname(cache), { recursive: true });
-  process.stderr.write(`packing ${REPO} (${INCLUDE}) with repomix...\n`);
-  // Write to a file rather than capturing stdout: a multi-hundred-KB pipe
-  // capture crashes Node on Windows.
-  const cmd = `npx -y repomix@1.19.0 --remote ${REPO} --remote-branch "${ref}" --include "${INCLUDE}" --style json -o "${cache}"`;
-  try {
-    execSync(cmd, { stdio: ["ignore", "inherit", "inherit"], shell: true });
-  } catch (err) {
-    process.stderr.write(`repomix failed (status ${err.status})\n`);
-    throw err;
-  }
-  return JSON.parse(readFileSync(cache, "utf8"));
+  return { files, tree };
 }
 
 // An explicit refresh uses the new upstream main commit; regular conversions
@@ -201,7 +215,7 @@ function convertSkill(id, raw) {
     metadata,
   );
   const note = NEEDS_NOTE.test(body) ? NOTE : "";
-  return fm + "\n" + note + translateBody(body).replace(/^\n+/, "");
+  return fm + "\n" + note + translateBody(body).replace(/^(\r?\n)+/, "");
 }
 
 function convertAgent(id, raw) {
@@ -218,15 +232,14 @@ function convertAgent(id, raw) {
     for (const [t, v] of Object.entries(tools)) lines.push(`  ${t}: ${v}`);
   }
   lines.push("---");
-  return lines.join("\n") + "\n\n" + translateBody(body).replace(/^\n+/, "");
+  return lines.join("\n") + "\n\n" + translateBody(body).replace(/^(\r?\n)+/, "");
 }
 
 // --- main -------------------------------------------------------------------
 
 function main() {
   const ref = upstreamRef();
-  const packed = repomix(ref);
-  const files = packed.files ?? {};
+  const { files, tree } = fetchUpstream(ref);
   const apm = join(ROOT, ".apm");
   process.stderr.write(`parsed ${Object.keys(files).length} files\n`);
 
@@ -256,17 +269,17 @@ function main() {
       const dest = join(apm, "skills", id, rel);
       mkdirSync(dirname(dest), { recursive: true });
       const body =
-        rel === "SKILL.md" ? convertSkill(id, content)
-        : rel.endsWith(".md") ? translateBody(content)
-        : content; // scripts and other assets are copied verbatim
-      writeFileSync(dest, body, "utf8");
+        rel === "SKILL.md" ? convertSkill(id, content.toString("utf8"))
+        : rel.endsWith(".md") ? translateBody(content.toString("utf8"))
+        : content; // scripts, lock files and other assets are copied byte-for-byte
+      writeFileSync(dest, body);
       written++;
     } else if (agent) {
       const [, id] = agent;
       agents.add(id);
       const dest = join(apm, "agents", `${id}.agent.md`);
       mkdirSync(dirname(dest), { recursive: true });
-      writeFileSync(dest, convertAgent(id, content), "utf8");
+      writeFileSync(dest, convertAgent(id, content.toString("utf8")), "utf8");
       written++;
     }
   }
@@ -286,7 +299,7 @@ function main() {
   writeFileSync(
     join(ROOT, "SOURCE.json"),
     JSON.stringify(
-      { repository: REPO, include: INCLUDE, ref, skills: [...skills].sort(), agents: [...agents].sort() },
+      { repository: REPO, include: INCLUDE, ref, tree, skills: [...skills].sort(), agents: [...agents].sort() },
       null,
       2,
     ) + "\n",
