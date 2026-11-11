@@ -16,12 +16,25 @@ RUN set -eux; \
     nix-store -qR /out/bundle | while read -r p; do printf '%s\n' "${p#/}"; done > /out/closure.txt; \
     cd / && tar -cf /out/store.tar --files-from=/out/closure.txt
 
-FROM docker/sandbox-templates:codex@sha256:a68b972a59148c6359ade441387159033f6d196d48aef9dda06d2d4bb26eb41e
+FROM docker/sandbox-templates:codex@sha256:2ef10a29ac5e608db28e88d75e40dadde55d1e311d83a68d36c5335d82af701a
 
 USER root
 RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
  && rm -rf /var/lib/apt/lists/*
+
+# Single Node.js / npm: drop the base image's own copy (apt nodejs/npm on the
+# claude-code base, the official Node tarball under /usr/local on the codex /
+# opencode bases) so only the Nix Node 24 LTS and npm 12 below are on PATH.
+RUN set -eux; \
+    if dpkg -s nodejs >/dev/null 2>&1 || dpkg -s npm >/dev/null 2>&1; then \
+      apt-get purge -y nodejs npm; \
+      apt-get autoremove -y --purge; \
+    fi; \
+    rm -rf /usr/local/bin/node /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+           /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+           /usr/local/include/node /usr/local/share/doc/node /usr/local/share/man/man1/node.1; \
+    test -z "$(command -v node || true)"
 
 # mise + pnpm from the vendors' official images. Both are single static binaries
 # with no runtime deps; the digest pins are what Renovate's docker manager keeps
@@ -60,7 +73,11 @@ RUN real="$(readlink -f /usr/local/bin/pnpm)" \
  && pnpm --version
 
 # npm 12 (latest) on top of the Nix-provided Node 24 LTS (see common-opencode).
-RUN npm install -g npm@12.2.2 \
+# Installed into /usr/local so it replaces the Nix bundle's npm link (one npm).
+RUN npm install -g npm@12.2.2 --prefix /usr/local \
+ && test "$(which -a node | wc -l)" -eq 1 \
+ && test "$(which -a npm | wc -l)" -eq 1 \
+ && test "$(command -v npm)" = /usr/local/bin/npm \
  && node --version && npm --version
 
 # npm-only CLIs, fully pinned via package-lock.json (see common-opencode).

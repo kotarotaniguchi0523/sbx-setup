@@ -16,12 +16,25 @@ RUN set -eux; \
     nix-store -qR /out/bundle | while read -r p; do printf '%s\n' "${p#/}"; done > /out/closure.txt; \
     cd / && tar -cf /out/store.tar --files-from=/out/closure.txt
 
-FROM docker/sandbox-templates:opencode@sha256:b3b69aa5148a20d1c0e3ec4d5db2975b8b9d6830d46d50a93fd766aec7d6668b
+FROM docker/sandbox-templates:opencode@sha256:7feb9784bc882dbe014888becb65c23e7fb1d1b24169a68d33660fe44476a0b4
 
 USER root
 RUN apt-get update \
  && apt-get install -y --no-install-recommends build-essential procps file curl ca-certificates xz-utils git \
  && rm -rf /var/lib/apt/lists/*
+
+# Single Node.js / npm: drop the base image's own copy (apt nodejs/npm on the
+# claude-code base, the official Node tarball under /usr/local on the codex /
+# opencode bases) so only the Nix Node 24 LTS and npm 12 below are on PATH.
+RUN set -eux; \
+    if dpkg -s nodejs >/dev/null 2>&1 || dpkg -s npm >/dev/null 2>&1; then \
+      apt-get purge -y nodejs npm; \
+      apt-get autoremove -y --purge; \
+    fi; \
+    rm -rf /usr/local/bin/node /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+           /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+           /usr/local/include/node /usr/local/share/doc/node /usr/local/share/man/man1/node.1; \
+    test -z "$(command -v node || true)"
 
 # mise + pnpm from the vendors' official images. Both are single static binaries
 # with no runtime deps; the digest pins are what Renovate's docker manager keeps
@@ -61,8 +74,12 @@ RUN real="$(readlink -f /usr/local/bin/pnpm)" \
 
 # npm 12 (latest) on top of the Nix-provided Node 24 LTS, which satisfies npm
 # 12's engine requirement (>= 24.15). Installed from the registry; Renovate
-# tracks the version.
-RUN npm install -g npm@12.2.2 \
+# tracks the version. Installed into /usr/local so it replaces the Nix bundle's
+# npm link, leaving exactly one node and one npm on PATH.
+RUN npm install -g npm@12.2.2 --prefix /usr/local \
+ && test "$(which -a node | wc -l)" -eq 1 \
+ && test "$(which -a npm | wc -l)" -eq 1 \
+ && test "$(command -v npm)" = /usr/local/bin/npm \
  && node --version && npm --version
 
 # npm-only CLIs, fully pinned via package-lock.json (npm ci, integrity-checked).
