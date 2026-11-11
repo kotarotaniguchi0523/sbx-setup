@@ -11,10 +11,10 @@ test('skill updates build only OpenCode and run delta verification', () => {
   }
 });
 
-test('Nix updates validate both images and the flake', () => {
+test('Nix updates validate all images and the flake', () => {
   for (const branch of ['chore/nix-flake-lock', 'chore/nix-tools-update']) {
     assert.deepEqual(checksFor(branch, 'nix'), [
-      { workflow: 'build.yml', inputs: { image: 'both' } },
+      { workflow: 'build.yml', inputs: { image: 'all' } },
       { workflow: 'nix.yml', inputs: {} },
     ]);
   }

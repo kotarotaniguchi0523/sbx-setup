@@ -1,10 +1,10 @@
 # Parallel multi-target build for the sbx templates.
 #   docker buildx bake -f sbx-setup/docker-bake.hcl
-# BuildKit builds both targets concurrently. The opencode target runs the
+# BuildKit builds all targets concurrently. The opencode target runs the
 # pstack conversion inside its image build.
 
 group "default" {
-  targets = ["opencode", "codex"]
+  targets = ["opencode", "codex", "claude"]
 }
 
 target "opencode" {
@@ -17,4 +17,10 @@ target "codex" {
   context    = "."
   dockerfile = "common-codex/common-codex.yaml"
   tags       = ["common-codex:dev"]
+}
+
+target "claude" {
+  context    = "."
+  dockerfile = "common-claude/common-claude.yaml"
+  tags       = ["common-claude:dev"]
 }

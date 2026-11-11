@@ -17,7 +17,7 @@ export function checksFor(branch, kind) {
     throw new Error('Unexpected automation branch or check group');
   }
   return [
-    { workflow: 'build.yml', inputs: { image: kind === 'skills' ? 'opencode' : 'both' } },
+    { workflow: 'build.yml', inputs: { image: kind === 'skills' ? 'opencode' : 'all' } },
     { workflow: kind === 'skills' ? 'skills-verify.yml' : 'nix.yml', inputs: {} },
   ];
 }

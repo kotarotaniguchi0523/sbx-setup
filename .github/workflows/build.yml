@@ -7,7 +7,7 @@ name: build
 # Only affected images build; the `changes` job detects
 # that and a small aggregator job named `build` always runs, so the required
 # "build" status check is always reported (GitHub blocks PRs whose required check
-# is never reported). The two images build in parallel (matrix -> one runner
+# is never reported). The images build in parallel (matrix -> one runner
 # each). A registry cache in GHCR keeps the large Nix-store layers warm. All
 # actions are pinned to commit SHAs (Renovate keeps them updated).
 
@@ -17,6 +17,7 @@ on:
     paths:
       - 'common-opencode/**'
       - 'common-codex/**'
+      - 'common-claude/**'
       - 'pstack-opencode/**'
       - 'tools/npm/**'
       - 'flake.nix'
@@ -31,11 +32,12 @@ on:
         description: "Which sandbox image to build without publishing"
         type: choice
         required: true
-        default: both
+        default: all
         options:
-          - both
+          - all
           - opencode
           - codex
+          - claude
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -67,6 +69,8 @@ jobs:
               - 'tools/npm/opencode/**'
             codex:
               - 'common-codex/**'
+            claude:
+              - 'common-claude/**'
             shared:
               - 'tools/npm/cli/**'
               - 'flake.nix'
@@ -77,27 +81,40 @@ jobs:
         id: matrix
         env:
           EVENT_NAME: ${{ github.event_name }}
-          IMAGE_CHOICE: ${{ inputs.image || 'both' }}
+          IMAGE_CHOICE: ${{ inputs.image || 'all' }}
           OPENCODE: ${{ steps.filter.outputs.opencode }}
           CODEX: ${{ steps.filter.outputs.codex }}
+          CLAUDE: ${{ steps.filter.outputs.claude }}
           SHARED: ${{ steps.filter.outputs.shared }}
         shell: bash
         run: |
           set -euo pipefail
-          targets='[]'
-          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$IMAGE_CHOICE" == "opencode" ]]; then
-            targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"}]'
-          elif [[ "$EVENT_NAME" == "workflow_dispatch" && "$IMAGE_CHOICE" == "codex" ]]; then
-            targets='[{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
-          elif [[ "$EVENT_NAME" == "workflow_dispatch" || "$SHARED" == "true" ]]; then
-            targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"},{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
-          elif [[ "$OPENCODE" == "true" && "$CODEX" == "true" ]]; then
-            targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"},{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
-          elif [[ "$OPENCODE" == "true" ]]; then
-            targets='[{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"}]'
-          elif [[ "$CODEX" == "true" ]]; then
-            targets='[{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}]'
+          # Each image is built when it is selected explicitly, when everything
+          # is selected (dispatch "all" / shared inputs changed), or when its own
+          # inputs changed.
+          all=false
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            [[ "$IMAGE_CHOICE" == "all" ]] && all=true
+            OPENCODE=false CODEX=false CLAUDE=false
+            case "$IMAGE_CHOICE" in
+              opencode) OPENCODE=true ;;
+              codex) CODEX=true ;;
+              claude) CLAUDE=true ;;
+            esac
+          elif [[ "$SHARED" == "true" ]]; then
+            all=true
           fi
+          entries=()
+          if [[ "$all" == "true" || "$OPENCODE" == "true" ]]; then
+            entries+=('{"name":"opencode","file":"common-opencode/common-opencode.yaml","image":"common-opencode","scope":"opencode"}')
+          fi
+          if [[ "$all" == "true" || "$CODEX" == "true" ]]; then
+            entries+=('{"name":"codex","file":"common-codex/common-codex.yaml","image":"common-codex","scope":"codex"}')
+          fi
+          if [[ "$all" == "true" || "$CLAUDE" == "true" ]]; then
+            entries+=('{"name":"claude","file":"common-claude/common-claude.yaml","image":"common-claude","scope":"claude"}')
+          fi
+          targets="[$(IFS=,; echo "${entries[*]-}")]"
           echo "targets=$targets" >> "$GITHUB_OUTPUT"
           echo "Target matrix: $targets"
 
