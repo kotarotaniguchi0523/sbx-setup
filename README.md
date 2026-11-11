@@ -62,7 +62,7 @@ sbx-setup/
 | fd | ファイル検索 | Nix | https://github.com/sharkdp/fd |
 | typos | スペル検査 | Nix | https://github.com/crate-ci/typos |
 | lefthook | Git hooks | Nix / host | https://github.com/evilmartians/lefthook |
-| betterleaks | シークレット検査 | host（winget） | https://github.com/betterleaks/betterleaks |
+| betterleaks | シークレット検査 | host（Windows: winget / macOS: mac-host-setup） | https://github.com/betterleaks/betterleaks |
 | sisakulint | GH Actions SAST | 自前導出 | https://github.com/sisaku-security/sisakulint |
 | waza | agent eval | 自前導出 | https://github.com/microsoft/waza |
 | ax | HTTP クライアント | 自前導出 | https://github.com/yusukebe/ax |
@@ -78,9 +78,13 @@ sbx-setup/
 
 ## 実行（入口は `sbx env`）
 
+Windows / macOS どちらのホストでも同じ手順で使える（コマンド例は Windows は `bat`、macOS は `zsh`）。
+ホスト側に必要なツール（Docker Desktop・sbx・lefthook・betterleaks 等）の導入は、このリポジトリではなく
+ホストのセットアップ（Windows: `win-host-setup` / macOS: `mac-host-setup`）が担う。
+
 **どこからでも（パス指定なし）**:
 
-```bat
+```sh
 sbx env run
 ```
 
@@ -96,6 +100,15 @@ sbx env run sbx-setup\sbxenv.yaml --name common-codex ^
   --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=%USERPROFILE%\projects
 sbx env run sbx-setup\sbxenv.yaml --name common-claude ^
   --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=%USERPROFILE%\projects
+```
+
+```zsh
+# macOS
+sbx env run sbx-setup/sbxenv.yaml --name common-opencode --env-arg workspace=$HOME/projects
+sbx env run sbx-setup/sbxenv.yaml --name common-codex \
+  --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=$HOME/projects
+sbx env run sbx-setup/sbxenv.yaml --name common-claude \
+  --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=$HOME/projects
 ```
 
 未アタッチで作成だけなら `sbx env create --auto-approve ...`、削除は `sbx env rm ...`。
@@ -128,6 +141,15 @@ sbx template load "%TEMP%\templates.tar"
 sbx template ls
 ```
 
+```zsh
+# macOS
+cd sbx-setup
+docker buildx bake
+docker image save common-opencode:dev common-codex:dev common-claude:dev -o "${TMPDIR:-/tmp}/templates.tar"
+sbx template load "${TMPDIR:-/tmp}/templates.tar"
+sbx template ls
+```
+
 > build context はリポジトリ直下（`.`）。Dockerfile が `flake.nix` / `flake.lock` を参照するため。
 
 ## サンドボックスを作る（補足）
@@ -141,6 +163,14 @@ sbx run --pull never -t common-codex:dev    codex    %USERPROFILE%\projects
 sbx run --pull never -t common-claude:dev   claude   %USERPROFILE%\projects
 
 REM TUI ダッシュボード（作成/一覧/attach）。テンプレート選択が出れば上記の :dev を選ぶ
+sbx tui
+```
+
+```zsh
+# macOS
+sbx run --pull never -t common-opencode:dev opencode $HOME/projects
+sbx run --pull never -t common-codex:dev    codex    $HOME/projects
+sbx run --pull never -t common-claude:dev   claude   $HOME/projects
 sbx tui
 ```
 
@@ -206,7 +236,7 @@ context7 の API キーは平文保存を避け、`sbx secret set` を使う。
 
 サンドボックス内で `gh auth login` は不要。ホスト側プロキシが GitHub トークンを `GH_TOKEN` として注入する（opencode/codex/claude 全 descriptor で `github` credential を宣言済み）。
 
-```bat
+```sh
 sbx secret set github --command "gh auth token"
 ```
 
@@ -215,8 +245,15 @@ sbx secret set github --command "gh auth token"
 初回のみ `lefthook install` で hooks を有効化する。**ホスト側のみ**で動作し、テンプレートイメージには含めない。
 
 ```bat
+REM Windows（win-host-setup 未使用時）
 winget install --exact --id evilmartians.lefthook --accept-package-agreements
 winget install --exact --id Betterleaks.Betterleaks --accept-package-agreements
+lefthook install
+```
+
+```zsh
+# macOS（lefthook / betterleaks は mac-host-setup で導入済みの前提。
+# リポジトリの devShell からも使える: nix develop）
 lefthook install
 ```
 
@@ -272,7 +309,7 @@ lefthook install
 - Renovate が `flake.lock`（nixpkgs）を追従。固定 CLI のハッシュは Renovate では再計算できないため専用ワークフローが担当
 
 方針と **sbx への影響**は [`docs/nix.md`](docs/nix.md) を参照。
-※ Windows は Nix 非対応（WSL 等が必要）。開発機では `tools/*.version` ＋ winget を併用。
+※ Windows は Nix 非対応（WSL 等が必要）。開発機では `tools/*.version` ＋ winget を併用。macOS は Nix がそのまま使える（`nix develop` で devShell）。
 
 ## 更新
 
