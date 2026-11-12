@@ -10,6 +10,12 @@ name: build
 # is never reported). The images build in parallel (matrix -> one runner
 # each). A registry cache in GHCR keeps the large Nix-store layers warm. All
 # actions are pinned to commit SHAs (Renovate keeps them updated).
+#
+# Multi-arch: every image builds natively for linux/amd64 (ubuntu-26.04) and
+# linux/arm64 (ubuntu-26.04-arm; Docker Sandboxes on Apple Silicon run arm64
+# VMs). On push each platform is pushed by digest, then the `manifest` job joins
+# the two into the single `:dev` tag, so `docker pull` / `sbx` pick the host's
+# architecture.
 
 on:
   push:
@@ -122,15 +128,18 @@ jobs:
     permissions:
       contents: read
       packages: read
-    name: image (${{ matrix.name }})
-    timeout-minutes: 45
+    name: image (${{ matrix.target.name }}, ${{ matrix.platform.arch }})
+    timeout-minutes: 60
     needs: changes
     if: ${{ github.event_name != 'push' && needs.changes.result == 'success' && needs.changes.outputs.targets != '[]' }}
-    runs-on: ubuntu-26.04
+    runs-on: ${{ matrix.platform.runner }}
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.changes.outputs.targets) }}
+        target: ${{ fromJSON(needs.changes.outputs.targets) }}
+        platform:
+          - { arch: amd64, runner: ubuntu-26.04 }
+          - { arch: arm64, runner: ubuntu-26.04-arm }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -144,34 +153,39 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build ${{ matrix.image }}
+      - name: Build ${{ matrix.target.image }} (linux/${{ matrix.platform.arch }})
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
-          file: ${{ matrix.file }}
+          file: ${{ matrix.target.file }}
+          platforms: linux/${{ matrix.platform.arch }}
           push: false
           provenance: false
           sbom: false
-          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:dev
+          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.target.image }}:dev
           # Registry cache lives in GHCR (no GHA size limit, which was evicting
-          # the large Nix-store layer); GHA cache stays as a secondary.
+          # the large Nix-store layer); GHA cache stays as a secondary. One cache
+          # per architecture.
           cache-from: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:buildcache
-            type=gha,scope=${{ matrix.scope }}
+            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.target.image }}:buildcache-${{ matrix.platform.arch }}
+            type=gha,scope=${{ matrix.target.scope }}-${{ matrix.platform.arch }}
 
   image-publish:
     permissions:
       contents: read
       packages: write
-    name: publish (${{ matrix.name }})
-    timeout-minutes: 45
+    name: publish (${{ matrix.target.name }}, ${{ matrix.platform.arch }})
+    timeout-minutes: 60
     needs: changes
     if: ${{ github.event_name == 'push' && needs.changes.result == 'success' && needs.changes.outputs.targets != '[]' }}
-    runs-on: ubuntu-26.04
+    runs-on: ${{ matrix.platform.runner }}
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.changes.outputs.targets) }}
+        target: ${{ fromJSON(needs.changes.outputs.targets) }}
+        platform:
+          - { arch: amd64, runner: ubuntu-26.04 }
+          - { arch: arm64, runner: ubuntu-26.04-arm }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -185,27 +199,89 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build ${{ matrix.image }}
+      # Pushed by digest only (no tag): the `manifest` job tags the joined
+      # multi-arch index, so `:dev` never points at a single architecture.
+      - name: Build ${{ matrix.target.image }} (linux/${{ matrix.platform.arch }})
+        id: build
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
-          file: ${{ matrix.file }}
-          push: ${{ github.event_name == 'push' }}
-          provenance: ${{ github.event_name == 'push' }}
-          sbom: ${{ github.event_name == 'push' }}
-          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:dev
-          # Registry cache lives in GHCR (no GHA size limit, which was evicting
-          # the large Nix-store layer); GHA cache stays as a secondary.
+          file: ${{ matrix.target.file }}
+          platforms: linux/${{ matrix.platform.arch }}
+          provenance: true
+          sbom: true
+          outputs: type=image,name=ghcr.io/${{ github.repository_owner }}/${{ matrix.target.image }},push-by-digest=true,name-canonical=true,push=true
           cache-from: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:buildcache
-            type=gha,scope=${{ matrix.scope }}
+            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.target.image }}:buildcache-${{ matrix.platform.arch }}
+            type=gha,scope=${{ matrix.target.scope }}-${{ matrix.platform.arch }}
           cache-to: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}:buildcache,mode=max
+            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.target.image }}:buildcache-${{ matrix.platform.arch }},mode=max
+
+      - name: Record digest
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          set -euo pipefail
+          [[ "$DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]] || { echo "::error::unexpected digest: $DIGEST"; exit 1; }
+          mkdir -p "$RUNNER_TEMP/digests"
+          touch "$RUNNER_TEMP/digests/${DIGEST#sha256:}"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: digests-${{ matrix.target.image }}-${{ matrix.platform.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  # Joins the per-architecture digests into the multi-arch `:dev` tag.
+  manifest:
+    permissions:
+      contents: read
+      packages: write
+    name: manifest (${{ matrix.target.name }})
+    timeout-minutes: 10
+    needs: [changes, image-publish]
+    if: ${{ github.event_name == 'push' && needs.image-publish.result == 'success' }}
+    runs-on: ubuntu-26.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.changes.outputs.targets) }}
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-${{ matrix.target.image }}-*
+          merge-multiple: true
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and verify the multi-arch :dev tag
+        env:
+          IMAGE: ghcr.io/${{ github.repository_owner }}/${{ matrix.target.image }}
+          DIGESTS: ${{ runner.temp }}/digests
+        run: |
+          set -euo pipefail
+          refs=()
+          for f in "$DIGESTS"/*; do refs+=("$IMAGE@sha256:$(basename "$f")"); done
+          [[ ${#refs[@]} -eq 2 ]] || { echo "::error::expected 2 platform digests, got ${#refs[@]}"; exit 1; }
+          docker buildx imagetools create -t "$IMAGE:dev" "${refs[@]}"
+          platforms="$(docker buildx imagetools inspect "$IMAGE:dev" --format '{{ range .Manifest.Manifests }}{{ if .Platform }}{{ .Platform.OS }}/{{ .Platform.Architecture }} {{ end }}{{ end }}')"
+          echo "platforms: $platforms"
+          for want in linux/amd64 linux/arm64; do
+            [[ " $platforms " == *" $want "* ]] || { echo "::error::$want missing from $IMAGE:dev"; exit 1; }
+          done
 
   # Aggregator so the required status check stays a single, stable "build".
   build:
     permissions: {}
-    needs: [changes, image, image-publish]
+    needs: [changes, image, image-publish, manifest]
     if: always()
     runs-on: ubuntu-26.04
     timeout-minutes: 5
@@ -217,6 +293,7 @@ jobs:
           TARGETS: ${{ needs.changes.outputs.targets }}
           IMAGE_RESULT: ${{ needs.image.result }}
           PUBLISH_RESULT: ${{ needs['image-publish'].result }}
+          MANIFEST_RESULT: ${{ needs.manifest.result }}
         run: |
           set -euo pipefail
           if [ "$CHANGES_RESULT" != "success" ]; then
@@ -225,7 +302,10 @@ jobs:
           fi
           if [ "$TARGETS" != "[]" ]; then
             result="$IMAGE_RESULT"
-            if [ "$EVENT_NAME" = "push" ]; then result="$PUBLISH_RESULT"; fi
+            if [ "$EVENT_NAME" = "push" ]; then
+              result="$PUBLISH_RESULT"
+              [ "$result" = "success" ] && result="$MANIFEST_RESULT"
+            fi
             if [ "$result" != "success" ]; then
               echo "::error::image builds: $result"
               exit 1
