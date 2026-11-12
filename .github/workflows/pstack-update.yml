@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       force:
-        description: Rebuild the converted skills even if upstream pstack/ is unchanged
+        description: Rebuild the converted skills even if the tracked upstream directories are unchanged
         type: boolean
         default: false
 
@@ -43,17 +43,27 @@ jobs:
           set -euo pipefail
           ref="$(git ls-remote https://github.com/cursor/plugins.git refs/heads/main | cut -f1)"
           [[ "$ref" =~ ^[a-f0-9]{40}$ ]] || { echo "::error::unable to resolve upstream commit"; exit 1; }
-          # cursor/plugins hosts other plugins too: compare the pstack/ tree id,
-          # not the repository commit, so unrelated upstream commits open no PR.
+          # cursor/plugins hosts other plugins too: compare the tree id of every
+          # directory the package is built from (pstack/ plus the extra
+          # cursor-team-kit skills, keys of SOURCE.json .trees), not the
+          # repository commit, so unrelated upstream commits open no PR.
           tmp="$(mktemp -d)"
           git -C "$tmp" init -q
           git -C "$tmp" fetch -q --depth 1 --filter=blob:none https://github.com/cursor/plugins.git "$ref"
-          tree="$(git -C "$tmp" rev-parse FETCH_HEAD:pstack)"
-          [[ "$tree" =~ ^[a-f0-9]{40}$ ]] || { echo "::error::unable to resolve the pstack tree"; exit 1; }
-          old="$(jq -r '.tree // empty' pstack-opencode/SOURCE.json)"
+          mapfile -t dirs < <(jq -r '.trees // {} | keys[]' pstack-opencode/SOURCE.json)
+          [ "${#dirs[@]}" -gt 0 ] || dirs=(pstack)
+          changed=false
+          for d in "${dirs[@]}"; do
+            # A tracked directory that disappeared upstream counts as a change;
+            # the converter then fails loudly in the PR run.
+            tree="$(git -C "$tmp" rev-parse -q --verify "FETCH_HEAD:$d" || echo missing)"
+            old="$(jq -r --arg d "$d" '.trees[$d] // empty' pstack-opencode/SOURCE.json)"
+            echo "$d: upstream $tree (recorded: ${old:-none})"
+            [ "$old" = "$tree" ] || changed=true
+          done
+          echo "upstream $ref, changed=$changed"
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
-          echo "upstream $ref, pstack tree $tree (recorded: ${old:-none})"
-          if [ "$old" != "$tree" ]; then echo "changed=true" >> "$GITHUB_OUTPUT"; else echo "changed=false" >> "$GITHUB_OUTPUT"; fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
 
       - if: ${{ steps.upstream.outputs.changed == 'true' || inputs.force == true }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0

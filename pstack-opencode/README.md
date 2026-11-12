@@ -13,6 +13,11 @@ principle や `ketchup` などを追加し、`poteto-mode` 本文がそれらを
 許可リストが古くなり、参照先の無い skill が生成物から欠落した。現在は上流の増減を
 そのまま反映するので、新しい skill も自動で入る。
 
+加えて、pstack 本文（`poteto-mode` / `poteto-help`）が「`cursor-team-kit` の skill を使え」と
+指示している **`deslop`・`control-cli`・`control-ui` の3つ**を同じ上流 commit から同梱する
+（`convert.mjs` の `EXTRA_SKILLS`。`cursor-team-kit` 全体は入れない）。これらの frontmatter には
+`metadata.pstack/source-plugin: "cursor-team-kit"` が付く。pstack 側に同名 skill が現れたら変換は失敗する。
+
 ## 構成
 
 ```
@@ -20,7 +25,7 @@ pstack-opencode/
 ├── apm.yml                  # targets: [opencode]
 ├── SOURCE.json              # 変換元と生成物の一覧
 ├── .apm/                    # 生成物（ここは手で編集しない）
-│   ├── skills/<id>/...      # 58 skill（上流 pstack の全 skill。playbooks / references / scripts 込み）
+│   ├── skills/<id>/...      # 61 skill（上流 pstack の全 58 skill ＋ cursor-team-kit の 3 skill）
 │   └── agents/*.agent.md    # poteto-agent, comment-sicko（mode: subagent）
 ├── opencode/AGENTS.md       # routing 常設指示（~/.config/opencode/AGENTS.md に配置）
 └── tools/
@@ -35,8 +40,8 @@ pstack-opencode/
 `apm install -g --target opencode` する。本家が更新されたら `scripts/build.cmd`
 でイメージを再ビルドすれば、その中で再取得・再変換される。
 
-1. `git fetch --depth 1 --filter=blob:none`（sparse-checkout で `pstack/` のみ）で `SOURCE.json` の commit をバイト単位で取得
-   （`.md` 以外は無変換コピー。`SOURCE.json` に `pstack/` の tree ID も記録）
+1. `git fetch --depth 1 --filter=blob:none`（sparse-checkout で `pstack/` と同梱3 skill のみ）で `SOURCE.json` の commit をバイト単位で取得
+   （`.md` 以外は無変換コピー。`SOURCE.json` の `trees` に取得ディレクトリごとの tree ID も記録）
 2. 各 `SKILL.md` の frontmatter を OpenCode 向けに正規化
    - `name` をディレクトリ名（kebab）へ
    - Cursor 専用フィールド（`mode`/`icon`/`color`/`reminder`）は破棄
