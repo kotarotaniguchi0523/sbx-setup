@@ -1,8 +1,18 @@
 {
   "repository": "cursor/plugins",
-  "include": "pstack/**",
+  "include": [
+    "pstack/**",
+    "cursor-team-kit/skills/deslop/**",
+    "cursor-team-kit/skills/control-cli/**",
+    "cursor-team-kit/skills/control-ui/**"
+  ],
   "ref": "c742dd61706fbacc1b95f1a20b7b988cf096ce6c",
-  "tree": "4719e1c4b4c43bac85d4206a8b41dd2899769c1c",
+  "trees": {
+    "pstack": "4719e1c4b4c43bac85d4206a8b41dd2899769c1c",
+    "cursor-team-kit/skills/deslop": "ac9ba043f9dd3b3a8850de6624ec5bc12e375599",
+    "cursor-team-kit/skills/control-cli": "21f3eee2663ae7c78464bfc2a69f6a8cc6c4f7ed",
+    "cursor-team-kit/skills/control-ui": "797e6d20a029b2ae757a97951278d308f3b53026"
+  },
   "skills": [
     "architect",
     "arena",
@@ -10,9 +20,12 @@
     "benchmark-checklist",
     "blast-radius",
     "bro",
+    "control-cli",
+    "control-ui",
     "correct",
     "create-formal-verification-skill",
     "create-verification-skill",
+    "deslop",
     "figure-it-out",
     "how",
     "in-your-own-words",

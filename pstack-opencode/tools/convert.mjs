@@ -3,8 +3,9 @@
 //
 // Pipeline:
 //   1. sparse, shallow git fetch of cursor/plugins at the pinned commit
-//      (only pstack/ is checked out; files arrive byte-for-byte)
-//   2. walk pstack/skills and pstack/agents
+//      (only pstack/ and the EXTRA_SKILLS directories are checked out;
+//      files arrive byte-for-byte)
+//   2. walk pstack/skills, pstack/agents and the extra skills
 //   3. normalise frontmatter for OpenCode and inject the OpenCode mapping
 //   4. write the .apm/ tree that `apm install` consumes
 //
@@ -26,7 +27,24 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const TPL = join(ROOT, "tools", "templates");
 const REPO = "cursor/plugins";
 const SUBDIR = "pstack";
-const INCLUDE = `${SUBDIR}/**`;
+
+// Skills from other cursor/plugins plugins that pstack's own text tells the
+// agent to use (poteto-mode: "the `deslop` skill from the `cursor-team-kit`
+// plugin", "`control-cli` / `control-ui` from `cursor-team-kit`"). They ship
+// alongside pstack, pinned to the same upstream commit, so those instructions
+// resolve inside OpenCode. Only the referenced skills come along, not the
+// whole plugin.
+const EXTRA_SKILLS = {
+  "cursor-team-kit": ["deslop", "control-cli", "control-ui"],
+};
+const EXTRA_DIRS = Object.entries(EXTRA_SKILLS).flatMap(([plugin, ids]) =>
+  ids.map((id) => `${plugin}/skills/${id}`),
+);
+// Every upstream directory the package is built from. SOURCE.json records a
+// git tree id for each, and pstack-update compares those ids to decide
+// whether anything this package ships changed.
+const TRACKED = [SUBDIR, ...EXTRA_DIRS];
+const INCLUDE = TRACKED.map((d) => `${d}/**`);
 
 // Which OpenCode subagent tools each pstack agent may use. Anything not listed
 // keeps OpenCode's default (enabled).
@@ -62,32 +80,37 @@ function cleanDir(dir) {
   }
 }
 
-// Fetch only pstack/ at `ref` and return { files: { "pstack/...": Buffer }, tree }.
-// `tree` is the git tree id of pstack/, so callers can tell whether the
-// directory itself changed (the upstream repo hosts other plugins too).
+// Fetch only the TRACKED directories at `ref` and return
+// { files: { "<dir>/...": Buffer }, trees: { "<dir>": treeId } }.
+// The tree ids let callers tell whether those directories themselves changed
+// (the upstream repo hosts other plugins too).
 function fetchUpstream(ref) {
   const dir = join(ROOT, ".cache", "upstream");
   cleanDir(dir);
   mkdirSync(dir, { recursive: true });
   const git = (...args) =>
     execFileSync("git", ["-C", dir, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] });
-  process.stderr.write(`fetching ${REPO}@${ref} (${SUBDIR}/ only) with git...\n`);
+  process.stderr.write(`fetching ${REPO}@${ref} (${TRACKED.join(", ")}) with git...\n`);
   git("init", "-q");
   // Byte-exact checkout on every host (no CRLF conversion on Windows).
   git("config", "core.autocrlf", "false");
   git("config", "core.eol", "lf");
-  git("sparse-checkout", "set", "--no-cone", `/${SUBDIR}/`);
+  git("sparse-checkout", "set", "--no-cone", ...TRACKED.map((d) => `/${d}/`));
   git("fetch", "-q", "--depth", "1", "--filter=blob:none", `https://github.com/${REPO}.git`, ref);
   git("checkout", "-q", "FETCH_HEAD");
-  const tree = git("rev-parse", `FETCH_HEAD:${SUBDIR}`).trim();
+  const trees = {};
   const files = {};
-  for (const entry of readdirSync(join(dir, SUBDIR), { recursive: true, withFileTypes: true })) {
-    if (!entry.isFile()) continue;
-    const abs = join(entry.parentPath ?? entry.path, entry.name);
-    const rel = abs.slice(dir.length + 1).split(/[\\/]/).join("/");
-    files[rel] = readFileSync(abs);
+  for (const d of TRACKED) {
+    // rev-parse fails loudly if upstream moved or removed a tracked directory.
+    trees[d] = git("rev-parse", `FETCH_HEAD:${d}`).trim();
+    for (const entry of readdirSync(join(dir, d), { recursive: true, withFileTypes: true })) {
+      if (!entry.isFile()) continue;
+      const abs = join(entry.parentPath ?? entry.path, entry.name);
+      const rel = abs.slice(dir.length + 1).split(/[\\/]/).join("/");
+      files[rel] = readFileSync(abs);
+    }
   }
-  return { files, tree };
+  return { files, trees };
 }
 
 // An explicit refresh uses the new upstream main commit; regular conversions
@@ -202,16 +225,17 @@ function translateBody(body) {
 
 // --- conversions ------------------------------------------------------------
 
-function convertSkill(id, raw) {
+function convertSkill(id, raw, plugin) {
   const { data, body } = splitFrontmatter(raw);
   const metadata = {};
+  if (plugin !== SUBDIR) metadata["pstack/source-plugin"] = plugin;
   if (data.name && data.name !== id) metadata["pstack/original-name"] = data.name;
   if (SLASH.has(id)) metadata["opencode/slash"] = "true";
   if (String(data["disable-model-invocation"]).toLowerCase() === "true" && !SLASH.has(id)) {
     metadata["opencode/autoinvoke"] = "false";
   }
   const fm = renderFrontmatter(
-    { name: id, description: data.description ?? `${id} (pstack skill)` },
+    { name: id, description: data.description ?? `${id} (${plugin} skill)` },
     metadata,
   );
   const note = NEEDS_NOTE.test(body) ? NOTE : "";
@@ -239,7 +263,7 @@ function convertAgent(id, raw) {
 
 function main() {
   const ref = upstreamRef();
-  const { files, tree } = fetchUpstream(ref);
+  const { files, trees } = fetchUpstream(ref);
   const apm = join(ROOT, ".apm");
   process.stderr.write(`parsed ${Object.keys(files).length} files\n`);
 
@@ -250,7 +274,13 @@ function main() {
     const m = path.match(/^pstack\/skills\/([^/]+)\//);
     if (m) upstreamSkills.add(m[1]);
   }
-  process.stderr.write(`skills: shipping all ${upstreamSkills.size}\n`);
+  process.stderr.write(`skills: shipping all ${upstreamSkills.size} from pstack + ${EXTRA_DIRS.length} extra\n`);
+  // An extra skill must not shadow a pstack skill of the same name.
+  for (const [plugin, ids] of Object.entries(EXTRA_SKILLS)) {
+    for (const id of ids) {
+      if (upstreamSkills.has(id)) throw new Error(`extra skill ${plugin}/${id} collides with pstack/skills/${id}`);
+    }
+  }
 
   cleanDir(apm);
   process.stderr.write("cleaned .apm\n");
@@ -260,16 +290,16 @@ function main() {
   let written = 0;
 
   for (const [path, content] of Object.entries(files)) {
-    const skill = path.match(/^pstack\/skills\/([^/]+)\/(.+)$/);
+    const skill = path.match(/^([^/]+)\/skills\/([^/]+)\/(.+)$/);
     const agent = path.match(/^pstack\/agents\/([^/]+)\.md$/);
 
     if (skill) {
-      const [, id, rel] = skill;
+      const [, plugin, id, rel] = skill;
       skills.add(id);
       const dest = join(apm, "skills", id, rel);
       mkdirSync(dirname(dest), { recursive: true });
       const body =
-        rel === "SKILL.md" ? convertSkill(id, content.toString("utf8"))
+        rel === "SKILL.md" ? convertSkill(id, content.toString("utf8"), plugin)
         : rel.endsWith(".md") ? translateBody(content.toString("utf8"))
         : content; // scripts, lock files and other assets are copied byte-for-byte
       writeFileSync(dest, body);
@@ -299,7 +329,7 @@ function main() {
   writeFileSync(
     join(ROOT, "SOURCE.json"),
     JSON.stringify(
-      { repository: REPO, include: INCLUDE, ref, tree, skills: [...skills].sort(), agents: [...agents].sort() },
+      { repository: REPO, include: INCLUDE, ref, trees, skills: [...skills].sort(), agents: [...agents].sort() },
       null,
       2,
     ) + "\n",

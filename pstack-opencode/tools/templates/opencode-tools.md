@@ -60,6 +60,7 @@ For model-diverse panels (`arena`, `architect`, `interrogate`, `how` critics,
 | `plugin-dev:skill-development` | Follow the Agent Skills authoring rules: keep `name` + `description` frontmatter and progressive disclosure. |
 | `loop` (recurring re-invocation) | OpenCode has no `loop` skill; re-run the step yourself on a cadence. |
 | `create-verification-skill` output path | Write the project skill under `.opencode/skills/<name>/SKILL.md`. |
+| `deslop`, `control-cli`, `control-ui` "from `cursor-team-kit`" | Installed alongside pstack: load them with `skill` by that ID (no separate plugin needed). |
 
 ## Instructions file
 

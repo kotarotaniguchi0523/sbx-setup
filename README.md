@@ -201,15 +201,16 @@ codex → `~/.agents/skills/`、claude → `~/.claude/skills/`。
 
 ### pstack の変換（自動・決定的）
 
-`pstack-opencode/tools/convert.mjs` が git の sparse・shallow fetch（`pstack/` のみ、`SOURCE.json` の commit 固定）で
+`pstack-opencode/tools/convert.mjs` が git の sparse・shallow fetch（`pstack/` と、pstack 本文が使うよう指示する
+`cursor-team-kit` の `deslop`・`control-cli`・`control-ui` のみ。`SOURCE.json` の commit 固定）で
 本家を**バイト単位でそのまま**取得し、frontmatter 正規化・Cursor 専用フィールド除去・**本文の Claude ツール名／パス置換**・
 `references/opencode-tools.md` 注入・agents の subagent 化・routing 生成を行って `.apm/` を出力する。
 モデル名（`opus`/`grok`）や `/loop`、`subagent_type` は複合IDを壊すため残置し、対応表で読み替える。
 scripts や lock ファイルなど `.md` 以外は無変換でコピーする（以前の Repomix 取得は lock / `.dot` を落とし末尾改行を削るため廃止）。
 `.apm/` は上流のミラーなので Renovate の更新対象外（`renovate.json` で無効化）。
 
-`pstack-update` は上流 commit ではなく **`pstack/` の tree ID**（`SOURCE.json` の `tree`）を比較するため、
-`cursor/plugins` の他プラグインだけが更新された日は PR を作らない。
+`pstack-update` は上流 commit ではなく **取得対象ディレクトリごとの tree ID**（`SOURCE.json` の `trees`）を比較するため、
+`cursor/plugins` の無関係なプラグインだけが更新された日は PR を作らない（上記3 skill の更新は検知する）。
 
 ## ネットワーク許可
 
