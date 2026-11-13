@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Refresh the pinned CLI versions + release-asset hashes in flake.nix.
+// Refresh the pinned CLI versions + release-asset hashes in flake.nix
+// (waza / ax / sisakulint / depgraph).
 //
 //   node tools/nix-tools-update.mjs
 //
@@ -14,7 +15,8 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const FLAKE = join(ROOT, "flake.nix");
 const API = "https://api.github.com";
-const VERSION_INTERP = "${sisakulintVersion}";
+const SISAKULINT_INTERP = "${sisakulintVersion}";
+const DEPGRAPH_INTERP = "${depgraphVersion}";
 
 function token() {
   for (const k of ["GITHUB_TOKEN", "GH_TOKEN"]) if (process.env[k]) return process.env[k];
@@ -99,7 +101,33 @@ const tools = [
     },
     // flake.nix interpolates the version into these names.
     nameExpr: (tag, file) =>
-      file.replace(`_${tag.replace(/^v/, "")}_`, `_${VERSION_INTERP}_`),
+      file.replace(`_${tag.replace(/^v/, "")}_`, `_${SISAKULINT_INTERP}_`),
+  },
+  {
+    // No checksums.txt: every archive has its own <asset>.sha256, and there is
+    // no Intel macOS build.
+    name: "depgraph",
+    versionVar: "depgraphVersion",
+    blockVar: "depgraphAssets",
+    systems: ["x86_64-linux", "aarch64-linux", "aarch64-darwin"],
+    latest: () => latestTag("TamaT-LLC/depgraph-cli"),
+    checksumsFor: async (tag, names) => {
+      const map = {};
+      for (const file of Object.values(names)) {
+        Object.assign(map, await checksums(`https://github.com/TamaT-LLC/depgraph-cli/releases/download/${tag}/${file}.sha256`));
+      }
+      return map;
+    },
+    names: (tag) => {
+      const n = tag.replace(/^v/, "");
+      return {
+        "x86_64-linux": `depgraph-${n}-x86_64-unknown-linux-gnu.tar.gz`,
+        "aarch64-linux": `depgraph-${n}-aarch64-unknown-linux-gnu.tar.gz`,
+        "aarch64-darwin": `depgraph-${n}-aarch64-apple-darwin.tar.gz`,
+      };
+    },
+    nameExpr: (tag, file) =>
+      file.replace(`-${tag.replace(/^v/, "")}-`, `-${DEPGRAPH_INTERP}-`),
   },
 ];
 
@@ -110,10 +138,12 @@ async function main() {
   for (const tool of tools) {
     const tag = await tool.latest();
     const version = tag.replace(/^v/, "");
-    const sums = await checksums(tool.checksumsUrl(tag));
     const names = tool.names(tag);
+    const sums = tool.checksumsFor
+      ? await tool.checksumsFor(tag, names)
+      : await checksums(tool.checksumsUrl(tag));
 
-    const entries = SYSTEMS.map((sys) => {
+    const entries = (tool.systems ?? SYSTEMS).map((sys) => {
       const file = names[sys];
       const sha = sums[file];
       if (!sha) throw new Error(`${tool.name}: checksum for ${file} not found`);

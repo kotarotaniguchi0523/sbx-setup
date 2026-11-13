@@ -66,6 +66,23 @@ bindings:
       domains:
         - api.doppler.com
 
+# MCP servers shared by every sandbox through the sbx MCP gateway. Credentials
+# stay on the host: nothing below puts a token inside a sandbox.
+#   artifactshare  … remote server (OAuth). Host-global registration, so it is
+#                    authorized once on the host and survives `sbx env rm`:
+#                      sbx mcp auth artifactshare
+#   repo-knowledge … stdio server run on the host (macOS / Linux only; Windows
+#                    is unsupported upstream). It reuses the host's `gh` login
+#                    and its knowledge store (~/.repo-knowledge), so the host
+#                    agents and every sandbox read the same rules.
+mcp:
+  servers:
+    - name: artifactshare
+      url: https://artifactshare.com/mcp
+    - name: repo-knowledge
+      command: npx
+      args: ["-y", "@tamat-llc/repo-knowledge-mcp@0.4.4"]
+
 lifecycle:
   initialize:
     - name: Build templates (parallel via bake; opencode conversion runs inside)

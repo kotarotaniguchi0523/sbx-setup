@@ -4,7 +4,7 @@
   # Everything the repo's builds and hooks need, declared as a flake:
   #   - the dev toolchain (node, go, gh, curl, jq, lefthook, betterleaks, docker)
   #     comes from nixpkgs and is pinned by flake.lock;
-  #   - the CLIs that are not in nixpkgs (waza, ax, sisakulint) are packaged here
+  #   - the CLIs that are not in nixpkgs (waza, ax, sisakulint, depgraph) are packaged here
   #     as fixed-output derivations (release binaries verified by sha256).
   #
   # Secrets must never go here: the Nix store is world-readable.
@@ -28,6 +28,7 @@
           wazaVersion = "0.40.1";
           axVersion = "0.1.25";
           sisakulintVersion = "0.3.8";
+          depgraphVersion = "0.7.4";
 
           wazaAssets = {
             x86_64-linux = { name = "waza-linux-amd64"; sha256 = "44c26075e159b8d9e7253c9e45e47d2468c09f8180b8de8d522b4faf73767a5c"; };
@@ -46,6 +47,13 @@
             aarch64-linux = { name = "sisakulint_${sisakulintVersion}_linux_arm64.tar.gz"; sha256 = "81bdfda81da01a3481fa4d2455fc9930dc6b3e39d78c9b4552458f89806caf61"; };
             x86_64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_amd64.tar.gz"; sha256 = "dd3107cacc022332428bc05995b1a4cf4d5fcdffdcf04f7b8047fd580e183a73"; };
             aarch64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_arm64.tar.gz"; sha256 = "4816e02bf8579b3d08aa5442014a06f646f8c963b8c1ce80c33c3accf2950f48"; };
+          };
+          # TamaT-LLC/depgraph-cli ships no Intel macOS build; the images only need
+          # the Linux ones. Hashes come from each asset's own .sha256 file.
+          depgraphAssets = {
+            x86_64-linux = { name = "depgraph-${depgraphVersion}-x86_64-unknown-linux-gnu.tar.gz"; sha256 = "0ae2badabfcf324467a938c37a5c910a70aecf561be001060039ff1cfa8150e8"; };
+            aarch64-linux = { name = "depgraph-${depgraphVersion}-aarch64-unknown-linux-gnu.tar.gz"; sha256 = "8620c44e7dde3fa6e045292e840cf3bc2692cdf53803ab5854baa953eacc24bd"; };
+            aarch64-darwin = { name = "depgraph-${depgraphVersion}-aarch64-apple-darwin.tar.gz"; sha256 = "da77491ec319f6f85c9902a0a0cfb0d6a4cb2b05f8fd7ebad5a884919cfd89cb"; };
           };
 
           pick = name: table:
@@ -75,6 +83,28 @@
             dontUnpack = true;
             installPhase = ''
               install -D -m 0755 "$src" "$out/bin/ax"
+            '';
+          };
+
+          # The release tree is kept intact: depgraph finds its workers under
+          # ../libexec relative to the real binary path, so bin/ only links in.
+          # No fixup: the official binaries and their bundled sysroot stay
+          # byte-identical to the verified archive.
+          depgraph = final.stdenvNoCC.mkDerivation {
+            pname = "depgraph";
+            version = depgraphVersion;
+            src = final.fetchurl {
+              url = "https://github.com/TamaT-LLC/depgraph-cli/releases/download/v${depgraphVersion}/${(pick "depgraph" depgraphAssets).name}";
+              sha256 = (pick "depgraph" depgraphAssets).sha256;
+            };
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+            installPhase = ''
+              mkdir -p "$out/share" "$out/bin"
+              cp -a . "$out/share/depgraph"
+              ln -s "$out/share/depgraph/bin/depgraph" "$out/bin/depgraph"
+              ln -s "$out/share/depgraph/bin/depgraph-mcp" "$out/bin/depgraph-mcp"
             '';
           };
 
@@ -122,11 +152,14 @@
               betterleaks
               waza
               ax
+              depgraph
             ];
             pathsToLink = [ "/bin" ];
           };
 
           default = pkgs.sisakulint;
+        } // pkgs.lib.optionalAttrs (system != "x86_64-darwin") {
+          inherit (pkgs) depgraph;
         });
 
       devShells = forAllSystems (system:
