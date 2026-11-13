@@ -9,6 +9,7 @@ Docker Sandboxes (sbx) のテンプレートと共通設定。Skill はすべて
 sbx-setup/
 ├── sbxenv.yaml             # 入口（共通 = Windows 版）。agent / template / lifecycle（ビルド＋取り込み）
 ├── sbxenv.mac.yaml         # macOS 版の追加レイヤー（ホスト専用の MCP など）。sbxenv.yaml の後に重ねる
+├── kits/ssh-agent/         # ホストの SSH エージェント（1Password）を転送する mixin kit（macOS 版で使用）
 ├── docker-bake.hcl         # ローカル並列ビルド
 ├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node.js 26）
 ├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
@@ -272,6 +273,8 @@ sbx mcp ls   REM context7 / artifactshare / repo-knowledge が並ぶこと
   ```
 
   蒸留は Provider CLI を使わない **host-assisted**（サンドボックス内のエージェントに `prepare_distillation` → `submit_distillation` を依頼）を推奨。承認（`review`）はホストの TTY で行う。
+- **同時に使えるのは1サンドボックスのみ**: ホスト実行（`command`）の MCP は環境ごとの所有になり、別の環境が同じ名前を登録できない（sbxenv には名前をサンドボックスごとに変える変数がない）。2つ目の環境では `sbx env plan` が名前の衝突で止まる。
+- 作成直後は承認前のため組み込みがスキップされることがある。`sbx mcp ls` で `ready` を確認してから `sbx mcp load repo-knowledge --sandbox <name>` で読み込む。
 - `sbx env` の plan は解決済みの `npx` の実体パスを固定して承認する。ホストの Node を更新してパスが変わると再承認を求められる。
 - バージョンは `sbxenv.mac.yaml` に固定し、Renovate（`customManagers`）が追従する。
 
@@ -294,7 +297,7 @@ depgraph mcp status --host claude
 
 ### SSH 鍵（git 署名・ssh）
 
-ホストの 1Password SSH エージェントを sbx が全サンドボックスへ転送する。初回のみホストで:
+ホストの 1Password SSH エージェントを sbx がサンドボックスへ転送する。エージェント kit（`docker.io/sbx/claude` など）は転送を要求しないため、`kits/ssh-agent`（`ssh-agent@1` だけを要求する mixin）を `sbxenv.mac.yaml` で読み込む。許可は **git の署名と `git@github.com` へのログインだけ**に絞ってある（それ以外の署名要求は拒否）。初回のみホストで:
 
 ```zsh
 # 1Password アプリ: 設定 → 開発者 →「SSH エージェントを使用」を ON
