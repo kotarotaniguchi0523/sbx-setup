@@ -36,7 +36,7 @@ jobs:
             experimental-features = nix-command flakes
 
       - name: Build pinned CLIs (fixed-output derivations)
-        run: nix build --no-link .#waza .#ax .#sisakulint .#depgraph
+        run: nix build --no-link .#waza .#ax .#sisakulint .#depgraph .#nodejs-official
 
       - name: Check flake
         run: nix flake check

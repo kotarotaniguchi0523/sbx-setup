@@ -1,6 +1,6 @@
 # ---- build the CLI toolchain with Nix (reproducible, hash-verified) --------
 # uv, gh, apm, agent-browser, obscura, ffmpeg, jq, ripgrep, fd, typos,
-# lefthook, betterleaks, waza, ax, depgraph and Node 24 LTS (+ its npm) all come from
+# lefthook, betterleaks, waza, ax, depgraph and Node.js 26 (official nodejs.org build, + its npm) all come from
 # ./flake.nix.
 # The bundle closure is copied into the image so no npm -g / brew / curl|bash
 # installers run (cf / difit / opencode stay on npm; see below).
@@ -25,7 +25,7 @@ RUN apt-get update \
 
 # Single Node.js / npm: drop the base image's own copy (apt nodejs/npm on the
 # claude-code base, the official Node tarball under /usr/local on the codex /
-# opencode bases) so only the Nix Node 24 LTS and npm 12 below are on PATH.
+# opencode bases) so only the Nix-packaged Node.js 26 and npm 12 below are on PATH.
 RUN set -eux; \
     if dpkg -s nodejs >/dev/null 2>&1 || dpkg -s npm >/dev/null 2>&1; then \
       apt-get purge -y nodejs npm; \
@@ -46,7 +46,7 @@ COPY --from=jdxcode/mise:2026.11.4@sha256:085be191bbe51dbe93894681b7f29f6c014ae2
 COPY --from=ghcr.io/pnpm/pnpm:12.14.0@sha256:71202ae73719148f6b6e129ca1e9fa3ceabbc9a037dc34800715606f2b5290a1 /opt/pnpm/pnpm /opt/pnpm/pnpm
 RUN ln -sf /opt/pnpm/pnpm /usr/local/bin/pnpm
 
-# CLI toolchain from the Nix bundle (Node 24 LTS + its bundled npm): unpack the
+# CLI toolchain from the Nix bundle (Node.js 26 + its bundled npm): unpack the
 # store closure and link every binary onto PATH.
 COPY --from=tools /out/store.tar /tmp/store.tar
 COPY --from=tools /out/bundle-path /tmp/bundle-path
@@ -72,7 +72,7 @@ RUN real="$(readlink -f /usr/local/bin/pnpm)" \
  && chmod +x /usr/local/bin/pnpm \
  && pnpm --version
 
-# npm 12 (latest) on top of the Nix-provided Node 24 LTS, which satisfies npm
+# npm 12 (latest) on top of the Nix-packaged Node.js 26, which satisfies npm
 # 12's engine requirement (>= 24.15). Installed from the registry; Renovate
 # tracks the version. The Nix npm links are moved aside and used only to
 # bootstrap npm 12 into /usr/local (npm refuses to overwrite a link it does not

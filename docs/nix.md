@@ -11,7 +11,7 @@
 - `flake.nix`
   - devShell（nixpkgs）: `nodejs_24` `go` `git` `gh` `curl` `jq` `lefthook` `betterleaks`（Linux は `docker-client`）
   - `bundle`（サンドボックスイメージに入れる CLI 一式。base イメージが提供する `uv`/`gh`/`jq`/`ripgrep`/`node`/`npm` は**含めない**）:
-    - nixpkgs: `apm-cli`(microsoft/apm) `nodejs_24` `agent-browser` `obscura` `ffmpeg` `fd` `typos` `lefthook` `betterleaks`
+    - nixpkgs: `apm-cli`(microsoft/apm) `agent-browser` `obscura` `ffmpeg` `fd` `typos` `lefthook` `betterleaks`
     - 自前導出（nixpkgs に無い）: `waza` `ax` `depgraph`（`sisakulint` は dev/CI のみ）
       - リリース資産を `sha256` 付き `fetchurl` で取得
     - **公式イメージ由来**（`flake.nix` には無い）: `mise`（`jdxcode/mise`）/ `pnpm`（`ghcr.io/pnpm/pnpm`）
@@ -20,8 +20,8 @@
   - 例外（**npm 固定版**）: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`
     - これらの npm パッケージは自己完結せず実行時依存（`minisearch`/`commander` 等）を import するため tarball ラップでは動作せず、Nix 化しない（nixpkgs の `opencode` は別プロジェクト v1）
     - **完全固定**は `tools/npm/cli`（cf, difit）と `tools/npm/opencode`（@opencode/cli）の `package.json` ＋ `package-lock.json` を **`npm ci`**（integrity 付き）で導入。Renovate が lock ごと更新
-    - **Node は Nix 管理**: bundle の `nodejs_24`（Node 24 LTS, 24.21.0）
-    - **npm は `12.2.0`（最新）** を Nix の Node 24 上に**レジストリから導入**（npm 12 は nixpkgs 未収録。Node 24 LTS 同梱は 11 系のため。Renovate 追従）
+    - **Node は Nix 管理**: bundle の `nodejs-official`（nodejs.org の公式ビルド v26 系の最新。nixpkgs の v26 は版が遅れるため。devShell は引き続き nixpkgs の `nodejs_24`）
+    - **npm は `12.2.0`（最新）** を Node.js 26 上に**レジストリから導入**（npm 12 は nixpkgs 未収録。Node 26 同梱は 11 系のため。Renovate 追従）
   - イメージは `nix build .#bundle` の**クロージャを tar 化して `COPY`** し、`/usr/local/bin` にリンク（`npm -g` / `brew` / `curl\|bash` を撤去）
 - `.github/workflows/nix.yml` … flake の検証＋パッケージの実ビルド
 - `.github/workflows/nix-lock.yml` … `flake.lock`（nixpkgs のピン）を生成して PR

@@ -58,7 +58,7 @@ jobs:
         if: ${{ steps.changes.outputs.changed == 'true' }}
         run: |
           nix flake check
-          nix build --no-link .#waza .#ax .#sisakulint .#depgraph
+          nix build --no-link .#waza .#ax .#sisakulint .#depgraph .#nodejs-official
 
       - name: Open a pull request if flake.nix changed
         if: ${{ steps.changes.outputs.changed == 'true' }}
@@ -71,9 +71,9 @@ jobs:
           title: "chore: update pinned Nix CLI tools"
           commit-message: "chore: update pinned Nix CLI tools"
           body: |
-            Automated update of the `waza` / `ax` / `sisakulint` / `depgraph` pins in
+            Automated update of the `waza` / `ax` / `sisakulint` / `depgraph` / Node.js v26 pins in
             `flake.nix` (versions + release-asset sha256 from each project's
-            `checksums.txt`, or per-asset `.sha256` for depgraph). Validated by the `nix` workflow.
+            `checksums.txt`, per-asset `.sha256` for depgraph, `SHASUMS256.txt` for Node.js). Validated by the `nix` workflow.
           add-paths: |
             flake.nix
 
