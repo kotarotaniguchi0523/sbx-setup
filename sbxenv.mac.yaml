@@ -20,15 +20,20 @@ mcp:
 
 # 1Password, without putting `op` or any key into the images:
 #
-# (1) SSH keys — sbx forwards the host's 1Password SSH agent into every
+# (1) SSH keys — sbx forwards the host's 1Password SSH agent into the
 #     sandbox once the host points sbx at it (host-global, one time):
 #       sbx settings set ssh.agentSocketPath \
 #         "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 #       sbx daemon restart
-#     The env below makes git inside the sandbox sign every commit with the
-#     first key that agent offers (`ssh-add -L`), so no personal key or email
-#     is written here. Without a forwarded agent, commits fail instead of
-#     going out unsigned (main requires signed commits).
+#     The agent kits (e.g. docker.io/sbx/claude) do not request the agent, so
+#     the kits/ssh-agent mixin asks for it, bounded to git signatures and
+#     git@github.com logins. The env below makes git sign every commit with
+#     the first key the agent offers (`ssh-add -L`), so no personal key or
+#     email is written here. Without a forwarded agent, commits fail instead
+#     of going out unsigned (main requires signed commits).
+kits:
+  - ./kits/ssh-agent
+
 env:
   GIT_CONFIG_COUNT: "3"
   GIT_CONFIG_KEY_0: gpg.format

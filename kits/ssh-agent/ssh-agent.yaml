@@ -1,0 +1,25 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: "3"
+kind: mixin
+displayName: Host SSH agent (git signing)
+description: Forwards the host SSH agent (e.g. 1Password) so git can sign
+  commits and reach github.com over SSH. Keys stay on the host.
+provides: ["ssh-agent"]
+version: "1.0.0"
+
+capabilities:
+  # Bounded grant: the sandbox may only make git signatures and log in to
+  # git@github.com. Optional, so a host without an agent still starts the
+  # sandbox (git signing then fails instead of committing unsigned).
+  - type: com.docker.sandbox/ssh-agent@1
+    optional: true
+    description: Sign git commits/tags and use git@github.com with the host SSH agent
+    config:
+      phase: runtime
+      unrestricted: false
+      sign: [git]
+      authenticate: [git@github.com]
+
+# Capability-only mixin: it adds no files to the workload.
+build: |
+  FROM scratch
