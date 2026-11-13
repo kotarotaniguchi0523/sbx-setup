@@ -17,3 +17,35 @@ mcp:
     - name: repo-knowledge
       command: npx
       args: ["-y", "@tamat-llc/repo-knowledge-mcp@0.4.4"]
+
+# 1Password, without putting `op` or any key into the images:
+#
+# (1) SSH keys — sbx forwards the host's 1Password SSH agent into every
+#     sandbox once the host points sbx at it (host-global, one time):
+#       sbx settings set ssh.agentSocketPath \
+#         "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+#       sbx daemon restart
+#     The env below makes git inside the sandbox sign every commit with the
+#     first key that agent offers (`ssh-add -L`), so no personal key or email
+#     is written here. Without a forwarded agent, commits fail instead of
+#     going out unsigned (main requires signed commits).
+env:
+  GIT_CONFIG_COUNT: "3"
+  GIT_CONFIG_KEY_0: gpg.format
+  GIT_CONFIG_VALUE_0: ssh
+  GIT_CONFIG_KEY_1: gpg.ssh.defaultKeyCommand
+  GIT_CONFIG_VALUE_1: ssh-add -L
+  GIT_CONFIG_KEY_2: commit.gpgsign
+  GIT_CONFIG_VALUE_2: "true"
+
+# (2) API keys — use a 1Password reference as the secret source. The host's
+#     `op` (an absolute PATH entry, e.g. /usr/local/bin) resolves it and the
+#     sbx proxy injects it, so the value never enters the sandbox. sbx checks
+#     that the reference resolves when the environment is created, so only
+#     list items that exist. Pair each service with a `bindings` entry (see
+#     sbxenv.yaml) for the domains it may be injected into. Example:
+#
+# secrets:
+#   anthropic:
+#     ref: op://Employee/Anthropic/credential
+#     refresh: 55m
