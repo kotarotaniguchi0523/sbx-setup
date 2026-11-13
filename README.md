@@ -7,7 +7,8 @@ Docker Sandboxes (sbx) のテンプレートと共通設定。Skill はすべて
 
 ```
 sbx-setup/
-├── sbxenv.yaml             # 入口。agent / template / lifecycle（ビルド＋取り込み）
+├── sbxenv.yaml             # 入口（共通 = Windows 版）。agent / template / lifecycle（ビルド＋取り込み）
+├── sbxenv.mac.yaml         # macOS 版の追加レイヤー（ホスト専用の MCP など）。sbxenv.yaml の後に重ねる
 ├── docker-bake.hcl         # ローカル並列ビルド
 ├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node 24 LTS）
 ├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
@@ -31,10 +32,10 @@ sbx-setup/
 
 | 項目 | 決定 |
 |------|------|
-| 入口 | `sbx env run` / `sbx env create`（`sbx-setup/sbxenv.yaml`） |
+| 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`） |
 | エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code` 同梱のもの） |
-| MCP | context7 のみ |
-| CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, node/npm（**Node 24 LTS + npm 12**） |
+| MCP | context7 / **artifactshare**（リモート, OAuth）/ **repo-knowledge**（ホストで stdio 実行）。いずれも sbx MCP gateway 経由で全サンドボックス共通 |
+| CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node 24 LTS + npm 12**） |
 | 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |
 | Skill | すべて APM 経由（sbx skills ストアは使わない） |
 | pstack | ビルド時に本家 `cursor/plugins/pstack` を OpenCode 向けに変換（opencode のみ） |
@@ -66,6 +67,9 @@ sbx-setup/
 | sisakulint | GH Actions SAST | 自前導出 | https://github.com/sisaku-security/sisakulint |
 | waza | agent eval | 自前導出 | https://github.com/microsoft/waza |
 | ax | HTTP クライアント | 自前導出 | https://github.com/yusukebe/ax |
+| depgraph | 依存グラフ CLI / 読み取り専用 MCP | 自前導出 | https://github.com/TamaT-LLC/depgraph-cli |
+| repo-knowledge-mcp | PR レビュー知見の MCP | npm（ホストで `npx` 実行） | https://github.com/TamaT-LLC/repo-knowledge-mcp |
+| Artifact Share | 成果物の共有（リモート MCP） | artifactshare.com | https://artifactshare.com |
 | cf | Cloudflare CLI | npm | https://github.com/cloudflare/cf |
 | difit | diff ビューア | npm | https://github.com/yoshiko-pg/difit |
 | pstack（本家） | 変換元 | 上流 | https://github.com/cursor/plugins |
@@ -102,14 +106,20 @@ sbx env run sbx-setup\sbxenv.yaml --name common-claude ^
   --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=%USERPROFILE%\projects
 ```
 
+macOS は共通ファイルの**後に** `sbxenv.mac.yaml` を重ねる（sbx がファイル順にマージし、`mcp.servers` などのリストは追記される）。
+`sbxenv.mac.yaml` にはホストでしか動かないもの（repo-knowledge MCP）だけを置き、テンプレートイメージには何も足さない。
+
 ```zsh
 # macOS
-sbx env run sbx-setup/sbxenv.yaml --name common-opencode --env-arg workspace=$HOME/projects
-sbx env run sbx-setup/sbxenv.yaml --name common-codex \
+sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-opencode \
+  --env-arg workspace=$HOME/projects
+sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-codex \
   --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=$HOME/projects
-sbx env run sbx-setup/sbxenv.yaml --name common-claude \
+sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-claude \
   --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=$HOME/projects
 ```
+
+`create` / `exec` / `rm` も同じファイルを同じ順で渡す。
 
 未アタッチで作成だけなら `sbx env create --auto-approve ...`、削除は `sbx env rm ...`。
 
@@ -219,7 +229,7 @@ scripts や lock ファイルなど `.md` 以外は無変換でコピーする�
 `sbxenv.yaml` には書けない（`network:` は未知フィールド）。
 
 既定で許可:
-- `github.com` / `api.github.com` / `uploads.github.com` / `raw.githubusercontent.com` / `objects.githubusercontent.com` / `codeload.github.com`（gh・APM・git）
+- `github.com` / `api.github.com` / `uploads.github.com` / `raw.githubusercontent.com` / `objects.githubusercontent.com` / `release-assets.githubusercontent.com` / `codeload.github.com`（gh・APM・git・`depgraph mcp setup` のリリース取得）
 - `api.cloudflare.com`（`cf`）
 - `cache.nixos.org` / `nixos.org`（サンドボックス内の `nix`）
 - `registry.npmjs.org`（npm / pnpm）
@@ -232,11 +242,51 @@ sbx policy allow network "pypi.org:443,files.pythonhosted.org:443"
 
 ## MCP
 
+MCP サーバーは **sbx の MCP gateway** に登録し、opencode / codex / claude の全サンドボックスで共通に使う。
+認証情報はホスト側に置かれ、**サンドボックスにはトークンを入れない**。
+
 ```bat
-sbx mcp ls   REM context7 が ready であること
+sbx mcp ls   REM context7 / artifactshare / repo-knowledge が並ぶこと
 ```
 
-context7 の API キーは平文保存を避け、`sbx secret set` を使う。
+| サーバー | 実行場所 | 認証 | 宣言 |
+|---|---|---|---|
+| context7 | リモート | API キーを `sbx secret set`（平文保存しない） | 手動登録 |
+| artifactshare | リモート（`https://artifactshare.com/mcp`） | OAuth。**ホストで1回だけ** `sbx mcp auth artifactshare` | `sbxenv.yaml`（共通） |
+| repo-knowledge | **ホスト**（`npx -y @tamat-llc/repo-knowledge-mcp@<ver>`） | ホストの `gh` ログインをそのまま使う（追加の秘密情報なし） | `sbxenv.mac.yaml`（**macOS のみ**） |
+
+### Artifact Share
+
+- URL 型の登録は**ホスト全体**に残る（`sbx env rm` でも消えない）。OAuth の更新も gateway が行う。
+- サンドボックス内では CLI（`npm exec ... artifactshare`）ではなく **MCP を使う**（CLI 用のトークンをサンドボックスへ入れないため）。
+
+### repo-knowledge-mcp（macOS 版のみ）
+
+- **ホストで動かす**ため、知識ストア（`~/.repo-knowledge/`）はホストに1つ。ホストの Claude Code / Codex と全サンドボックスが同じルールを読み、サンドボックスを消しても知識は残る。
+- 前提: ホストに Node.js（22.13+ / 24+）と `gh auth login` 済みの `gh`。上流が Windows 非対応のため **macOS / Linux ホスト専用**。
+- 初回は対象リポジトリでホストから guided setup を実行する（TTY が必要。外部送信・reviewer 信頼は既定 `No`）:
+
+  ```zsh
+  cd /path/to/repository
+  npx -y @tamat-llc/repo-knowledge-mcp@0.4.4 setup
+  ```
+
+  蒸留は Provider CLI を使わない **host-assisted**（サンドボックス内のエージェントに `prepare_distillation` → `submit_distillation` を依頼）を推奨。承認（`review`）はホストの TTY で行う。
+- `sbx env` の plan は解決済みの `npx` の実体パスを固定して承認する。ホストの Node を更新してパスが変わると再承認を求められる。
+- バージョンは `sbxenv.mac.yaml` に固定し、Renovate（`customManagers`）が追従する。
+
+### depgraph（サンドボックス内）
+
+`depgraph` / `depgraph-mcp` は全テンプレートに焼き込み済み（公式リリースを Nix で hash 検証）。
+解析はワークスペースに対して行うため、MCP はサンドボックス内で**リポジトリごとに**登録する:
+
+```sh
+cd /path/to/repository
+depgraph mcp setup --host claude   # opencode は手動設定、codex は --host codex
+depgraph mcp status --host claude
+```
+
+登録されるサーバーは読み取り専用で、プロジェクトのコードは実行しない。
 
 ## GitHub 認証（gh / git）
 
@@ -298,7 +348,7 @@ lefthook install
 - `.github/workflows/apm-update.yml` … 週次で `apm update`（外部 skill の ref を更新）→ 差分検証 → PR
 - `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins` の `pstack/` の tree 変化を検知し PR を作成
 - `renovate.json` … Dependabot alerts 連携（`vulnerabilityAlerts`）／**非メジャーを1PRに集約**／Actions を `GitHub Actions` でまとめ／**リリース後3日待ってから PR**（`minimumReleaseAge: "3 days"` + `internalChecksFilter: strict`）。security 修正のみ即時
-- base イメージは **digest ピン**。pstack / base / npm / sisakulint / Go / waza / ax を追従
+- base イメージは **digest ピン**。pstack / base / npm / sisakulint / Go / waza / ax / depgraph / repo-knowledge-mcp を追従
 - 署名: コミットは **SSH 署名**（`gpg.format=ssh`）。GitHub の Signing Key に `id_ed25519.pub` を登録すると Verified 表示
 
 ## Nix（依存管理）
@@ -306,7 +356,7 @@ lefthook install
 `flake.nix` でこのリポジトリの依存を管理する。
 
 - devShell: `nodejs_24` / `go` / `git` / `gh` / `curl` / `jq` / `lefthook` / `betterleaks`（Linux は `docker-client`）
-- `bundle`（イメージに入れる CLI 一式）: nixpkgs の `uv` `gh` `apm-cli` `agent-browser` ほか ＋ 自前導出 `waza` `ax` `sisakulint`
+- `bundle`（イメージに入れる CLI 一式）: nixpkgs の `uv` `gh` `apm-cli` `agent-browser` ほか ＋ 自前導出 `waza` `ax` `depgraph` `sisakulint`
 - ※ `mise` / `pnpm` は Nix ではなく**ベンダー公式イメージ**から `COPY --from` で取り込む（`jdxcode/mise`, `ghcr.io/pnpm/pnpm`。どちらも単体バイナリで、nixpkgs より上流の追随が速い）。digest ピンは base イメージと同じく Renovate が更新
 - `nix build .#bundle`（個別は `.#waza` `.#ax` `.#sisakulint`）
 - ※ npm 固定版の例外: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`（npm パッケージが自己完結しないため）。`tools/npm/*/package.json` ＋ `package-lock.json` を **`npm ci`** で導入。**Node 24 LTS は Nix 管理**、**npm は `12.2.0`（最新）をレジストリから導入**（npm 12 は nixpkgs 未収録のため。Renovate が追従）
@@ -322,7 +372,8 @@ lefthook install
 - 本家 pstack: `pstack-update` workflow（毎日）が検知して PR。手元では `sbx env run` の再ビルドでも再変換
 - 外部 skill（explainer / yomiyasu / agent-browser / ax / waza / apm-usage）: **`apm-update` workflow（週次）が `apm update` で `pstack-opencode/apm.lock.yaml` を更新して PR**（lock で exact SHA ＋ content_hash 固定）
 - Nix のツール（uv / gh / apm-cli / agent-browser ほか）: `flake.lock`（Renovate が nixpkgs を追従）
-- 自前固定 CLI（waza / ax / sisakulint）: `nix-tools-update` workflow が version＋hash を更新（PR）
+- 自前固定 CLI（waza / ax / sisakulint / depgraph）: `nix-tools-update` workflow が version＋hash を更新（PR。depgraph は asset ごとの `.sha256` を読む）
+- repo-knowledge-mcp: `sbxenv.mac.yaml` の `npx` 固定版を Renovate が更新
 - npm の例外（`@opencode/cli` / cf / difit）: `tools/npm/*/package-lock.json` を Renovate が更新
 - base イメージ（`docker/sandbox-templates`）: digest ピンを Renovate が更新
 - 公式イメージ由来の CLI（`mise` / `pnpm`）: Dockerfile の `COPY --from` の digest を Renovate が更新

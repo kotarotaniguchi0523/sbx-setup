@@ -30,6 +30,13 @@
     },
     {
       "customType": "regex",
+      "description": "npm MCP servers pinned in the sbxenv files (npx -y <pkg>@<version>)",
+      "fileMatch": ["(^|/)sbxenv(\\.[\\w-]+)?\\.yaml$"],
+      "matchStrings": ["\"(?<depName>@?[\\w./-]+)@(?<currentValue>\\d+\\.\\d+\\.\\d+)\""],
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
       "description": "sisakulint pinned in tools/sisakulint.version",
       "fileMatch": ["(^|/)tools/sisakulint\\.version$"],
       "matchStrings": ["(?<currentValue>[\\d.]+)"],

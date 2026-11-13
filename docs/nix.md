@@ -12,7 +12,7 @@
   - devShell（nixpkgs）: `nodejs_24` `go` `git` `gh` `curl` `jq` `lefthook` `betterleaks`（Linux は `docker-client`）
   - `bundle`（サンドボックスイメージに入れる CLI 一式。base イメージが提供する `uv`/`gh`/`jq`/`ripgrep`/`node`/`npm` は**含めない**）:
     - nixpkgs: `apm-cli`(microsoft/apm) `nodejs_24` `agent-browser` `obscura` `ffmpeg` `fd` `typos` `lefthook` `betterleaks`
-    - 自前導出（nixpkgs に無い）: `waza` `ax`（`sisakulint` は dev/CI のみ）
+    - 自前導出（nixpkgs に無い）: `waza` `ax` `depgraph`（`sisakulint` は dev/CI のみ）
       - リリース資産を `sha256` 付き `fetchurl` で取得
     - **公式イメージ由来**（`flake.nix` には無い）: `mise`（`jdxcode/mise`）/ `pnpm`（`ghcr.io/pnpm/pnpm`）
       - どちらも単体バイナリを配っており、nixpkgs の収録より上流の追随が速い（実測: mise 2026.10.3 → 2026.10.13、pnpm 12.9.0 → 12.14.0）
@@ -25,14 +25,14 @@
   - イメージは `nix build .#bundle` の**クロージャを tar 化して `COPY`** し、`/usr/local/bin` にリンク（`npm -g` / `brew` / `curl\|bash` を撤去）
 - `.github/workflows/nix.yml` … flake の検証＋パッケージの実ビルド
 - `.github/workflows/nix-lock.yml` … `flake.lock`（nixpkgs のピン）を生成して PR
-- `.github/workflows/nix-tools-update.yml`（＋`tools/nix-tools-update.mjs`）… `flake.nix` の waza / ax / sisakulint の version＋hash を更新して PR
+- `.github/workflows/nix-tools-update.yml`（＋`tools/nix-tools-update.mjs`）… `flake.nix` の waza / ax / sisakulint / depgraph の version＋hash を更新して PR
 
 ### 依存更新の分担
 
 | 対象 | 担当 |
 |---|---|
 | `flake.lock`（nixpkgs） | **Renovate**（nix manager）＋ `nix-lock` |
-| `flake.nix` の固定 CLI（waza / ax / sisakulint） | **`nix-tools-update`**（Renovate は固定出力ハッシュを再計算できないため） |
+| `flake.nix` の固定 CLI（waza / ax / sisakulint / depgraph） | **`nix-tools-update`**（Renovate は固定出力ハッシュを再計算できないため） |
 | `tools/*.version` / Dockerfile の `ARG` | **Renovate** |
 | Dockerfile の `COPY --from` / base イメージの digest | **Renovate**（docker datasource, `pinDigests`） |
 

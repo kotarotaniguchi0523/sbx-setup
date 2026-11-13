@@ -1,6 +1,6 @@
 # ---- build the CLI toolchain with Nix (reproducible, hash-verified) --------
 # uv, gh, apm, agent-browser, obscura, ffmpeg, jq, ripgrep, fd, typos,
-# lefthook, betterleaks, waza, ax and Node 24 LTS (+ its npm) all come from
+# lefthook, betterleaks, waza, ax, depgraph and Node 24 LTS (+ its npm) all come from
 # ./flake.nix.
 # The bundle closure is copied into the image so no npm -g / brew / curl|bash
 # installers run (cf / difit / opencode stay on npm; see below).
@@ -55,7 +55,7 @@ RUN set -eux; \
     bundle="$(cat /tmp/bundle-path)"; \
     for f in "$bundle"/bin/*; do ln -sf "$f" "/usr/local/bin/$(basename "$f")"; done; \
     rm -f /tmp/store.tar /tmp/bundle-path; \
-    uv --version; mise --version; gh --version | head -1; pnpm --version; node --version; npm --version
+    uv --version; mise --version; gh --version | head -1; pnpm --version; node --version; npm --version; depgraph --version
 
 # pnpm-only defaults: the sandbox workspace is a virtiofs/FUSE mount where
 # pnpm's default symlinks break. Wrap pnpm so the settings apply only while

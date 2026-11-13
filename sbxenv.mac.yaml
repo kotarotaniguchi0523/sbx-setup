@@ -1,0 +1,19 @@
+schemaVersion: "1"
+
+# macOS layer for sbxenv.yaml. Always pass it after the common file:
+#
+#   sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml \
+#     --name common-opencode --env-arg workspace=$HOME/projects
+#
+# sbx merges the files in order (lists such as mcp.servers are appended), so
+# this file only holds what needs a macOS host. Nothing here is baked into the
+# template images: everything below runs or resolves on the host.
+
+# repo-knowledge … stdio MCP server run on the host (unsupported on Windows
+# upstream). It reuses the host's `gh` login and its knowledge store
+# (~/.repo-knowledge), so the host agents and every sandbox read the same rules.
+mcp:
+  servers:
+    - name: repo-knowledge
+      command: npx
+      args: ["-y", "@tamat-llc/repo-knowledge-mcp@0.4.4"]

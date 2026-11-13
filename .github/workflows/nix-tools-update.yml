@@ -1,6 +1,6 @@
 name: nix-tools-update
 
-# Refresh the pinned CLI versions/hashes in flake.nix (waza / ax / sisakulint).
+# Refresh the pinned CLI versions/hashes in flake.nix (waza / ax / sisakulint / depgraph).
 # Renovate handles flake.lock (nixpkgs); Renovate cannot recompute fixed-output
 # hashes, so this workflow owns those pins instead.
 
@@ -58,7 +58,7 @@ jobs:
         if: ${{ steps.changes.outputs.changed == 'true' }}
         run: |
           nix flake check
-          nix build --no-link .#waza .#ax .#sisakulint
+          nix build --no-link .#waza .#ax .#sisakulint .#depgraph
 
       - name: Open a pull request if flake.nix changed
         if: ${{ steps.changes.outputs.changed == 'true' }}
@@ -71,9 +71,9 @@ jobs:
           title: "chore: update pinned Nix CLI tools"
           commit-message: "chore: update pinned Nix CLI tools"
           body: |
-            Automated update of the `waza` / `ax` / `sisakulint` pins in
+            Automated update of the `waza` / `ax` / `sisakulint` / `depgraph` pins in
             `flake.nix` (versions + release-asset sha256 from each project's
-            `checksums.txt`). Validated by the `nix` workflow.
+            `checksums.txt`, or per-asset `.sha256` for depgraph). Validated by the `nix` workflow.
           add-paths: |
             flake.nix
 
