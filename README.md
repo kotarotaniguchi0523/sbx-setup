@@ -288,6 +288,30 @@ depgraph mcp status --host claude
 
 登録されるサーバーは読み取り専用で、プロジェクトのコードは実行しない。
 
+## 1Password（macOS 版のみ）
+
+`op` もどの鍵も**イメージには入れない**。ホストの 1Password を sbx 経由で使う（`sbxenv.mac.yaml`）。
+
+### SSH 鍵（git 署名・ssh）
+
+ホストの 1Password SSH エージェントを sbx が全サンドボックスへ転送する。初回のみホストで:
+
+```zsh
+# 1Password アプリ: 設定 → 開発者 →「SSH エージェントを使用」を ON
+sbx settings set ssh.agentSocketPath \
+  "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+sbx daemon restart   # 実行中のサンドボックスは停止する
+```
+
+- `sbxenv.mac.yaml` の `env`（`GIT_CONFIG_*`）で、サンドボックス内の git が**エージェントの先頭の鍵（`ssh-add -L`）で全コミットに署名**する。個人の鍵やメールはファイルに書かない。
+- エージェントが転送されていないとコミットは**失敗する**（署名なしで出ていかない。main は署名必須）。
+- 使う鍵は GitHub の **Signing Key** に登録しておく（`gh ssh-key add <pub> --type signing`）。
+
+### API キー
+
+`secrets` の参照先に 1Password を使える（`ref: op://Vault/Item/field`）。ホストの `op`（`/usr/local/bin` など絶対パスの PATH 上）が値を取り出し、sbx のプロキシが注入するので**値はサンドボックスに入らない**。
+環境作成時に参照が解決できるか検証されるため、実在するアイテムだけを書く。対応する `bindings`（注入先ドメイン）も `sbxenv.yaml` に宣言する。書式例は `sbxenv.mac.yaml` のコメントを参照。
+
 ## GitHub 認証（gh / git）
 
 サンドボックス内で `gh auth login` は不要。ホスト側プロキシが GitHub トークンを `GH_TOKEN` として注入する（opencode/codex/claude 全 descriptor で `github` credential を宣言済み）。
