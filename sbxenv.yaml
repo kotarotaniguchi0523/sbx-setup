@@ -1,9 +1,12 @@
 schemaVersion: "1"
 
-# Common sbx environment. One command builds the template images (the pstack
-# conversion runs inside the opencode image build) and creates the sandbox.
-# Examples use the Windows workspace path; on macOS pass
-# `--env-arg workspace=$HOME/projects` instead.
+# Common sbx environment (Windows and macOS). One command builds the template
+# images (the pstack conversion runs inside the opencode image build) and
+# creates the sandbox. This file alone is the Windows setup. On macOS, layer
+# sbxenv.mac.yaml on top for the host-only extras (see that file), e.g.:
+#   sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml \
+#     --name common-opencode --env-arg workspace=$HOME/projects
+# The examples below use the Windows workspace path.
 #
 #   OpenCode:
 #     sbx env run sbx-setup/sbxenv.yaml --name common-opencode \
@@ -68,20 +71,14 @@ bindings:
 
 # MCP servers shared by every sandbox through the sbx MCP gateway. Credentials
 # stay on the host: nothing below puts a token inside a sandbox.
-#   artifactshare  … remote server (OAuth). Host-global registration, so it is
-#                    authorized once on the host and survives `sbx env rm`:
-#                      sbx mcp auth artifactshare
-#   repo-knowledge … stdio server run on the host (macOS / Linux only; Windows
-#                    is unsupported upstream). It reuses the host's `gh` login
-#                    and its knowledge store (~/.repo-knowledge), so the host
-#                    agents and every sandbox read the same rules.
+#   artifactshare … remote server (OAuth). Host-global registration, so it is
+#                   authorized once on the host and survives `sbx env rm`:
+#                     sbx mcp auth artifactshare
+# macOS-only servers live in sbxenv.mac.yaml; sbx appends its list to this one.
 mcp:
   servers:
     - name: artifactshare
       url: https://artifactshare.com/mcp
-    - name: repo-knowledge
-      command: npx
-      args: ["-y", "@tamat-llc/repo-knowledge-mcp@0.4.4"]
 
 lifecycle:
   initialize:

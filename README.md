@@ -7,7 +7,8 @@ Docker Sandboxes (sbx) のテンプレートと共通設定。Skill はすべて
 
 ```
 sbx-setup/
-├── sbxenv.yaml             # 入口。agent / template / lifecycle（ビルド＋取り込み）
+├── sbxenv.yaml             # 入口（共通 = Windows 版）。agent / template / lifecycle（ビルド＋取り込み）
+├── sbxenv.mac.yaml         # macOS 版の追加レイヤー（ホスト専用の MCP など）。sbxenv.yaml の後に重ねる
 ├── docker-bake.hcl         # ローカル並列ビルド
 ├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node 24 LTS）
 ├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
@@ -31,7 +32,7 @@ sbx-setup/
 
 | 項目 | 決定 |
 |------|------|
-| 入口 | `sbx env run` / `sbx env create`（`sbx-setup/sbxenv.yaml`） |
+| 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`） |
 | エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code` 同梱のもの） |
 | MCP | context7 / **artifactshare**（リモート, OAuth）/ **repo-knowledge**（ホストで stdio 実行）。いずれも sbx MCP gateway 経由で全サンドボックス共通 |
 | CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node 24 LTS + npm 12**） |
@@ -105,14 +106,20 @@ sbx env run sbx-setup\sbxenv.yaml --name common-claude ^
   --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=%USERPROFILE%\projects
 ```
 
+macOS は共通ファイルの**後に** `sbxenv.mac.yaml` を重ねる（sbx がファイル順にマージし、`mcp.servers` などのリストは追記される）。
+`sbxenv.mac.yaml` にはホストでしか動かないもの（repo-knowledge MCP）だけを置き、テンプレートイメージには何も足さない。
+
 ```zsh
 # macOS
-sbx env run sbx-setup/sbxenv.yaml --name common-opencode --env-arg workspace=$HOME/projects
-sbx env run sbx-setup/sbxenv.yaml --name common-codex \
+sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-opencode \
+  --env-arg workspace=$HOME/projects
+sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-codex \
   --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=$HOME/projects
-sbx env run sbx-setup/sbxenv.yaml --name common-claude \
+sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-claude \
   --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=$HOME/projects
 ```
+
+`create` / `exec` / `rm` も同じファイルを同じ順で渡す。
 
 未アタッチで作成だけなら `sbx env create --auto-approve ...`、削除は `sbx env rm ...`。
 
@@ -245,15 +252,15 @@ sbx mcp ls   REM context7 / artifactshare / repo-knowledge が並ぶこと
 | サーバー | 実行場所 | 認証 | 宣言 |
 |---|---|---|---|
 | context7 | リモート | API キーを `sbx secret set`（平文保存しない） | 手動登録 |
-| artifactshare | リモート（`https://artifactshare.com/mcp`） | OAuth。**ホストで1回だけ** `sbx mcp auth artifactshare` | `sbxenv.yaml` の `mcp.servers` |
-| repo-knowledge | **ホスト**（`npx -y @tamat-llc/repo-knowledge-mcp@<ver>`） | ホストの `gh` ログインをそのまま使う（追加の秘密情報なし） | `sbxenv.yaml` の `mcp.servers` |
+| artifactshare | リモート（`https://artifactshare.com/mcp`） | OAuth。**ホストで1回だけ** `sbx mcp auth artifactshare` | `sbxenv.yaml`（共通） |
+| repo-knowledge | **ホスト**（`npx -y @tamat-llc/repo-knowledge-mcp@<ver>`） | ホストの `gh` ログインをそのまま使う（追加の秘密情報なし） | `sbxenv.mac.yaml`（**macOS のみ**） |
 
 ### Artifact Share
 
 - URL 型の登録は**ホスト全体**に残る（`sbx env rm` でも消えない）。OAuth の更新も gateway が行う。
 - サンドボックス内では CLI（`npm exec ... artifactshare`）ではなく **MCP を使う**（CLI 用のトークンをサンドボックスへ入れないため）。
 
-### repo-knowledge-mcp（macOS ホスト向け）
+### repo-knowledge-mcp（macOS 版のみ）
 
 - **ホストで動かす**ため、知識ストア（`~/.repo-knowledge/`）はホストに1つ。ホストの Claude Code / Codex と全サンドボックスが同じルールを読み、サンドボックスを消しても知識は残る。
 - 前提: ホストに Node.js（22.13+ / 24+）と `gh auth login` 済みの `gh`。上流が Windows 非対応のため **macOS / Linux ホスト専用**。
@@ -266,7 +273,7 @@ sbx mcp ls   REM context7 / artifactshare / repo-knowledge が並ぶこと
 
   蒸留は Provider CLI を使わない **host-assisted**（サンドボックス内のエージェントに `prepare_distillation` → `submit_distillation` を依頼）を推奨。承認（`review`）はホストの TTY で行う。
 - `sbx env` の plan は解決済みの `npx` の実体パスを固定して承認する。ホストの Node を更新してパスが変わると再承認を求められる。
-- バージョンは `sbxenv.yaml` に固定し、Renovate（`customManagers`）が追従する。
+- バージョンは `sbxenv.mac.yaml` に固定し、Renovate（`customManagers`）が追従する。
 
 ### depgraph（サンドボックス内）
 
@@ -366,7 +373,7 @@ lefthook install
 - 外部 skill（explainer / yomiyasu / agent-browser / ax / waza / apm-usage）: **`apm-update` workflow（週次）が `apm update` で `pstack-opencode/apm.lock.yaml` を更新して PR**（lock で exact SHA ＋ content_hash 固定）
 - Nix のツール（uv / gh / apm-cli / agent-browser ほか）: `flake.lock`（Renovate が nixpkgs を追従）
 - 自前固定 CLI（waza / ax / sisakulint / depgraph）: `nix-tools-update` workflow が version＋hash を更新（PR。depgraph は asset ごとの `.sha256` を読む）
-- repo-knowledge-mcp: `sbxenv.yaml` の `npx` 固定版を Renovate が更新
+- repo-knowledge-mcp: `sbxenv.mac.yaml` の `npx` 固定版を Renovate が更新
 - npm の例外（`@opencode/cli` / cf / difit）: `tools/npm/*/package-lock.json` を Renovate が更新
 - base イメージ（`docker/sandbox-templates`）: digest ピンを Renovate が更新
 - 公式イメージ由来の CLI（`mise` / `pnpm`）: Dockerfile の `COPY --from` の digest を Renovate が更新

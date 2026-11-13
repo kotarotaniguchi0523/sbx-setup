@@ -30,8 +30,8 @@
     },
     {
       "customType": "regex",
-      "description": "npm MCP servers pinned in sbxenv.yaml (npx -y <pkg>@<version>)",
-      "fileMatch": ["(^|/)sbxenv\\.yaml$"],
+      "description": "npm MCP servers pinned in the sbxenv files (npx -y <pkg>@<version>)",
+      "fileMatch": ["(^|/)sbxenv(\\.[\\w-]+)?\\.yaml$"],
       "matchStrings": ["\"(?<depName>@?[\\w./-]+)@(?<currentValue>\\d+\\.\\d+\\.\\d+)\""],
       "datasourceTemplate": "npm"
     },
