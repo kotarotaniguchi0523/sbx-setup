@@ -5,7 +5,9 @@
   #   - the dev toolchain (node, go, gh, curl, jq, lefthook, betterleaks, docker)
   #     comes from nixpkgs and is pinned by flake.lock;
   #   - the CLIs that are not in nixpkgs (waza, ax, sisakulint, depgraph) are packaged here
-  #     as fixed-output derivations (release binaries verified by sha256).
+  #     as fixed-output derivations (release binaries verified by sha256);
+  #   - the images' Node.js is the official nodejs.org build of the newest
+  #     v26 (nixpkgs lags behind the v26 line), packaged the same way.
   #
   # Secrets must never go here: the Nix store is world-readable.
 
@@ -29,6 +31,7 @@
           axVersion = "0.1.25";
           sisakulintVersion = "0.3.8";
           depgraphVersion = "0.7.4";
+          nodeVersion = "26.13.1";
 
           wazaAssets = {
             x86_64-linux = { name = "waza-linux-amd64"; sha256 = "44c26075e159b8d9e7253c9e45e47d2468c09f8180b8de8d522b4faf73767a5c"; };
@@ -54,6 +57,14 @@
             x86_64-linux = { name = "depgraph-${depgraphVersion}-x86_64-unknown-linux-gnu.tar.gz"; sha256 = "0ae2badabfcf324467a938c37a5c910a70aecf561be001060039ff1cfa8150e8"; };
             aarch64-linux = { name = "depgraph-${depgraphVersion}-aarch64-unknown-linux-gnu.tar.gz"; sha256 = "8620c44e7dde3fa6e045292e840cf3bc2692cdf53803ab5854baa953eacc24bd"; };
             aarch64-darwin = { name = "depgraph-${depgraphVersion}-aarch64-apple-darwin.tar.gz"; sha256 = "da77491ec319f6f85c9902a0a0cfb0d6a4cb2b05f8fd7ebad5a884919cfd89cb"; };
+          };
+
+          # Official Node.js builds; hashes are the published SHASUMS256.txt values.
+          nodeAssets = {
+            x86_64-linux = { name = "node-v${nodeVersion}-linux-x64.tar.xz"; sha256 = "5c063e46bab0fbc1c17cc445d7ff129cbdcd0471be6ed83b6ab864f8143bc864"; };
+            aarch64-linux = { name = "node-v${nodeVersion}-linux-arm64.tar.xz"; sha256 = "89e1853138db51e8b82d3e98ba9c0d3f2956a28e5e55ea1b7e12d25aae92d5dd"; };
+            x86_64-darwin = { name = "node-v${nodeVersion}-darwin-x64.tar.xz"; sha256 = "2693310b2820f9350d29524f21344e1c623875bab773457d55b2aceb9670716f"; };
+            aarch64-darwin = { name = "node-v${nodeVersion}-darwin-arm64.tar.xz"; sha256 = "af6202f5370a3a5209e85dc543758dfd9f44c8726626a236730cd603a67a8559"; };
           };
 
           pick = name: table:
@@ -108,6 +119,25 @@
             '';
           };
 
+          # The official tree as published (bin/node, npm, npx, corepack and
+          # lib/node_modules); no fixup, so the binary and npm's shebangs stay
+          # byte-identical to the verified archive.
+          nodejs-official = final.stdenvNoCC.mkDerivation {
+            pname = "nodejs-official";
+            version = nodeVersion;
+            src = final.fetchurl {
+              url = "https://nodejs.org/dist/v${nodeVersion}/${(pick "nodejs" nodeAssets).name}";
+              sha256 = (pick "nodejs" nodeAssets).sha256;
+            };
+            dontConfigure = true;
+            dontBuild = true;
+            dontFixup = true;
+            installPhase = ''
+              mkdir -p "$out"
+              cp -a . "$out"
+            '';
+          };
+
           sisakulint = final.stdenvNoCC.mkDerivation {
             pname = "sisakulint";
             version = sisakulintVersion;
@@ -127,7 +157,7 @@
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlays.default ]; };
         in
         {
-          inherit (pkgs) waza ax sisakulint;
+          inherit (pkgs) waza ax sisakulint nodejs-official;
 
           # CLI tooling this repo adds to the sandbox images. Consumed as a
           # closure (see the kit Dockerfiles) so the images do not run npm -g /
@@ -142,7 +172,7 @@
             name = "sbx-tools";
             paths = with pkgs; [
               apm-cli
-              nodejs_24
+              nodejs-official
               agent-browser
               obscura
               ffmpeg

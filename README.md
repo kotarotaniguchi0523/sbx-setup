@@ -10,7 +10,7 @@ sbx-setup/
 ├── sbxenv.yaml             # 入口（共通 = Windows 版）。agent / template / lifecycle（ビルド＋取り込み）
 ├── sbxenv.mac.yaml         # macOS 版の追加レイヤー（ホスト専用の MCP など）。sbxenv.yaml の後に重ねる
 ├── docker-bake.hcl         # ローカル並列ビルド
-├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node 24 LTS）
+├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node.js 26）
 ├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
 ├── common-codex/           # Codex 用 kit
 ├── common-claude/          # Claude Code 用 kit（Claude Code 本体は base テンプレート同梱のものを使用）
@@ -35,7 +35,7 @@ sbx-setup/
 | 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`） |
 | エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code` 同梱のもの） |
 | MCP | context7 / **artifactshare**（リモート, OAuth）/ **repo-knowledge**（ホストで stdio 実行）。いずれも sbx MCP gateway 経由で全サンドボックス共通 |
-| CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node 24 LTS + npm 12**） |
+| CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node.js 26（公式ビルド）+ npm 12**） |
 | 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |
 | Skill | すべて APM 経由（sbx skills ストアは使わない） |
 | pstack | ビルド時に本家 `cursor/plugins/pstack` を OpenCode 向けに変換（opencode のみ） |
@@ -77,7 +77,7 @@ sbx-setup/
 | Renovate | 依存更新 | Mend App | https://github.com/renovatebot/renovate |
 
 - 一覧は**このリポジトリで追加・管理しているもの**のみ。base イメージ（`docker/sandbox-templates`）が元から提供する **エージェント（opencode / codex / claude）・jq / ripgrep / gh / uv・python / git / curl** は除外（base は digest ピンなので据え置き）。
-- **Node.js / npm は1系統のみ**: base が持つ Node（claude-code は apt の nodejs/npm、codex / opencode は `/usr/local` の公式 Node）はビルド時に削除し、Nix の **Node 24 LTS** ＋ `/usr/local` に入れた **npm 12** だけを PATH に置く（`which -a node` / `which -a npm` が1件であることをビルドで検証）。
+- **Node.js / npm は1系統のみ**: base が持つ Node（claude-code は apt の nodejs/npm、codex / opencode は `/usr/local` の公式 Node）はビルド時に削除し、Nix で取り込んだ **Node.js 26 の公式ビルド**（nodejs.org の tarball を SHASUMS256 で固定。nixpkgs の v26 は版が遅れるため）＋ `/usr/local` に入れた **npm 12** だけを PATH に置く（`which -a node` / `which -a npm` が1件であることをビルドで検証）。
 - **pnpm**: ワークスペースは virtiofs で symlink 不可のため、`pnpm` を**薄いラッパー**で包み、**pnpm 実行時だけ** `PNPM_CONFIG_NODE_LINKER=hoisted` ＋ `PNPM_CONFIG_PREFER_SYMLINKED_EXECUTABLES=false` を当てる。`PNPM_CONFIG_*` は **pnpm 専用の環境変数名前空間**で、pnpm 専用のグローバル設定ファイルは置かない → npm / yarn / Go / uv / 他言語には**一切関与しない**。
 
 ## 実行（入口は `sbx env`）
@@ -121,10 +121,10 @@ sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-claude
 
 `create` / `exec` / `rm` も同じファイルを同じ順で渡す。
 
-未アタッチで作成だけなら `sbx env create --auto-approve ...`、削除は `sbx env rm ...`。
+未アタッチで作成だけなら `sbx env create --force ...`、削除は `sbx env rm ...`。
 
 - いずれのファイルも `sandboxOptions.skills: off`（sbx の共有 skills ストアを使わない。APM で焼き込んだ skills と衝突するため）。
-- lifecycle があるため既定では毎回プラン承認が必要。`sbx settings set env.rememberHostCommands true` か `--auto-approve` で省略可。
+- lifecycle があるため既定では毎回プラン承認が必要。`sbx settings set env.rememberHostCommands true` か `--force` で省略可。
 
 ## `lifecycle.initialize` が行うこと
 
@@ -383,7 +383,7 @@ lefthook install
 - `bundle`（イメージに入れる CLI 一式）: nixpkgs の `uv` `gh` `apm-cli` `agent-browser` ほか ＋ 自前導出 `waza` `ax` `depgraph` `sisakulint`
 - ※ `mise` / `pnpm` は Nix ではなく**ベンダー公式イメージ**から `COPY --from` で取り込む（`jdxcode/mise`, `ghcr.io/pnpm/pnpm`。どちらも単体バイナリで、nixpkgs より上流の追随が速い）。digest ピンは base イメージと同じく Renovate が更新
 - `nix build .#bundle`（個別は `.#waza` `.#ax` `.#sisakulint`）
-- ※ npm 固定版の例外: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`（npm パッケージが自己完結しないため）。`tools/npm/*/package.json` ＋ `package-lock.json` を **`npm ci`** で導入。**Node 24 LTS は Nix 管理**、**npm は `12.2.0`（最新）をレジストリから導入**（npm 12 は nixpkgs 未収録のため。Renovate が追従）
+- ※ npm 固定版の例外: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`（npm パッケージが自己完結しないため）。`tools/npm/*/package.json` ＋ `package-lock.json` を **`npm ci`** で導入。**Node.js 26 は Nix 管理（公式ビルド）**、**npm は `12.2.0`（最新）をレジストリから導入**（npm 12 は nixpkgs 未収録のため。Renovate が追従）
 - `.github/workflows/nix.yml` が検証、`.github/workflows/nix-lock.yml` が `flake.lock` を生成（PR）
 - `.github/workflows/nix-tools-update.yml` が `flake.nix` の固定 CLI（waza/ax/sisakulint）の version＋hash を更新（PR）
 - Renovate が `flake.lock`（nixpkgs）を追従。固定 CLI のハッシュは Renovate では再計算できないため専用ワークフローが担当
@@ -396,7 +396,7 @@ lefthook install
 - 本家 pstack: `pstack-update` workflow（毎日）が検知して PR。手元では `sbx env run` の再ビルドでも再変換
 - 外部 skill（explainer / yomiyasu / agent-browser / ax / waza / apm-usage）: **`apm-update` workflow（週次）が `apm update` で `pstack-opencode/apm.lock.yaml` を更新して PR**（lock で exact SHA ＋ content_hash 固定）
 - Nix のツール（uv / gh / apm-cli / agent-browser ほか）: `flake.lock`（Renovate が nixpkgs を追従）
-- 自前固定 CLI（waza / ax / sisakulint / depgraph）: `nix-tools-update` workflow が version＋hash を更新（PR。depgraph は asset ごとの `.sha256` を読む）
+- 自前固定 CLI（waza / ax / sisakulint / depgraph）とイメージの Node.js（v26 系の最新）: `nix-tools-update` workflow が version＋hash を更新（PR。depgraph は asset ごとの `.sha256`、Node.js は `SHASUMS256.txt` を読む）
 - repo-knowledge-mcp: `sbxenv.mac.yaml` の `npx` 固定版を Renovate が更新
 - npm の例外（`@opencode/cli` / cf / difit）: `tools/npm/*/package-lock.json` を Renovate が更新
 - base イメージ（`docker/sandbox-templates`）: digest ピンを Renovate が更新

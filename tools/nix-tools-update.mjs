@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Refresh the pinned CLI versions + release-asset hashes in flake.nix
-// (waza / ax / sisakulint / depgraph).
+// (waza / ax / sisakulint / depgraph, and the images' official Node.js v26).
 //
 //   node tools/nix-tools-update.mjs
 //
@@ -17,6 +17,16 @@ const FLAKE = join(ROOT, "flake.nix");
 const API = "https://api.github.com";
 const SISAKULINT_INTERP = "${sisakulintVersion}";
 const DEPGRAPH_INTERP = "${depgraphVersion}";
+const NODE_INTERP = "${nodeVersion}";
+const NODE_MAJOR = "v26.";
+
+async function latestNode() {
+  const r = await fetch("https://nodejs.org/dist/index.json", { headers: { "User-Agent": "nix-tools-update" } });
+  if (!r.ok) throw new Error(`nodejs.org index: ${r.status}`);
+  const hit = (await r.json()).find((x) => x.version.startsWith(NODE_MAJOR));
+  if (!hit) throw new Error(`nodejs.org: no ${NODE_MAJOR}x release`);
+  return hit.version;
+}
 
 function token() {
   for (const k of ["GITHUB_TOKEN", "GH_TOKEN"]) if (process.env[k]) return process.env[k];
@@ -128,6 +138,22 @@ const tools = [
     },
     nameExpr: (tag, file) =>
       file.replace(`-${tag.replace(/^v/, "")}-`, `-${DEPGRAPH_INTERP}-`),
+  },
+  {
+    // Newest release of the v26 line, from nodejs.org's own index and
+    // SHASUMS256.txt.
+    name: "nodejs",
+    versionVar: "nodeVersion",
+    blockVar: "nodeAssets",
+    latest: latestNode,
+    checksumsUrl: (tag) => `https://nodejs.org/dist/${tag}/SHASUMS256.txt`,
+    names: (tag) => ({
+      "x86_64-linux": `node-${tag}-linux-x64.tar.xz`,
+      "aarch64-linux": `node-${tag}-linux-arm64.tar.xz`,
+      "x86_64-darwin": `node-${tag}-darwin-x64.tar.xz`,
+      "aarch64-darwin": `node-${tag}-darwin-arm64.tar.xz`,
+    }),
+    nameExpr: (tag, file) => file.replace(`node-${tag}-`, `node-v${NODE_INTERP}-`),
   },
 ];
 
