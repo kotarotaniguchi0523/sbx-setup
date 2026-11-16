@@ -1,4 +1,4 @@
-# Skill security audit · 2026-11-09T03:25Z
+# Skill security audit · 2026-11-16T03:33Z
 
 **Version** `pstack-opencode 0.1.0` · upstream `cursor/plugins@c742dd61706f`
 **Scanner** APM external scanner — `apm audit --external skillspector` (offline, deterministic)
@@ -30,7 +30,7 @@
 
 | Severity | Rule | Location |
 |---|---|---|
-| warning | apm/hidden-unicode/skillspector/EA2 | automate-me/SKILL.md:57 |
+| warning | apm/hidden-unicode/skillspector/EA2 | automate-me/SKILL.md:56 |
 | note | apm/hidden-unicode/skillspector/SC1 | poteto-mode/scripts/package.json:13 |
 | note | apm/hidden-unicode/skillspector/SC1 | poteto-mode/scripts/package.json:14 |
 | warning | apm/hidden-unicode/skillspector/AST4 | yomiyasu/scripts/yomiyasu_check.py:1437 |
