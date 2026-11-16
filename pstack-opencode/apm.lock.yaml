@@ -19,7 +19,7 @@ dependencies:
 - repo_url: microsoft/apm
   name: apm-usage
   host: github.com
-  resolved_commit: 2920043258932f0f67e6f01df7b9047eb42f358c
+  resolved_commit: f574a62c2a35f3c6b271763931df8dd1ed20fe21
   version: unknown
   virtual_path: packages/apm-guide/.apm/skills/apm-usage
   is_virtual: true
@@ -37,19 +37,19 @@ dependencies:
   - .agents/skills/apm-usage/workflow.md
   deployed_file_hashes:
     .agents/skills/apm-usage/SKILL.md: sha256:715b6d3497d5ca30f4751463091b8ff7cd85dc51e375d2176aea8f0867081c38
-    .agents/skills/apm-usage/authentication.md: sha256:253f932e324d5e6fe5209d8271764dc5512a9cc1db8ed2a490fc6bf94675a4b0
-    .agents/skills/apm-usage/commands.md: sha256:b832421add4f49b56658a5571825e188d75a0a93fa4c4b53c8c9292b6af33ea0
-    .agents/skills/apm-usage/dependencies.md: sha256:28822c38deb16a5c7fceaf3851fd7530d894c37b0f95853b86c2fb956a84ab73
-    .agents/skills/apm-usage/governance.md: sha256:968670a858801f4576746fbe86affacf4cf27296f634ad9008f58bcba22b2409
-    .agents/skills/apm-usage/installation.md: sha256:c70544c5d1f85102c5e144ac6ae1ca68fcf8ba6a8323cb2ca6adc840d13aa960
-    .agents/skills/apm-usage/package-authoring.md: sha256:00983812289ec13ac9ad84f57148c5cfd3ff5af479c26a42caffc9d6674e14d3
-    .agents/skills/apm-usage/troubleshooting.md: sha256:2c6f13b1a1758b84305f1d11e2eeb096896a02851de1e24dde644783862667cc
+    .agents/skills/apm-usage/authentication.md: sha256:12b24d08eef2fa4ff33752297d2e080c381144669a7c5ed42b352a1171dad4c3
+    .agents/skills/apm-usage/commands.md: sha256:ae8b793b4d907dd7ffe449d9261574121cb8141c24fb3406f4217d319ed51227
+    .agents/skills/apm-usage/dependencies.md: sha256:25608884d3e0839fa5d421fb43ab950f24506188cd530e48e3277a20d7a75634
+    .agents/skills/apm-usage/governance.md: sha256:7489356994e05d984348af6b37504b40971a80dcccde12c25cf2398926ea1aeb
+    .agents/skills/apm-usage/installation.md: sha256:a8d33ceeb41626d809ed07e0cdd16ba74f0510b5842bab64b7f6dc3e3fdb1057
+    .agents/skills/apm-usage/package-authoring.md: sha256:3aa51296a70099a81feed7447ac21bc82dceb79b8bdf18ce547fd4667691ea29
+    .agents/skills/apm-usage/troubleshooting.md: sha256:dae797b388dcb591c2276e8d2c07aee2a5313c5188aae15c4486bb7fee4065cd
     .agents/skills/apm-usage/workflow.md: sha256:1bbb710fa9fd710aa2258aea52f6d905c6a2b3d366a1fdc723b028b4bfd2dbae
-  content_hash: sha256:0a1e4c20c374600b02ebd4059d01134f8bc83b51945133d157e1edf6408d696a
+  content_hash: sha256:8308eba53b8e0bc14daf6027b0f79f268131dcf7462672ce7fe7a6b76a13cd79
 - repo_url: microsoft/waza
   name: waza
   host: github.com
-  resolved_commit: fab6106d06e3a3cb059bab35fbef9e8dc16040a5
+  resolved_commit: a62c30a0c51598e0ceeb8cc3f2b469faea1450b1
   version: unknown
   package_type: skill_bundle
   deployed_files:
@@ -65,11 +65,11 @@ dependencies:
     .agents/skills/waza-interactive/SKILL.md: sha256:6976d7c90efce2fa934871265085abaceb59bc722d6218307c7a1d962838be71
     .agents/skills/waza-interactive/tests/eval.yaml: sha256:fdb84af4a57da4ad360f1bbf35d34b7ae786586f3c73f8abff2a5ff63ced8e00
     .agents/skills/waza/SKILL.md: sha256:e7ef60562bbf3535d7ca4b8b8b9d5c65bd210a37a03ef00e19e43be16b4f960e
-  content_hash: sha256:85b49057a375c84d37db23f18c6555c7c21b934a129acdef9baa284bf71d380c
+  content_hash: sha256:a83838edeb0903509982437b1c0fcecf46fff4f1ce63e6e8ec1cf734836616d7
 - repo_url: mizchi/explainer
   name: explainer
   host: github.com
-  resolved_commit: ccdd7bacfb47451e38506d837af8a629504960b2
+  resolved_commit: 752da7c687e767c3efd8ea79f63c5f4f3d76e7b5
   version: 0.5.3
   package_type: skill_bundle
   deployed_files:
@@ -160,12 +160,11 @@ dependencies:
 - repo_url: nanaism/yomiyasu
   name: yomiyasu
   host: github.com
-  resolved_commit: 8394e099486aaa2e28cf89992e46f5ebe5ed839d
-  version: 2.5.0
+  resolved_commit: db78b9bc5e868549b517a037df7a4d1c93edac23
+  version: 3.1.0
   package_type: marketplace_plugin
   deployed_files:
   - .agents/skills/yomiyasu
-  - .agents/skills/yomiyasu/.codex-plugin/plugin.json
   - .agents/skills/yomiyasu/LICENSE
   - .agents/skills/yomiyasu/SKILL.md
   - .agents/skills/yomiyasu/UNICODE-LICENSE.txt
@@ -209,32 +208,31 @@ dependencies:
   - .agents/skills/yomiyasu/scripts/yomiyasu_hook.py
   - .agents/skills/yomiyasu/scripts/yomiyasu_lint.py
   deployed_file_hashes:
-    .agents/skills/yomiyasu/.codex-plugin/plugin.json: sha256:b26d6af9532a22e6ca8d825196a4816fee3ca0a06458419f5427d5252a856318
     .agents/skills/yomiyasu/LICENSE: sha256:79d802f15bc8caf67f1a83c1bdbe214ccb41a0a0275f9046b329b89c65ee1fca
-    .agents/skills/yomiyasu/SKILL.md: sha256:e3aee084c9fd4e0db746890d0bbcf2ba247ac3292cc14ee38710c51a1bef0b89
+    .agents/skills/yomiyasu/SKILL.md: sha256:34f2611aa021f4496ff4555ef1b29a67670c411d137aaeb269e9ba9ab2b73877
     .agents/skills/yomiyasu/UNICODE-LICENSE.txt: sha256:e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96
     .agents/skills/yomiyasu/assets/algo-artis.png: sha256:57c7c204d43d0e2873e3b61221db3ac4ba75a7ce29271a6deaeb3bd09f26fdec
-    .agents/skills/yomiyasu/references/audience.md: sha256:1f84fd456c1e959e01c2b31f4f9aa38aeca9798451a0e1ae40ab969cf3aaabd2
-    .agents/skills/yomiyasu/references/calques.md: sha256:0f4cd78823f40685fd56517bcda3cb671e7962c698f40285b218ed3108c7f454
+    .agents/skills/yomiyasu/references/audience.md: sha256:fedae4ffbcd808ea2a3900b1dfccdfaed7cfbb74e2b5b1ca3f82966826d6b60c
+    .agents/skills/yomiyasu/references/calques.md: sha256:11d342cf90d24e20b12a9ecac66951a957fd930832c8b6cbdfb567cb9f5f01b0
     .agents/skills/yomiyasu/references/doc-types/article.md: sha256:e5009c496b4b4ac8974c16f2f15b0f8ce93620863dfe721803b01138db845716
-    .agents/skills/yomiyasu/references/doc-types/essay.md: sha256:9b164c2916544e417fb42454e199f5c790cbfcd233879c59f563a1942329d9bb
+    .agents/skills/yomiyasu/references/doc-types/essay.md: sha256:fd8b888d3599747040c416df696ab39b9d9b962ce19a9229544b691ef43742af
     .agents/skills/yomiyasu/references/doc-types/formal.md: sha256:6b4121d4e57d52fb60fb428770a4504c53e1fb06c3fa20e57a1fcd56ce933141
     .agents/skills/yomiyasu/references/doc-types/incident.md: sha256:d25282690b220e5d4fa2595228d282d65f7b03d8d4b325c30bf251b58a474b77
-    .agents/skills/yomiyasu/references/doc-types/mail.md: sha256:43c84865368c6e1e61c0ac1645583933092ddcaabb49b6ed4b6c4621e9ba2d4f
-    .agents/skills/yomiyasu/references/doc-types/manual.md: sha256:37971c4b7cf8159656a2435b30444a05692fbdffdd7dc3dd8e8f4ada90e8ef8f
+    .agents/skills/yomiyasu/references/doc-types/mail.md: sha256:aafdef898a05c8526fed64c7b9e076dd618015704256e1a7ee4d1d0c9e5b4ca5
+    .agents/skills/yomiyasu/references/doc-types/manual.md: sha256:29806ff027229f1c82dbd9472a485b70ab0c537cfe15138f436f977783b63b08
     .agents/skills/yomiyasu/references/doc-types/minutes.md: sha256:7869c10e72e0e4ce6ecb94833e84452beba7f8b676230908fe623deddc49b140
-    .agents/skills/yomiyasu/references/doc-types/paper.md: sha256:39a7ff9aca340a003c637153c374f0dc1d668cda3520aab99923bffbc1c37f94
+    .agents/skills/yomiyasu/references/doc-types/paper.md: sha256:0ae274c3e8da87bcad74aaee069d799f902f2944c2972e714070e225b18ccde9
     .agents/skills/yomiyasu/references/doc-types/pr.md: sha256:d7bb8a4ac7f5344abf66bb7dfe893480c67ea8d635078c5a8d2582264a21506b
     .agents/skills/yomiyasu/references/doc-types/promo.md: sha256:06f8f3a39547985fc74a70c3717596070401b9d3db5fc93e3b10f76f9b6656e4
     .agents/skills/yomiyasu/references/doc-types/proposal.md: sha256:2a8d8a557b33f2df51aedeed02ba5bb8ed623fcde55f6a42ff4b477920853731
     .agents/skills/yomiyasu/references/doc-types/script.md: sha256:41bc1c8ebb9f5fea7c18b70b18a3e8ee86073e38f85d62d4ad00ae0719acb49a
     .agents/skills/yomiyasu/references/doc-types/slides.md: sha256:9bd9dac1e4886ebdc23cefc46d68ec1eeb06b98442eff1b34f992b5997d6213d
-    .agents/skills/yomiyasu/references/domains/business.md: sha256:416d0752959ae43cd030f2cbcee76425d457ae37f153164db64f7884f7df7685
-    .agents/skills/yomiyasu/references/domains/essay.md: sha256:aeeeb9f9c842d68fa0fcf2e956bd2f87c5f450bc820df931f3f94b903a8a8c7a
-    .agents/skills/yomiyasu/references/domains/tech.md: sha256:efcd3b633477b816bab2e0257099394d89cc35ae943999e96ce7451df6fcbc1a
+    .agents/skills/yomiyasu/references/domains/business.md: sha256:b68dbdf15d0145462794ba638c795cc9f13be9fe4d59e7dedafa945da6689aa3
+    .agents/skills/yomiyasu/references/domains/essay.md: sha256:5dccd1810c1b99b87e4bd27538240c32406be64280a4c6ee8be1ef9521eb3694
+    .agents/skills/yomiyasu/references/domains/tech.md: sha256:a45800b3fea46b45456ad00b8607f5ef347ede53d6a51f65826e1423f47d634a
     .agents/skills/yomiyasu/references/fact-recovery-details.md: sha256:9359c801872643adef0b6ea56239f97314d9b70e6426dded6d880c9a7dd61749
-    .agents/skills/yomiyasu/references/fact-recovery.md: sha256:c777b05e64922c2b6339c35cdab744ff1f306726f166568d2eeb09276333daa8
-    .agents/skills/yomiyasu/references/gemini-syntax.md: sha256:bb4a212402f63e9144d221feb9992dfe9db69527e71ad74b497c3d97e7453585
+    .agents/skills/yomiyasu/references/fact-recovery.md: sha256:36056bcfef43b48b9c17b063c53f34e8d8b7e061895f5dea26847d5c9a2a2e63
+    .agents/skills/yomiyasu/references/gemini-syntax.md: sha256:78b593952303fe2f02f44921fe553925acdcd830cdb41ad1c9cae488ff8d25a3
     .agents/skills/yomiyasu/references/lists/fact-gaps.txt: sha256:c78da500dcddc76978fecd1a7a9f3318d9feabf0db78387a41662a4545e6964f
     .agents/skills/yomiyasu/references/lists/feelings.txt: sha256:37b6779b3ef8cf91260379b21d6b721bda362542a5702affd99d550879539e82
     .agents/skills/yomiyasu/references/lists/hedges.txt: sha256:ed666036f63f4705d2c129d3fd30e971018d50732bbef2c18081412a61ccd771
@@ -243,16 +241,16 @@ dependencies:
     .agents/skills/yomiyasu/references/lists/nominalization.txt: sha256:cfe31060efc6d165c30b1619ab574ec405312a80bfb00387efc6557911614be0
     .agents/skills/yomiyasu/references/lists/renyo-nouns.txt: sha256:0642b6ba40e4707af4715463d7433c0215087a8e068b00e7894b73e89365997a
     .agents/skills/yomiyasu/references/lists/thin-evaluation.txt: sha256:b2cf6a8e1fc424d1bcac15e2aa2045a98ec77a002e2830692922a8f97ee406e4
-    .agents/skills/yomiyasu/references/persona.md: sha256:a805b2a8946a423a011d2cd66a33bf1be784d0dacdad32a5c5d3b4fed7bc0976
-    .agents/skills/yomiyasu/references/rephrase-test.md: sha256:a3531b41aaefe987726e928b09d59dbb312a35594b8dc6ce6a85dae10c2cc1b7
-    .agents/skills/yomiyasu/references/review-points.md: sha256:899d7d512df32e77d301c87a50917576b0fd816bc932b0bd572f2b3df0a75e60
-    .agents/skills/yomiyasu/references/slop-catalog.md: sha256:48afab317afc430f53aabeb7a0c3eb52ddfe0c875e420f9fa031684076bac407
-    .agents/skills/yomiyasu/scripts/markdown_visibility.py: sha256:603dae42750dc6a4823983453a93941db59a0138a2416772971bd8bc16e0b553
-    .agents/skills/yomiyasu/scripts/yomiyasu_check.py: sha256:ba1662ac89d605c6fe09617a4efbb27dc00ed150c769568f9e43f6eccc1f8607
-    .agents/skills/yomiyasu/scripts/yomiyasu_diff.py: sha256:44a95ce08115e424f5871dadc4dada38ac2683493c366d699b99586716936bb8
-    .agents/skills/yomiyasu/scripts/yomiyasu_hook.py: sha256:dba402af0ff280417906f48586f446aa371d2dcfa7de9b55db1fa8885692a39d
-    .agents/skills/yomiyasu/scripts/yomiyasu_lint.py: sha256:cfa03a806514ba050dcb526ed76e1114e879e27fee47f86dc64b010c865514db
-  content_hash: sha256:28fe119f14968df5ec579d9d0ae5732ac29018a83c6e00d9b41f45371e30b6e1
+    .agents/skills/yomiyasu/references/persona.md: sha256:88f9490473acd3c51116556fbc9c06d95bbf003236fc9ef54cf94446cef7e191
+    .agents/skills/yomiyasu/references/rephrase-test.md: sha256:1086593de2fbcbcc577ca68c155d441f9fbe3bb72a229340cb639b4538207304
+    .agents/skills/yomiyasu/references/review-points.md: sha256:ec1f7ff6bdf0095db2b3f683e7acee6cc62d203975c28de9e6d515ff37caa0f5
+    .agents/skills/yomiyasu/references/slop-catalog.md: sha256:cdf2cef3f62ba8b75a02bc56b5ae8d2f69a9fac257b5c8fc56637adb3827bf97
+    .agents/skills/yomiyasu/scripts/markdown_visibility.py: sha256:c8d410c5379c00c4bb94fc06d3a5a3fee118ac6b0cf7e6b81b4d452d5e912e60
+    .agents/skills/yomiyasu/scripts/yomiyasu_check.py: sha256:4355847c6cc8b8f08e7541c7f04add5eb4e0ef7b9e0176e6a069bfa8b9679ca8
+    .agents/skills/yomiyasu/scripts/yomiyasu_diff.py: sha256:25e5e1db015297a9cbf0642482091b8c6f47b5c8b5f03dcc8b565a0ab5aecaba
+    .agents/skills/yomiyasu/scripts/yomiyasu_hook.py: sha256:2b5611ae6075af3046100197f438874727480859bcc9c11ee4845ce952c172ee
+    .agents/skills/yomiyasu/scripts/yomiyasu_lint.py: sha256:bde745c46242ab0a923503bbe5488178f2b503e972498112e46df2ec79559767
+  content_hash: sha256:694df4ed0c947f04c19cf169d13d7201e7bea09d0e3d8d0dbcc85420c3aed7ca
   declared_license: MIT
 - repo_url: yusukebe/ax
   name: ax
@@ -284,7 +282,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:4a02d1d4e5491817f34f27573f78426a9fcdc05afb6c6f6c26782190b4c6c5ea
+  content_hash: sha256:dd17b5e54578dd24ba21265ea4dded43186d640b61f1fc4cbd07f28c63b6c859
 - kind: project-relative
   target: legacy
   value: .agents/skills/architect/references/design-red-flags.md
@@ -329,7 +327,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:5f979bcb1d1b3e0d5ddfb32abf4d620586f3adb841ce7658a8c7b3853e05b70f
+  content_hash: sha256:681bd049da77731c02f9e9a9cb3422077d0d210b3a621cd7622bd468069c878b
 - kind: project-relative
   target: legacy
   value: .agents/skills/automate-me
@@ -347,7 +345,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:1eaaa71126e249862d52fd2669911280071bbbce70bc26c915e832f5c8a99ca8
+  content_hash: sha256:b2ad3f495e3a520adda5a6dc06b733a57dd44d3df7378557d2b3b0b212e79e25
 - kind: project-relative
   target: legacy
   value: .agents/skills/benchmark-checklist
@@ -365,7 +363,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:297c8c953668059eb1992119023b5509b4f0ea44890b1f9dacda4d421957903e
+  content_hash: sha256:cdbdbd5f29e7e2110c1d674f7f223ee8457eee0d343d706fd5181eb645edd03b
 - kind: project-relative
   target: legacy
   value: .agents/skills/blast-radius
@@ -383,7 +381,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:a66ea26e8903ec586a50bb928148c8e83bc776882dd732d9dfb56c2a7bbb1880
+  content_hash: sha256:0c59ee9865dfeefb776a89fc892f4b2647be2e79e1b090d6aea7e3c20aa62033
 - kind: project-relative
   target: legacy
   value: .agents/skills/bro
@@ -401,7 +399,43 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:ccd31d89ad58e63811636c703e88daf2c15f66786b001fa706a2a9e86fe41566
+  content_hash: sha256:59719140b9b9ceccbe616959c66e443789c8a52270c8a9f1f9aaecbe3ef81436
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/control-cli
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/control-cli/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:b9b805220907358a1edb7c86f8fec052ecad8d3d62f876bf25e51d8ed9749163
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/control-ui
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/control-ui/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:8a6a942871924650237fb656e76c9c354830c8d118d62062f85ae9f90ee66cd8
 - kind: project-relative
   target: legacy
   value: .agents/skills/correct
@@ -419,7 +453,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:1269ed9b800442288759e1c3a4ab7b230b73f909994522e81a91e573d50a48d7
+  content_hash: sha256:8f6d47c3445a4a13efa8d2570eff2d2ddd3c807e328422c007a0138835a8bae2
 - kind: project-relative
   target: legacy
   value: .agents/skills/create-formal-verification-skill
@@ -437,7 +471,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:00473cf802c8280446d195a2aaba2aa290dddade0536bd7d2e63450d55022643
+  content_hash: sha256:78bcda535d7bed488b1f91ada2bf01a2c10c063f8433c33f5f11035b48927670
 - kind: project-relative
   target: legacy
   value: .agents/skills/create-verification-skill
@@ -455,7 +489,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e88c6c354f6fad16d5c9ac66d64f618dbf265d600e923bf1d97b7ade66f358c7
+  content_hash: sha256:5d621073355ec68faaa42f0fcde350d2b3dc7e7e0e5de03b9e28d3f153f42570
 - kind: project-relative
   target: legacy
   value: .agents/skills/create-verification-skill/references/feature-map-example/README.md
@@ -485,6 +519,24 @@ deployments:
   content_hash: sha256:6e87b9e7f2791a7776ba1bb83f371cd285c306c67f19d245cc4dd6ca3015c823
 - kind: project-relative
   target: legacy
+  value: .agents/skills/deslop
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/deslop/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:dbfe426c98db94f121565881f7481ac2f350e0ee24d088955daebb56f32820fc
+- kind: project-relative
+  target: legacy
   value: .agents/skills/figure-it-out
   runtime: null
   scope: project
@@ -500,7 +552,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:65eab29476f3be92606e1552b35ce031fb038686d66be7fdab74bcb70c625c75
+  content_hash: sha256:848c41c72bca95fad0fc2f2e16afdcb40b12026551676117900261b4435ef277
 - kind: project-relative
   target: legacy
   value: .agents/skills/how
@@ -518,7 +570,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:2fefb05b82d05e8354566ac83ce80a43630b5acd83c4410d5c2aa9f71b9b4038
+  content_hash: sha256:b9d8a6872e899086e5c651189f102a67a68139024a59d22817f071154d3771e1
 - kind: project-relative
   target: legacy
   value: .agents/skills/how/references/explainer-prompt.md
@@ -554,7 +606,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:f777174af57aaccfd40eb4439e6c7f7760fb44aedfe14f3054a1b23692774836
+  content_hash: sha256:170a9f9d88eb478f9d072ba32fe33af5e8526be4d4197f21af5237571f656703
 - kind: project-relative
   target: legacy
   value: .agents/skills/interrogate
@@ -572,7 +624,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:506f33352e66620eb497c5ff1d18d32e901b51dfe1e96e993cf93bbbb16293d1
+  content_hash: sha256:8190a84a9cf11f50bd4faf2b4f345c826332c556fed15e2c6601497b7e8c5bad
 - kind: project-relative
   target: legacy
   value: .agents/skills/interrogate/references/code-quality-review.md
@@ -635,7 +687,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:cdc7ac2db1e4ccc0c1c489737560e17326660ebdecf4a4ba461711ac33408c6a
+  content_hash: sha256:8d6e1c8ad5d1bb4ae6ed9755ae07efeee19f79110de803c2656064c2a2f4e6a4
 - kind: project-relative
   target: legacy
   value: .agents/skills/ketchup/SKILL.md
@@ -644,7 +696,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:447aa397567ee13c9f116477e2a71d49019c0734652911cbf190de7be106a623
+  content_hash: sha256:ab8a2f1e6760417eac1b676e5b73312c88c5b2efa0f02e2da0fdb3379eebaebc
 - kind: project-relative
   target: legacy
   value: .agents/skills/maintain-formal-verification-skill
@@ -662,7 +714,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e7c93f227c34d45a8df77c6f0c36aa3a068900305c57581bef5d561cf21aaa73
+  content_hash: sha256:1bf52cad41f46cad95648df0544212eede3045ba26b439814e9c4161c508354f
 - kind: project-relative
   target: legacy
   value: .agents/skills/maintain-verification-skill
@@ -680,7 +732,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:b7f52e3c024d379bbc07224829c8f88b0f2c9da4323e0269fd8dc1631381ab5a
+  content_hash: sha256:0dd2b2ba6d7524c3ad8ea395da4138bf74285c501fe09c1537952a0a5460f914
 - kind: project-relative
   target: legacy
   value: .agents/skills/make-bot-ui
@@ -716,7 +768,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:ad1333ace832542b89d5e598fa359ba2fe0226d47272442216f923f8993425d8
+  content_hash: sha256:e8d80e676a54d57e74cb13fdbffe849adeeae3b281e2492f9fe622347bdcff44
 - kind: project-relative
   target: legacy
   value: .agents/skills/poteto-help
@@ -734,7 +786,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:9736fe4185b0e11d6956894281d856a81b67eb873ac9a6977d72adaa2c7c3982
+  content_hash: sha256:3cc855689f69491bb7079666c2e0f6ed91a358ce7b40cf934ceb64b32a563a10
 - kind: project-relative
   target: legacy
   value: .agents/skills/poteto-help/references/prompting.md
@@ -770,7 +822,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:42190ac1739191f7f694ab977c531a53298024250f9cce76691443b210a40fcd
+  content_hash: sha256:eb01edbde395cf1f991bf4dbb0680dc2b9ba14c7eca54293f4c08bfceeefefaf
 - kind: project-relative
   target: legacy
   value: .agents/skills/poteto-mode/playbooks/authoring-a-skill.md
@@ -995,7 +1047,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:1c906cff2d9126f97fe6cdbe0043cf9b9180af9432c00c89eab9c222022f652e
+  content_hash: sha256:a751fb7c774d74626de57bdebc4a072369f637c7f6eab922b71f37473ced8a76
 - kind: project-relative
   target: legacy
   value: .agents/skills/poteto-mode/scripts/bootstrap.ts
@@ -1013,7 +1065,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:6edead64c37e326bd39b1d6a86518aa19f5d00d39e953edf7473d970abb3b7f4
+  content_hash: sha256:667d9cf7222e9aae3fa42a4be383e657784216e9df115da02227fbc5ac7bbe46
 - kind: project-relative
   target: legacy
   value: .agents/skills/poteto-mode/scripts/check-plan.mjs
@@ -1067,7 +1119,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:ce63908de71140d87aae7256c8620aebbbf9d8deae96b3758c7b4102628caa44
+  content_hash: sha256:c9db6bb9362c6e319e395b358b113ebc72ab06b6c5e3a095093f6ebfdafe1c57
 - kind: project-relative
   target: legacy
   value: .agents/skills/poteto-mode/scripts/watch-pr/cli.test.ts
@@ -1202,7 +1254,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:dec6f01a13102733060a470a88520e6a388a4bc8d62a0187f323f298a0482dd2
+  content_hash: sha256:664c5fd96c3d96ae6de52e0353dc8bca3f28892218ad2d19afd398bd73274cc6
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-boundary-discipline
@@ -1220,7 +1272,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:73451bf69984a18142f7250310094e68831aae56d7e6a71072ecc967270a1a7e
+  content_hash: sha256:ff0386b8888693adaee7daf810ec043931fe35b8c8d309eaf40ccb6bdf792d03
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-build-the-lever
@@ -1256,7 +1308,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:5e2fb0c04afa9a645eae1ac983bbe1f0f108b8f959a3a4bdb9e917e5513d2b01
+  content_hash: sha256:51afcead22c5c942aeec792391e909a4e752dda9a8a13055e0d079d3b38e6bd1
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-exhaust-the-design-space
@@ -1274,7 +1326,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:0e662d35bc6bdba128aff13560b8dace38dc45cf74ac400305a3cfa7b852f8ed
+  content_hash: sha256:9d243a96f9f5033da228a14af1bc79cdfba77498ec27dc096392b25410efa434
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-experience-first
@@ -1292,7 +1344,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:f4c07877f1be23d3ade0b050bcf16df8a8106007401da8584854e47bcf95e09c
+  content_hash: sha256:a3f5e124b15b1d1d9742cdbc2c23080b67b5a61aafeb45c7ad199e2ff059f42b
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-explain-the-number
@@ -1310,7 +1362,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e181861b117f3f335b5a5ada15b85c2143e1cd8b1d3f5a0c8716651241d94e77
+  content_hash: sha256:c613e48978d961d1f32bb05cd19b67f439ca77a903c0149eeb0f2341db11cd17
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-fix-root-causes
@@ -1328,7 +1380,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:7ae65bcecebe16d92dfd3ffd42ff3ffbb655b602ebd1ff01229b553527dde452
+  content_hash: sha256:6fe5012c7e605120978b5891aa58d80f2e89e9a317fcf01097f5f36e26e67938
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-foundational-thinking
@@ -1346,7 +1398,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:8b75c658387a886e2ed93aa6faa6b29e025ceedc972f229e97e78cefcb82590d
+  content_hash: sha256:d372dd6be20509a56cde2a8aeb9deee8ad32a08eca0508866d4a0df958cfaa96
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-guard-the-context-window
@@ -1364,7 +1416,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:ef4cef0467e03368df6c9acddacada5dd9b3767a61ddaf2195dae893d878994f
+  content_hash: sha256:58afbc73ffdc8bc841325d8ec4d40def6fd3b4e7f154aa4cb4bd2b1bbc9878d4
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-laziness-protocol
@@ -1382,7 +1434,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:1618c323b0886e2793961210684190b2a8dcabe74dd9a94d9bc5d339846d61d9
+  content_hash: sha256:d30d02cfc1dd09db07a31f807c81393ee7daa041d7cfaf7a1754ecb162891a8f
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-make-operations-idempotent
@@ -1400,7 +1452,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:f6a663d5e1c460a059762bdf20e8e87fe8df43970967b4f5a7fcb9ab321afc05
+  content_hash: sha256:a126da2db34ff149f075e39b2e3b24a82fa3c6c6c330f30690146fd29c7ebfe1
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-migrate-callers-then-delete-legacy-apis
@@ -1418,7 +1470,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:651a04181d241d92f22f1aeb02c9c254cc95c548dab8b8120197fa17c6068cb8
+  content_hash: sha256:04d659af08426b1e2fa1a95db84b86f07e1b1da079dde3d2a8f2ef1b89050227
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-minimize-reader-load
@@ -1436,7 +1488,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:8501a27210364ff2e54dec2487c7cd40ab0973cbe10c1bf918932140489b0c72
+  content_hash: sha256:5837c33cb4b13e580b20d945cc4a02fabe50bf28088350d3e4b6d2109db9590f
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-model-the-domain
@@ -1454,7 +1506,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:1676bde5e625807c73f63e79443c659d9498a5676da411cef6df67742abaa443
+  content_hash: sha256:f3e39ce0af6d223157a95f3b44878d63089c599d786d43209231c47832f8c767
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-never-block-on-the-human
@@ -1472,7 +1524,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:8141cd4318896b605d38a4d4540087e271864f72f13ba19902a80a44a38294bf
+  content_hash: sha256:e5aef723139252e9b20744890208f449a6392f8d91713ab82bd43008679a0742
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-outcome-oriented-execution
@@ -1490,7 +1542,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:dc453cbf1ad09492fcd35658d0a51834b4cb87e9a3a6bff6174f465f1dbb0fb0
+  content_hash: sha256:ffe113923a2b3dd9d3de472d4ac3595d042104a6eac190131d53acbae03b153e
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-prove-it-works
@@ -1508,7 +1560,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:386599afeb110e4972da7301cb1516c612ce2974ab4825c4ed52d1141e2831eb
+  content_hash: sha256:28c23336b3c7dc62cdb8e3bbb5c0b4ed134e1ebb8037dde2fc52b20c4621d7b1
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-redesign-from-first-principles
@@ -1526,7 +1578,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:d588065198f328b8fc88ad08d2fc2c22e359f09e1ede9b0df76dab7081c532d5
+  content_hash: sha256:086df7b2fde2fab5359c307c26aca8d616c0ab52d9adbad77df5e00228940688
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-separate-before-serializing-shared-state
@@ -1544,7 +1596,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e567985b1119d939114e7200ab2b40724f05eab5a6d64a2968f265bbcd690a26
+  content_hash: sha256:bef8c4aac8f5537be2e111507f1a17d27b46fabc019b7beb234b54e2e7573b41
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-sequence-verifiable-units
@@ -1562,7 +1614,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:22f9c64ca62f9d4d2bee22d56acb95d908bf1aae41e74128744768945b54b9b0
+  content_hash: sha256:221f0624c4e015f46648c43c230f00436dd3e863813812e46b383d61ff559252
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-subtract-before-you-add
@@ -1580,7 +1632,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e9b220d12c73771d16f9f7603e63c02c13ce651b5dab9a8ffe5ac6ffc70c33eb
+  content_hash: sha256:990a8e7afcafe26dcd536eecdf7ef5e566a5ecfb839f5159dc9f1a4f9b70c522
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-test-behavior-not-implementation
@@ -1598,7 +1650,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:9618334a0f19d6b59d98e18fbedb052f5e6104e7409e063360c37dcbaf8db7ce
+  content_hash: sha256:77c1cffbcadd004a3cdf7cf66a897974397430d1ce61183533018940a74dab04
 - kind: project-relative
   target: legacy
   value: .agents/skills/principle-type-system-discipline
@@ -1616,7 +1668,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:92b9155b83de7833e16b68d2c77dc5d75a504a164db43c7704e371cbb03fb1e1
+  content_hash: sha256:30e8419771d20525c2e8d45d6fd61ea709e836d7b3c5261d373857d8362d21e3
 - kind: project-relative
   target: legacy
   value: .agents/skills/recall
@@ -1634,7 +1686,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:147acb7268d43a34be75f673546830d81f7dae15c9d0d4adb959b52694d0ae1d
+  content_hash: sha256:aedacb109d4606cfc508dfc5e8d25c7ee3835fea6e9a6b28d13f2acb113bbf07
 - kind: project-relative
   target: legacy
   value: .agents/skills/reflect
@@ -1652,7 +1704,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:234c750143613caae964c0f4f26dd26406e8dee480731f360786f0157aeeb6c9
+  content_hash: sha256:83e0c6387c94bf18223c978c8eaa97e8b145ab99ea15023f5d89990d15405708
 - kind: project-relative
   target: legacy
   value: .agents/skills/reflect/references/divergent-reviewer.md
@@ -1706,7 +1758,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:c7bb71c9d06b837f8a69b84f6ba0851c30f5cd7172becc681b38306622917f01
+  content_hash: sha256:7001d926c39ecb4f1454c5891a4f903f2c1af44d5fd4e2b845aeeb53c7b996da
 - kind: project-relative
   target: legacy
   value: .agents/skills/sharpen
@@ -1724,7 +1776,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:0c71d1853f8155fbb43cc1a5ec8b6d742cdf1686c838d1c293648b6b260e7982
+  content_hash: sha256:a98fbba23e980a987a0789336bec673fbf05c09f49d1cbcb6d11e7aef86ffd13
 - kind: project-relative
   target: legacy
   value: .agents/skills/show-me-your-work
@@ -1742,7 +1794,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:4363321202a9c2ad2b1b98c491a60cf5ae131709c714a748df59144ab26647c1
+  content_hash: sha256:0a5f1a17b126042dff86cccc59d04f7b2fd033369d3cb2f52de5754738705227
 - kind: project-relative
   target: legacy
   value: .agents/skills/show-me-your-work/references/decision-log-template.tsv
@@ -1778,7 +1830,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:680d7b02757e7d7e6a724abf30c02985f95a2f3c940b666ce3f75603ea160926
+  content_hash: sha256:b544abf5a47dda5f44234f3ffb3ac66d14fe99e8edf417755eafe42eeb794e3a
 - kind: project-relative
   target: legacy
   value: .agents/skills/statechart/references/render.md
@@ -1922,7 +1974,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:47760217039f764e943a33042532318d80276e38fbf4ba7d3cbf7c1bba579f92
+  content_hash: sha256:2c36842f391275b0f343a38947560adee155fab4a744eacef1e595e9f07c4e3d
 - kind: project-relative
   target: legacy
   value: .agents/skills/statechart/scripts/passes/annotate.ts
@@ -5450,7 +5502,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:b0ef7942dd5d0e05eac56a9bea0736ee76f9c00c7683831d42d58dedfff212f4
+  content_hash: sha256:5b723307b798c0403e0af70829f0bcd5d6831a1e5ad226e87f027789b29881ea
 - kind: project-relative
   target: legacy
   value: .agents/skills/tdd
@@ -5468,7 +5520,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:816ae738a499ef0e020ab8025e66f1840d714fa4646b551468cffdf8807422e9
+  content_hash: sha256:a9febb174a229ccbc880bfa311e268776d225f5a3266cfe933cfeabb82998844
 - kind: project-relative
   target: legacy
   value: .agents/skills/teach
@@ -5486,7 +5538,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:3591be4a9968828fe04bffd82b7460164c81d3ae7ee44a0fc837bdc6c27cc79b
+  content_hash: sha256:8531959bc6d4b67dd3ceac234d42ea039f6123d46d1c08a7938508703d1234e8
 - kind: project-relative
   target: legacy
   value: .agents/skills/technical-writing
@@ -5504,7 +5556,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:5475c3e4e43d2fdd5f80de43d3bb6c5bf8ab10d3f2b917db085c11b0fc89b70d
+  content_hash: sha256:a727c08f864d1f5de275cf8c738d3ebddc69e536dc6e47e7d9265ddb967f01f3
 - kind: project-relative
   target: legacy
   value: .agents/skills/typescript-best-practices
@@ -5522,7 +5574,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:e4301c5ac2e94aed6558005a85f2b19edae055614a70b0525f12ba27984bb1da
+  content_hash: sha256:aa6272ac07e7396eb477f89960d02e0014142cffb125596d270f0587c9050651
 - kind: project-relative
   target: legacy
   value: .agents/skills/typescript-best-practices/references/patterns.md
@@ -5549,7 +5601,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:6f916f8d52906da5a37ef31a2f3de5e958e4a4014bb789c0b72e751824b8dddc
+  content_hash: sha256:5654f3bea69268e2d7f6aa541dc60a4bb83c920c9f7d4b30787c5522168c566e
 - kind: project-relative
   target: legacy
   value: .agents/skills/why
@@ -5567,7 +5619,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:071f6adc2493ce8780a450552c3bf2a181690a96ae9adfc5e9ec4ac5c4c9a25a
+  content_hash: sha256:12d896e51fc2ea1e97e62d5bb41ac5c170f78b60358d2f31bb1a4a12a356cd7e
 - kind: project-relative
   target: legacy
   value: .agents/skills/why/references/epistemics.md
@@ -5738,7 +5790,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:253f932e324d5e6fe5209d8271764dc5512a9cc1db8ed2a490fc6bf94675a4b0
+  content_hash: sha256:12b24d08eef2fa4ff33752297d2e080c381144669a7c5ed42b352a1171dad4c3
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/commands.md
@@ -5747,7 +5799,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:b832421add4f49b56658a5571825e188d75a0a93fa4c4b53c8c9292b6af33ea0
+  content_hash: sha256:ae8b793b4d907dd7ffe449d9261574121cb8141c24fb3406f4217d319ed51227
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/dependencies.md
@@ -5756,7 +5808,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:28822c38deb16a5c7fceaf3851fd7530d894c37b0f95853b86c2fb956a84ab73
+  content_hash: sha256:25608884d3e0839fa5d421fb43ab950f24506188cd530e48e3277a20d7a75634
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/governance.md
@@ -5765,7 +5817,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:968670a858801f4576746fbe86affacf4cf27296f634ad9008f58bcba22b2409
+  content_hash: sha256:7489356994e05d984348af6b37504b40971a80dcccde12c25cf2398926ea1aeb
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/installation.md
@@ -5774,7 +5826,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:c70544c5d1f85102c5e144ac6ae1ca68fcf8ba6a8323cb2ca6adc840d13aa960
+  content_hash: sha256:a8d33ceeb41626d809ed07e0cdd16ba74f0510b5842bab64b7f6dc3e3fdb1057
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/package-authoring.md
@@ -5783,7 +5835,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:00983812289ec13ac9ad84f57148c5cfd3ff5af479c26a42caffc9d6674e14d3
+  content_hash: sha256:3aa51296a70099a81feed7447ac21bc82dceb79b8bdf18ce547fd4667691ea29
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/troubleshooting.md
@@ -5792,7 +5844,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:2c6f13b1a1758b84305f1d11e2eeb096896a02851de1e24dde644783862667cc
+  content_hash: sha256:dae797b388dcb591c2276e8d2c07aee2a5313c5188aae15c4486bb7fee4065cd
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/workflow.md
@@ -6281,15 +6333,6 @@ deployments:
   content_hash: null
 - kind: project-relative
   target: opencode
-  value: .agents/skills/yomiyasu/.codex-plugin/plugin.json
-  runtime: null
-  scope: project
-  owners:
-  - nanaism/yomiyasu
-  active_owner: nanaism/yomiyasu
-  content_hash: sha256:b26d6af9532a22e6ca8d825196a4816fee3ca0a06458419f5427d5252a856318
-- kind: project-relative
-  target: opencode
   value: .agents/skills/yomiyasu/LICENSE
   runtime: null
   scope: project
@@ -6305,7 +6348,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:e3aee084c9fd4e0db746890d0bbcf2ba247ac3292cc14ee38710c51a1bef0b89
+  content_hash: sha256:34f2611aa021f4496ff4555ef1b29a67670c411d137aaeb269e9ba9ab2b73877
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/UNICODE-LICENSE.txt
@@ -6332,7 +6375,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:1f84fd456c1e959e01c2b31f4f9aa38aeca9798451a0e1ae40ab969cf3aaabd2
+  content_hash: sha256:fedae4ffbcd808ea2a3900b1dfccdfaed7cfbb74e2b5b1ca3f82966826d6b60c
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/calques.md
@@ -6341,7 +6384,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:0f4cd78823f40685fd56517bcda3cb671e7962c698f40285b218ed3108c7f454
+  content_hash: sha256:11d342cf90d24e20b12a9ecac66951a957fd930832c8b6cbdfb567cb9f5f01b0
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/doc-types/article.md
@@ -6359,7 +6402,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:9b164c2916544e417fb42454e199f5c790cbfcd233879c59f563a1942329d9bb
+  content_hash: sha256:fd8b888d3599747040c416df696ab39b9d9b962ce19a9229544b691ef43742af
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/doc-types/formal.md
@@ -6386,7 +6429,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:43c84865368c6e1e61c0ac1645583933092ddcaabb49b6ed4b6c4621e9ba2d4f
+  content_hash: sha256:aafdef898a05c8526fed64c7b9e076dd618015704256e1a7ee4d1d0c9e5b4ca5
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/doc-types/manual.md
@@ -6395,7 +6438,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:37971c4b7cf8159656a2435b30444a05692fbdffdd7dc3dd8e8f4ada90e8ef8f
+  content_hash: sha256:29806ff027229f1c82dbd9472a485b70ab0c537cfe15138f436f977783b63b08
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/doc-types/minutes.md
@@ -6413,7 +6456,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:39a7ff9aca340a003c637153c374f0dc1d668cda3520aab99923bffbc1c37f94
+  content_hash: sha256:0ae274c3e8da87bcad74aaee069d799f902f2944c2972e714070e225b18ccde9
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/doc-types/pr.md
@@ -6467,7 +6510,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:416d0752959ae43cd030f2cbcee76425d457ae37f153164db64f7884f7df7685
+  content_hash: sha256:b68dbdf15d0145462794ba638c795cc9f13be9fe4d59e7dedafa945da6689aa3
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/domains/essay.md
@@ -6476,7 +6519,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:aeeeb9f9c842d68fa0fcf2e956bd2f87c5f450bc820df931f3f94b903a8a8c7a
+  content_hash: sha256:5dccd1810c1b99b87e4bd27538240c32406be64280a4c6ee8be1ef9521eb3694
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/domains/tech.md
@@ -6485,7 +6528,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:efcd3b633477b816bab2e0257099394d89cc35ae943999e96ce7451df6fcbc1a
+  content_hash: sha256:a45800b3fea46b45456ad00b8607f5ef347ede53d6a51f65826e1423f47d634a
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/fact-recovery-details.md
@@ -6503,7 +6546,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:c777b05e64922c2b6339c35cdab744ff1f306726f166568d2eeb09276333daa8
+  content_hash: sha256:36056bcfef43b48b9c17b063c53f34e8d8b7e061895f5dea26847d5c9a2a2e63
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/gemini-syntax.md
@@ -6512,7 +6555,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:bb4a212402f63e9144d221feb9992dfe9db69527e71ad74b497c3d97e7453585
+  content_hash: sha256:78b593952303fe2f02f44921fe553925acdcd830cdb41ad1c9cae488ff8d25a3
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/lists/fact-gaps.txt
@@ -6593,7 +6636,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:a805b2a8946a423a011d2cd66a33bf1be784d0dacdad32a5c5d3b4fed7bc0976
+  content_hash: sha256:88f9490473acd3c51116556fbc9c06d95bbf003236fc9ef54cf94446cef7e191
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/rephrase-test.md
@@ -6602,7 +6645,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:a3531b41aaefe987726e928b09d59dbb312a35594b8dc6ce6a85dae10c2cc1b7
+  content_hash: sha256:1086593de2fbcbcc577ca68c155d441f9fbe3bb72a229340cb639b4538207304
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/review-points.md
@@ -6611,7 +6654,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:899d7d512df32e77d301c87a50917576b0fd816bc932b0bd572f2b3df0a75e60
+  content_hash: sha256:ec1f7ff6bdf0095db2b3f683e7acee6cc62d203975c28de9e6d515ff37caa0f5
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/references/slop-catalog.md
@@ -6620,7 +6663,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:48afab317afc430f53aabeb7a0c3eb52ddfe0c875e420f9fa031684076bac407
+  content_hash: sha256:cdf2cef3f62ba8b75a02bc56b5ae8d2f69a9fac257b5c8fc56637adb3827bf97
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/markdown_visibility.py
@@ -6629,7 +6672,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:603dae42750dc6a4823983453a93941db59a0138a2416772971bd8bc16e0b553
+  content_hash: sha256:c8d410c5379c00c4bb94fc06d3a5a3fee118ac6b0cf7e6b81b4d452d5e912e60
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/yomiyasu_check.py
@@ -6638,7 +6681,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:ba1662ac89d605c6fe09617a4efbb27dc00ed150c769568f9e43f6eccc1f8607
+  content_hash: sha256:4355847c6cc8b8f08e7541c7f04add5eb4e0ef7b9e0176e6a069bfa8b9679ca8
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/yomiyasu_diff.py
@@ -6647,7 +6690,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:44a95ce08115e424f5871dadc4dada38ac2683493c366d699b99586716936bb8
+  content_hash: sha256:25e5e1db015297a9cbf0642482091b8c6f47b5c8b5f03dcc8b565a0ab5aecaba
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/yomiyasu_hook.py
@@ -6656,7 +6699,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:dba402af0ff280417906f48586f446aa371d2dcfa7de9b55db1fa8885692a39d
+  content_hash: sha256:2b5611ae6075af3046100197f438874727480859bcc9c11ee4845ce952c172ee
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/yomiyasu_lint.py
@@ -6665,7 +6708,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:cfa03a806514ba050dcb526ed76e1114e879e27fee47f86dc64b010c865514db
+  content_hash: sha256:bde745c46242ab0a923503bbe5488178f2b503e972498112e46df2ec79559767
 - kind: project-relative
   target: opencode
   value: .opencode/agents/comment-sicko.md
@@ -6674,7 +6717,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:b606b9c036e6bdb82f83afec29be643d1fb4a7c0da3b28fc625dacdab64708df
+  content_hash: sha256:5ed8aa98c63bb114f2b720156c8d9a45ea9eed19e93872f5d815a7f0ee2d201b
 - kind: project-relative
   target: opencode
   value: .opencode/agents/poteto-agent.md
@@ -6683,7 +6726,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:49b4d16cba0d5b5caa929154a9f6cf2e02e4e95f7ec4e00cf53b6fb5eeeee017
+  content_hash: sha256:c64d82b664d670b64de0fb30010becd6b301a4371c5dd6376f60f7fd6da97315
 local_deployed_files:
 - .agents/skills/architect
 - .agents/skills/architect/SKILL.md
@@ -6700,6 +6743,10 @@ local_deployed_files:
 - .agents/skills/blast-radius/SKILL.md
 - .agents/skills/bro
 - .agents/skills/bro/SKILL.md
+- .agents/skills/control-cli
+- .agents/skills/control-cli/SKILL.md
+- .agents/skills/control-ui
+- .agents/skills/control-ui/SKILL.md
 - .agents/skills/correct
 - .agents/skills/correct/SKILL.md
 - .agents/skills/create-formal-verification-skill
@@ -6709,6 +6756,8 @@ local_deployed_files:
 - .agents/skills/create-verification-skill/references/feature-map-example/README.md
 - .agents/skills/create-verification-skill/references/feature-map-example/create-note.md
 - .agents/skills/create-verification-skill/references/feature-map-example/search.md
+- .agents/skills/deslop
+- .agents/skills/deslop/SKILL.md
 - .agents/skills/figure-it-out
 - .agents/skills/figure-it-out/SKILL.md
 - .agents/skills/how
@@ -7289,41 +7338,44 @@ local_deployed_files:
 - .opencode/agents/comment-sicko.md
 - .opencode/agents/poteto-agent.md
 local_deployed_file_hashes:
-  .agents/skills/architect/SKILL.md: sha256:4a02d1d4e5491817f34f27573f78426a9fcdc05afb6c6f6c26782190b4c6c5ea
+  .agents/skills/architect/SKILL.md: sha256:dd17b5e54578dd24ba21265ea4dded43186d640b61f1fc4cbd07f28c63b6c859
   .agents/skills/architect/references/design-red-flags.md: sha256:d0e639e4cc588ec865f930d3a4111faad60987ae36925917e319d7ceca7c69ce
   .agents/skills/architect/references/rationale-template.md: sha256:45ebea3e616c87c02ad0111c7ebfa119b1576989cf732eaa636413bf028c9c3c
   .agents/skills/architect/references/runner-prompt.md: sha256:21dd5314aab778c5007228027a4591d97693fbec6ab86524037772b63f40948e
-  .agents/skills/arena/SKILL.md: sha256:5f979bcb1d1b3e0d5ddfb32abf4d620586f3adb841ce7658a8c7b3853e05b70f
-  .agents/skills/automate-me/SKILL.md: sha256:1eaaa71126e249862d52fd2669911280071bbbce70bc26c915e832f5c8a99ca8
-  .agents/skills/benchmark-checklist/SKILL.md: sha256:297c8c953668059eb1992119023b5509b4f0ea44890b1f9dacda4d421957903e
-  .agents/skills/blast-radius/SKILL.md: sha256:a66ea26e8903ec586a50bb928148c8e83bc776882dd732d9dfb56c2a7bbb1880
-  .agents/skills/bro/SKILL.md: sha256:ccd31d89ad58e63811636c703e88daf2c15f66786b001fa706a2a9e86fe41566
-  .agents/skills/correct/SKILL.md: sha256:1269ed9b800442288759e1c3a4ab7b230b73f909994522e81a91e573d50a48d7
-  .agents/skills/create-formal-verification-skill/SKILL.md: sha256:00473cf802c8280446d195a2aaba2aa290dddade0536bd7d2e63450d55022643
-  .agents/skills/create-verification-skill/SKILL.md: sha256:e88c6c354f6fad16d5c9ac66d64f618dbf265d600e923bf1d97b7ade66f358c7
+  .agents/skills/arena/SKILL.md: sha256:681bd049da77731c02f9e9a9cb3422077d0d210b3a621cd7622bd468069c878b
+  .agents/skills/automate-me/SKILL.md: sha256:b2ad3f495e3a520adda5a6dc06b733a57dd44d3df7378557d2b3b0b212e79e25
+  .agents/skills/benchmark-checklist/SKILL.md: sha256:cdbdbd5f29e7e2110c1d674f7f223ee8457eee0d343d706fd5181eb645edd03b
+  .agents/skills/blast-radius/SKILL.md: sha256:0c59ee9865dfeefb776a89fc892f4b2647be2e79e1b090d6aea7e3c20aa62033
+  .agents/skills/bro/SKILL.md: sha256:59719140b9b9ceccbe616959c66e443789c8a52270c8a9f1f9aaecbe3ef81436
+  .agents/skills/control-cli/SKILL.md: sha256:b9b805220907358a1edb7c86f8fec052ecad8d3d62f876bf25e51d8ed9749163
+  .agents/skills/control-ui/SKILL.md: sha256:8a6a942871924650237fb656e76c9c354830c8d118d62062f85ae9f90ee66cd8
+  .agents/skills/correct/SKILL.md: sha256:8f6d47c3445a4a13efa8d2570eff2d2ddd3c807e328422c007a0138835a8bae2
+  .agents/skills/create-formal-verification-skill/SKILL.md: sha256:78bcda535d7bed488b1f91ada2bf01a2c10c063f8433c33f5f11035b48927670
+  .agents/skills/create-verification-skill/SKILL.md: sha256:5d621073355ec68faaa42f0fcde350d2b3dc7e7e0e5de03b9e28d3f153f42570
   .agents/skills/create-verification-skill/references/feature-map-example/README.md: sha256:cb7bd782cf89968a4ba3d58a5151db837430db92d19a6f52a906973b77b516ba
   .agents/skills/create-verification-skill/references/feature-map-example/create-note.md: sha256:644a44c74f35d38c2feb7cd05a0121fdebbb623e8dc376c185b565a581d1ccf7
   .agents/skills/create-verification-skill/references/feature-map-example/search.md: sha256:6e87b9e7f2791a7776ba1bb83f371cd285c306c67f19d245cc4dd6ca3015c823
-  .agents/skills/figure-it-out/SKILL.md: sha256:65eab29476f3be92606e1552b35ce031fb038686d66be7fdab74bcb70c625c75
-  .agents/skills/how/SKILL.md: sha256:2fefb05b82d05e8354566ac83ce80a43630b5acd83c4410d5c2aa9f71b9b4038
+  .agents/skills/deslop/SKILL.md: sha256:dbfe426c98db94f121565881f7481ac2f350e0ee24d088955daebb56f32820fc
+  .agents/skills/figure-it-out/SKILL.md: sha256:848c41c72bca95fad0fc2f2e16afdcb40b12026551676117900261b4435ef277
+  .agents/skills/how/SKILL.md: sha256:b9d8a6872e899086e5c651189f102a67a68139024a59d22817f071154d3771e1
   .agents/skills/how/references/explainer-prompt.md: sha256:ddb89cebefc24e2b54517a331aedfe045b6971e101f45c71b8cef4cccff45bff
   .agents/skills/how/references/explorer-prompt.md: sha256:6300128385ee940fd42ecb84b0e623435440a2dc283eae54ee4a52ba56947ba1
-  .agents/skills/in-your-own-words/SKILL.md: sha256:f777174af57aaccfd40eb4439e6c7f7760fb44aedfe14f3054a1b23692774836
-  .agents/skills/interrogate/SKILL.md: sha256:506f33352e66620eb497c5ff1d18d32e901b51dfe1e96e993cf93bbbb16293d1
+  .agents/skills/in-your-own-words/SKILL.md: sha256:170a9f9d88eb478f9d072ba32fe33af5e8526be4d4197f21af5237571f656703
+  .agents/skills/interrogate/SKILL.md: sha256:8190a84a9cf11f50bd4faf2b4f345c826332c556fed15e2c6601497b7e8c5bad
   .agents/skills/interrogate/references/code-quality-review.md: sha256:c5f55e9377ac1869e32cd7bbb9c95744ea219e90dd20bb9ad63a7e3a2bbbd118
   .agents/skills/interrogate/references/lead-judgment.md: sha256:569913b3f69413ef41d0703920bbf7f633e76765a4459c282177ee92cf1f60f6
   .agents/skills/interrogate/references/reviewer-prompt.md: sha256:28ef7f0d799eeb91e9ae43165624c6a7be21f33a00e68d2c50aad876e26afef1
   .agents/skills/interrogate/references/rubric.md: sha256:ca4306b66510e88c30d038829e43d77ff9955adbf1657d18763e33f05364073e
-  .agents/skills/ketchup-video/SKILL.md: sha256:cdc7ac2db1e4ccc0c1c489737560e17326660ebdecf4a4ba461711ac33408c6a
-  .agents/skills/ketchup/SKILL.md: sha256:447aa397567ee13c9f116477e2a71d49019c0734652911cbf190de7be106a623
-  .agents/skills/maintain-formal-verification-skill/SKILL.md: sha256:e7c93f227c34d45a8df77c6f0c36aa3a068900305c57581bef5d561cf21aaa73
-  .agents/skills/maintain-verification-skill/SKILL.md: sha256:b7f52e3c024d379bbc07224829c8f88b0f2c9da4323e0269fd8dc1631381ab5a
+  .agents/skills/ketchup-video/SKILL.md: sha256:8d6e1c8ad5d1bb4ae6ed9755ae07efeee19f79110de803c2656064c2a2f4e6a4
+  .agents/skills/ketchup/SKILL.md: sha256:ab8a2f1e6760417eac1b676e5b73312c88c5b2efa0f02e2da0fdb3379eebaebc
+  .agents/skills/maintain-formal-verification-skill/SKILL.md: sha256:1bf52cad41f46cad95648df0544212eede3045ba26b439814e9c4161c508354f
+  .agents/skills/maintain-verification-skill/SKILL.md: sha256:0dd2b2ba6d7524c3ad8ea395da4138bf74285c501fe09c1537952a0a5460f914
   .agents/skills/make-bot-ui/SKILL.md: sha256:389432e3665bf8c0a4faaaac7b10c0877c1d5ffa4ccdb5aa5306057fb63422a2
-  .agents/skills/no-comments/SKILL.md: sha256:ad1333ace832542b89d5e598fa359ba2fe0226d47272442216f923f8993425d8
-  .agents/skills/poteto-help/SKILL.md: sha256:9736fe4185b0e11d6956894281d856a81b67eb873ac9a6977d72adaa2c7c3982
+  .agents/skills/no-comments/SKILL.md: sha256:e8d80e676a54d57e74cb13fdbffe849adeeae3b281e2492f9fe622347bdcff44
+  .agents/skills/poteto-help/SKILL.md: sha256:3cc855689f69491bb7079666c2e0f6ed91a358ce7b40cf934ceb64b32a563a10
   .agents/skills/poteto-help/references/prompting.md: sha256:839a6fd65fdcba1dd89c3edd3d163b1bd9718019a860d291de4c2102db6f6d65
   .agents/skills/poteto-help/references/recipes.md: sha256:3563fb3b174264d73a2ad012f4e3de5fa194c0a23c6c5423295a6e642820ff10
-  .agents/skills/poteto-mode/SKILL.md: sha256:42190ac1739191f7f694ab977c531a53298024250f9cce76691443b210a40fcd
+  .agents/skills/poteto-mode/SKILL.md: sha256:eb01edbde395cf1f991bf4dbb0680dc2b9ba14c7eca54293f4c08bfceeefefaf
   .agents/skills/poteto-mode/playbooks/authoring-a-skill.md: sha256:f6a13a445c360b48d6cd72780ac01955f45b82826476efe0e67c7559329407aa
   .agents/skills/poteto-mode/playbooks/autonomous-run.md: sha256:6f94d98ad513f9442573fe0aaced5f2a7385d120ea4f57ac1c1204cb6e551145
   .agents/skills/poteto-mode/playbooks/autopilot-full.md: sha256:dedac91ab06f39b54f1f9837d2c52edafbbb18d17d787820a529b2b63bba6577
@@ -7348,15 +7400,15 @@ local_deployed_file_hashes:
   .agents/skills/poteto-mode/playbooks/visual-parity.md: sha256:ed2c95c006b130d30e6936b922139f31fd67d89b7cde71843e602619e29b75f7
   .agents/skills/poteto-mode/playbooks/worktree-cleanup.md: sha256:be04ae0afe19d4a4da5bcc4e94455f68dbebd1cda6eb0f456ca0d358ecf76c00
   .agents/skills/poteto-mode/references/bugbot-triage.md: sha256:b2d146c770d8d3593e1ef3d77b668039b8e1f78093ea1a86f1d45d7f99614309
-  .agents/skills/poteto-mode/references/opencode-tools.md: sha256:1c906cff2d9126f97fe6cdbe0043cf9b9180af9432c00c89eab9c222022f652e
+  .agents/skills/poteto-mode/references/opencode-tools.md: sha256:a751fb7c774d74626de57bdebc4a072369f637c7f6eab922b71f37473ced8a76
   .agents/skills/poteto-mode/scripts/bootstrap.ts: sha256:ccd2ed08fd9da9d0d942e5f2491cfc74bb92d8a08fa51755e0da1ac8de287361
-  .agents/skills/poteto-mode/scripts/bun.lock: sha256:6edead64c37e326bd39b1d6a86518aa19f5d00d39e953edf7473d970abb3b7f4
+  .agents/skills/poteto-mode/scripts/bun.lock: sha256:667d9cf7222e9aae3fa42a4be383e657784216e9df115da02227fbc5ac7bbe46
   .agents/skills/poteto-mode/scripts/check-plan.mjs: sha256:e3d4e9ca638c6fb4a2b52c434c17c7af30da4fdd44605ccfe9906f82fe37b555
   .agents/skills/poteto-mode/scripts/check-plan.test.ts: sha256:848d321f2b76299d1b2d7bb46c929dbaebef08ca4ba8669dbe09d1d5c86f96e2
   .agents/skills/poteto-mode/scripts/orch/orch.test.ts: sha256:234668333d5184324be7231b17636d3502041460ca57c9aaab44104dfc23ed09
   .agents/skills/poteto-mode/scripts/orch/orch.ts: sha256:ffa225e4e9c61e9731b819f3e07e6b56ccea7ec3ef9cb9143caeae6d3e7e07f5
   .agents/skills/poteto-mode/scripts/orch/store.ts: sha256:8831d17aaefaf14f236908a9de2194fb428666247dd91051439ed85334e60786
-  .agents/skills/poteto-mode/scripts/package.json: sha256:ce63908de71140d87aae7256c8620aebbbf9d8deae96b3758c7b4102628caa44
+  .agents/skills/poteto-mode/scripts/package.json: sha256:c9db6bb9362c6e319e395b358b113ebc72ab06b6c5e3a095093f6ebfdafe1c57
   .agents/skills/poteto-mode/scripts/watch-pr/cli.test.ts: sha256:a35592b4c6da96caf8d47987e9cd503fab6c7774ab87d11a43f24b4b5df2a9d1
   .agents/skills/poteto-mode/scripts/watch-pr/cli.ts: sha256:89c08863089181a232be782c4b2ed90a1552f44aeecb0dcb7aac2c623620e680
   .agents/skills/poteto-mode/scripts/watch-pr/fakes.test-helper.ts: sha256:cf0c5ee61b4a73444c1b775cfb6c81a40d312e055dd21a1f5eae6276e54de13f
@@ -7370,42 +7422,42 @@ local_deployed_file_hashes:
   .agents/skills/poteto-mode/scripts/watch-pr/types.ts: sha256:daa66c56220bae084c18cc6d3b0a2c66c0e72206d298e40973b44ee085ce16d2
   .agents/skills/poteto-mode/scripts/watch-pr/watch-pr: sha256:d955603be6cc0e8b8ffcec722f635192b2261410b1f2929abea94480e47eb5d4
   .agents/skills/poteto-mode/scripts/worktree-audit.sh: sha256:06be04b38346ded24ce761d373726f98cd9b9737f20ec98214e88b5f08f521b8
-  .agents/skills/principle-attack-the-premise/SKILL.md: sha256:dec6f01a13102733060a470a88520e6a388a4bc8d62a0187f323f298a0482dd2
-  .agents/skills/principle-boundary-discipline/SKILL.md: sha256:73451bf69984a18142f7250310094e68831aae56d7e6a71072ecc967270a1a7e
+  .agents/skills/principle-attack-the-premise/SKILL.md: sha256:664c5fd96c3d96ae6de52e0353dc8bca3f28892218ad2d19afd398bd73274cc6
+  .agents/skills/principle-boundary-discipline/SKILL.md: sha256:ff0386b8888693adaee7daf810ec043931fe35b8c8d309eaf40ccb6bdf792d03
   .agents/skills/principle-build-the-lever/SKILL.md: sha256:05bb12169230c3ced97b29dad8d4bedef252a7af90c4c8e22080e6c61532633c
-  .agents/skills/principle-encode-lessons-in-structure/SKILL.md: sha256:5e2fb0c04afa9a645eae1ac983bbe1f0f108b8f959a3a4bdb9e917e5513d2b01
-  .agents/skills/principle-exhaust-the-design-space/SKILL.md: sha256:0e662d35bc6bdba128aff13560b8dace38dc45cf74ac400305a3cfa7b852f8ed
-  .agents/skills/principle-experience-first/SKILL.md: sha256:f4c07877f1be23d3ade0b050bcf16df8a8106007401da8584854e47bcf95e09c
-  .agents/skills/principle-explain-the-number/SKILL.md: sha256:e181861b117f3f335b5a5ada15b85c2143e1cd8b1d3f5a0c8716651241d94e77
-  .agents/skills/principle-fix-root-causes/SKILL.md: sha256:7ae65bcecebe16d92dfd3ffd42ff3ffbb655b602ebd1ff01229b553527dde452
-  .agents/skills/principle-foundational-thinking/SKILL.md: sha256:8b75c658387a886e2ed93aa6faa6b29e025ceedc972f229e97e78cefcb82590d
-  .agents/skills/principle-guard-the-context-window/SKILL.md: sha256:ef4cef0467e03368df6c9acddacada5dd9b3767a61ddaf2195dae893d878994f
-  .agents/skills/principle-laziness-protocol/SKILL.md: sha256:1618c323b0886e2793961210684190b2a8dcabe74dd9a94d9bc5d339846d61d9
-  .agents/skills/principle-make-operations-idempotent/SKILL.md: sha256:f6a663d5e1c460a059762bdf20e8e87fe8df43970967b4f5a7fcb9ab321afc05
-  .agents/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md: sha256:651a04181d241d92f22f1aeb02c9c254cc95c548dab8b8120197fa17c6068cb8
-  .agents/skills/principle-minimize-reader-load/SKILL.md: sha256:8501a27210364ff2e54dec2487c7cd40ab0973cbe10c1bf918932140489b0c72
-  .agents/skills/principle-model-the-domain/SKILL.md: sha256:1676bde5e625807c73f63e79443c659d9498a5676da411cef6df67742abaa443
-  .agents/skills/principle-never-block-on-the-human/SKILL.md: sha256:8141cd4318896b605d38a4d4540087e271864f72f13ba19902a80a44a38294bf
-  .agents/skills/principle-outcome-oriented-execution/SKILL.md: sha256:dc453cbf1ad09492fcd35658d0a51834b4cb87e9a3a6bff6174f465f1dbb0fb0
-  .agents/skills/principle-prove-it-works/SKILL.md: sha256:386599afeb110e4972da7301cb1516c612ce2974ab4825c4ed52d1141e2831eb
-  .agents/skills/principle-redesign-from-first-principles/SKILL.md: sha256:d588065198f328b8fc88ad08d2fc2c22e359f09e1ede9b0df76dab7081c532d5
-  .agents/skills/principle-separate-before-serializing-shared-state/SKILL.md: sha256:e567985b1119d939114e7200ab2b40724f05eab5a6d64a2968f265bbcd690a26
-  .agents/skills/principle-sequence-verifiable-units/SKILL.md: sha256:22f9c64ca62f9d4d2bee22d56acb95d908bf1aae41e74128744768945b54b9b0
-  .agents/skills/principle-subtract-before-you-add/SKILL.md: sha256:e9b220d12c73771d16f9f7603e63c02c13ce651b5dab9a8ffe5ac6ffc70c33eb
-  .agents/skills/principle-test-behavior-not-implementation/SKILL.md: sha256:9618334a0f19d6b59d98e18fbedb052f5e6104e7409e063360c37dcbaf8db7ce
-  .agents/skills/principle-type-system-discipline/SKILL.md: sha256:92b9155b83de7833e16b68d2c77dc5d75a504a164db43c7704e371cbb03fb1e1
-  .agents/skills/recall/SKILL.md: sha256:147acb7268d43a34be75f673546830d81f7dae15c9d0d4adb959b52694d0ae1d
-  .agents/skills/reflect/SKILL.md: sha256:234c750143613caae964c0f4f26dd26406e8dee480731f360786f0157aeeb6c9
+  .agents/skills/principle-encode-lessons-in-structure/SKILL.md: sha256:51afcead22c5c942aeec792391e909a4e752dda9a8a13055e0d079d3b38e6bd1
+  .agents/skills/principle-exhaust-the-design-space/SKILL.md: sha256:9d243a96f9f5033da228a14af1bc79cdfba77498ec27dc096392b25410efa434
+  .agents/skills/principle-experience-first/SKILL.md: sha256:a3f5e124b15b1d1d9742cdbc2c23080b67b5a61aafeb45c7ad199e2ff059f42b
+  .agents/skills/principle-explain-the-number/SKILL.md: sha256:c613e48978d961d1f32bb05cd19b67f439ca77a903c0149eeb0f2341db11cd17
+  .agents/skills/principle-fix-root-causes/SKILL.md: sha256:6fe5012c7e605120978b5891aa58d80f2e89e9a317fcf01097f5f36e26e67938
+  .agents/skills/principle-foundational-thinking/SKILL.md: sha256:d372dd6be20509a56cde2a8aeb9deee8ad32a08eca0508866d4a0df958cfaa96
+  .agents/skills/principle-guard-the-context-window/SKILL.md: sha256:58afbc73ffdc8bc841325d8ec4d40def6fd3b4e7f154aa4cb4bd2b1bbc9878d4
+  .agents/skills/principle-laziness-protocol/SKILL.md: sha256:d30d02cfc1dd09db07a31f807c81393ee7daa041d7cfaf7a1754ecb162891a8f
+  .agents/skills/principle-make-operations-idempotent/SKILL.md: sha256:a126da2db34ff149f075e39b2e3b24a82fa3c6c6c330f30690146fd29c7ebfe1
+  .agents/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md: sha256:04d659af08426b1e2fa1a95db84b86f07e1b1da079dde3d2a8f2ef1b89050227
+  .agents/skills/principle-minimize-reader-load/SKILL.md: sha256:5837c33cb4b13e580b20d945cc4a02fabe50bf28088350d3e4b6d2109db9590f
+  .agents/skills/principle-model-the-domain/SKILL.md: sha256:f3e39ce0af6d223157a95f3b44878d63089c599d786d43209231c47832f8c767
+  .agents/skills/principle-never-block-on-the-human/SKILL.md: sha256:e5aef723139252e9b20744890208f449a6392f8d91713ab82bd43008679a0742
+  .agents/skills/principle-outcome-oriented-execution/SKILL.md: sha256:ffe113923a2b3dd9d3de472d4ac3595d042104a6eac190131d53acbae03b153e
+  .agents/skills/principle-prove-it-works/SKILL.md: sha256:28c23336b3c7dc62cdb8e3bbb5c0b4ed134e1ebb8037dde2fc52b20c4621d7b1
+  .agents/skills/principle-redesign-from-first-principles/SKILL.md: sha256:086df7b2fde2fab5359c307c26aca8d616c0ab52d9adbad77df5e00228940688
+  .agents/skills/principle-separate-before-serializing-shared-state/SKILL.md: sha256:bef8c4aac8f5537be2e111507f1a17d27b46fabc019b7beb234b54e2e7573b41
+  .agents/skills/principle-sequence-verifiable-units/SKILL.md: sha256:221f0624c4e015f46648c43c230f00436dd3e863813812e46b383d61ff559252
+  .agents/skills/principle-subtract-before-you-add/SKILL.md: sha256:990a8e7afcafe26dcd536eecdf7ef5e566a5ecfb839f5159dc9f1a4f9b70c522
+  .agents/skills/principle-test-behavior-not-implementation/SKILL.md: sha256:77c1cffbcadd004a3cdf7cf66a897974397430d1ce61183533018940a74dab04
+  .agents/skills/principle-type-system-discipline/SKILL.md: sha256:30e8419771d20525c2e8d45d6fd61ea709e836d7b3c5261d373857d8362d21e3
+  .agents/skills/recall/SKILL.md: sha256:aedacb109d4606cfc508dfc5e8d25c7ee3835fea6e9a6b28d13f2acb113bbf07
+  .agents/skills/reflect/SKILL.md: sha256:83e0c6387c94bf18223c978c8eaa97e8b145ab99ea15023f5d89990d15405708
   .agents/skills/reflect/references/divergent-reviewer.md: sha256:f6030d88e20e906ef5e2d9ba44cb013ce610c49c2fe2ef74c377d32e0dc9e939
   .agents/skills/reflect/references/judgment-reviewer.md: sha256:38f917619fbf346062d643e0ad6b12fc952d58678dfcbbf42ffcf6d8b9c08307
   .agents/skills/reflect/references/synthesizer.md: sha256:6af816963de74d1a1aef4070273c1ff533d2072732e488e159ddc0b299fec3cd
   .agents/skills/reflect/references/tooling-reviewer.md: sha256:f81b8697e7366fbbc18feba52c6e3253a101f751091364ebc4396a1d9b5753b4
-  .agents/skills/setup-pstack/SKILL.md: sha256:c7bb71c9d06b837f8a69b84f6ba0851c30f5cd7172becc681b38306622917f01
-  .agents/skills/sharpen/SKILL.md: sha256:0c71d1853f8155fbb43cc1a5ec8b6d742cdf1686c838d1c293648b6b260e7982
-  .agents/skills/show-me-your-work/SKILL.md: sha256:4363321202a9c2ad2b1b98c491a60cf5ae131709c714a748df59144ab26647c1
+  .agents/skills/setup-pstack/SKILL.md: sha256:7001d926c39ecb4f1454c5891a4f903f2c1af44d5fd4e2b845aeeb53c7b996da
+  .agents/skills/sharpen/SKILL.md: sha256:a98fbba23e980a987a0789336bec673fbf05c09f49d1cbcb6d11e7aef86ffd13
+  .agents/skills/show-me-your-work/SKILL.md: sha256:0a5f1a17b126042dff86cccc59d04f7b2fd033369d3cb2f52de5754738705227
   .agents/skills/show-me-your-work/references/decision-log-template.tsv: sha256:6779378006a2f5225e8c06deb84f1d913fb532041ebbb6e50d94600bfe3f4b76
   .agents/skills/show-me-your-work/scripts/log.sh: sha256:a65a4bc5fb7cdeadbdb7b7ff1ca4682f4d9c42420942b2977cd17b46c4ac338e
-  .agents/skills/statechart/SKILL.md: sha256:680d7b02757e7d7e6a724abf30c02985f95a2f3c940b666ce3f75603ea160926
+  .agents/skills/statechart/SKILL.md: sha256:b544abf5a47dda5f44234f3ffb3ac66d14fe99e8edf417755eafe42eeb794e3a
   .agents/skills/statechart/references/render.md: sha256:8cca446eb0c8f87f2ef7b97c4b149f59aacdc153134b4217c4bcde09b10ac3c4
   .agents/skills/statechart/scripts/backends/cfg.ts: sha256:aea4d8766d214e7fa08f4881f1037319655e75eb56652e1b6d5d4f13a162e3e1
   .agents/skills/statechart/scripts/backends/mermaid.ts: sha256:75704b2704a9399a39479ff704a580d5b9a1d0fede01fe771df28bf799b434b6
@@ -7421,7 +7473,7 @@ local_deployed_file_hashes:
   .agents/skills/statechart/scripts/frontends/verdict.ts: sha256:0d0a9d6b6d6da5a7c48851b86d9d041f22982404dda6288795a1715138d7008b
   .agents/skills/statechart/scripts/frontends/view.ts: sha256:2c0af8939321c5aaed4b6ecac8ce6a98d0e6774d8bd15d4b02fe4f406b8c9620
   .agents/skills/statechart/scripts/ir.ts: sha256:5602beca4e4ac08421cfa07e4da989f0e75439f1d136cc923226909e771dc7ff
-  .agents/skills/statechart/scripts/package.json: sha256:47760217039f764e943a33042532318d80276e38fbf4ba7d3cbf7c1bba579f92
+  .agents/skills/statechart/scripts/package.json: sha256:2c36842f391275b0f343a38947560adee155fab4a744eacef1e595e9f07c4e3d
   .agents/skills/statechart/scripts/passes/annotate.ts: sha256:dc8eeee09c3a9a0c060f32fb1d554e01bd80e5265751cdeb041ef3e19561b92a
   .agents/skills/statechart/scripts/passes/label.ts: sha256:b5ef402369c5e7846be1fd39165e95cbfe715fc36eb9331a0401b26523c539c9
   .agents/skills/statechart/scripts/passes/lift.ts: sha256:8977dddc6c93bb2e3914d5b50760eb66876107ba51e2b8cf9e18611b4c40c89c
@@ -7812,14 +7864,14 @@ local_deployed_file_hashes:
   .agents/skills/statechart/scripts/test/tlc.ts: sha256:73f5cf9dca5ca55aa65d5b342405e31f6eff858ed2bc2124c3e3fbb328259cca
   .agents/skills/statechart/scripts/tsconfig.json: sha256:6bb2af53f7b251328e6117cd4fb761468dc4d4b96085d31a19304ccb73c32cc1
   .agents/skills/statechart/scripts/worker.ts: sha256:1f18ed5ef806982e05e8a40fc217e88257700b28b63cb4acbd647872f85f782b
-  .agents/skills/swarm/SKILL.md: sha256:b0ef7942dd5d0e05eac56a9bea0736ee76f9c00c7683831d42d58dedfff212f4
-  .agents/skills/tdd/SKILL.md: sha256:816ae738a499ef0e020ab8025e66f1840d714fa4646b551468cffdf8807422e9
-  .agents/skills/teach/SKILL.md: sha256:3591be4a9968828fe04bffd82b7460164c81d3ae7ee44a0fc837bdc6c27cc79b
-  .agents/skills/technical-writing/SKILL.md: sha256:5475c3e4e43d2fdd5f80de43d3bb6c5bf8ab10d3f2b917db085c11b0fc89b70d
-  .agents/skills/typescript-best-practices/SKILL.md: sha256:e4301c5ac2e94aed6558005a85f2b19edae055614a70b0525f12ba27984bb1da
+  .agents/skills/swarm/SKILL.md: sha256:5b723307b798c0403e0af70829f0bcd5d6831a1e5ad226e87f027789b29881ea
+  .agents/skills/tdd/SKILL.md: sha256:a9febb174a229ccbc880bfa311e268776d225f5a3266cfe933cfeabb82998844
+  .agents/skills/teach/SKILL.md: sha256:8531959bc6d4b67dd3ceac234d42ea039f6123d46d1c08a7938508703d1234e8
+  .agents/skills/technical-writing/SKILL.md: sha256:a727c08f864d1f5de275cf8c738d3ebddc69e536dc6e47e7d9265ddb967f01f3
+  .agents/skills/typescript-best-practices/SKILL.md: sha256:aa6272ac07e7396eb477f89960d02e0014142cffb125596d270f0587c9050651
   .agents/skills/typescript-best-practices/references/patterns.md: sha256:12e70c9419a8b3f5d6a1ab80e272c1f00a43ac0b3bbf72d68199033570e5de77
-  .agents/skills/unslop/SKILL.md: sha256:6f916f8d52906da5a37ef31a2f3de5e958e4a4014bb789c0b72e751824b8dddc
-  .agents/skills/why/SKILL.md: sha256:071f6adc2493ce8780a450552c3bf2a181690a96ae9adfc5e9ec4ac5c4c9a25a
+  .agents/skills/unslop/SKILL.md: sha256:5654f3bea69268e2d7f6aa541dc60a4bb83c920c9f7d4b30787c5522168c566e
+  .agents/skills/why/SKILL.md: sha256:12d896e51fc2ea1e97e62d5bb41ac5c170f78b60358d2f31bb1a4a12a356cd7e
   .agents/skills/why/references/epistemics.md: sha256:d54a2361b2d5973bc3fe2edf62f446d87935974d4b40d47f23b9529f956ca758
   .agents/skills/why/references/investigator-prompt.md: sha256:c44afba186f899094f3694e6c9d6de5d14ff7c4ce28b787a9f50fc789c9a7fc3
   .agents/skills/why/references/source-playbook.md: sha256:9ae9dcb9d09111c9facc68510331c5aba4aed9b1b057314ff1fc0e166ad3993a
@@ -7832,5 +7884,5 @@ local_deployed_file_hashes:
   .agents/skills/why/references/sources/sentry.md: sha256:2d4f83048eac1df530b399e2aed75dd7c9c18577b7665420aaeb96d0ceb0b702
   .agents/skills/why/references/sources/slack.md: sha256:3bc6309f5c7b26ace3b919dbd7f7b048861dd2020f910fe24f656cc74b3b661c
   .agents/skills/why/references/synthesizer-prompt.md: sha256:11c62671aa7b7a6e3d36929ffe2b59bf95e6ca664eee4d93e6ee527dd3390ddb
-  .opencode/agents/comment-sicko.md: sha256:b606b9c036e6bdb82f83afec29be643d1fb4a7c0da3b28fc625dacdab64708df
-  .opencode/agents/poteto-agent.md: sha256:49b4d16cba0d5b5caa929154a9f6cf2e02e4e95f7ec4e00cf53b6fb5eeeee017
+  .opencode/agents/comment-sicko.md: sha256:5ed8aa98c63bb114f2b720156c8d9a45ea9eed19e93872f5d815a7f0ee2d201b
+  .opencode/agents/poteto-agent.md: sha256:c64d82b664d670b64de0fb30010becd6b301a4371c5dd6376f60f7fd6da97315
