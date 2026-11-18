@@ -24,10 +24,19 @@ schedule は変更パスのフィルターと組み合わせられないため�
 | Workflow | 頻度（UTC） | 対象と制限 |
 |---|---|---|
 | pstack-update | 毎日 03:17 | 上流 `pstack/` と同梱する `cursor-team-kit` 3 skill の tree ID を SOURCE.json の `trees` と比較し、変更時または force 指定時だけツール導入・変換・検証。PR に含めるのは `.apm` と SOURCE.json |
-| apm-update | 月曜 03:30 | pstack-opencode の外部 APM 依存だけ更新。PR に含めるのは apm.yml と apm.lock.yaml |
-| nix-tools-update | 月曜 03:23 | flake.nix の CLI pin だけ更新。変更時だけ Nix 導入・検証 |
+| apm-update | 毎日 03:30 | pstack-opencode の外部 APM 依存だけ更新。PR に含めるのは apm.yml と apm.lock.yaml |
+| nix-tools-update | 毎日 03:23 | flake.nix の CLI pin だけ更新。変更時だけ Nix 導入・検証 |
 | skills-audit | 月曜 00:00 | APM で固定したスキル群を専用の一時ディレクトリで全件監査。Issue・監査ブランチ・Code Scanning に報告 |
 | nix-lock | 手動のみ | flake.lock だけ生成・更新。通常の定期更新は Renovate が担当 |
+
+Renovate も `schedule:daily`（毎日）で動く。更新系は毎日、監査（skills-audit）だけ週次。
+
+### 更新 PR は更新元ごとに常に最新の 1 本
+
+更新元 1 つにつき固定ブランチ 1 本・PR 1 本とする。新しい実行は同じブランチを最新の内容で上書きするので、昨日の更新 PR と今日の更新 PR が並ばず、古い内容は破棄される。差分がなくなったら `delete-branch: true` で PR ごと閉じる。
+
+- 自前 updater（`create-pull-request` を使う Workflow）: `branch:` を固定値にし、`tools/dispatch-pr-ci.mjs` の `updateBranches` に登録する。`tools/dispatch-pr-ci.test.mjs` が「固定ブランチ 1 本・登録済み・`delete-branch: true`・schedule が毎日」を検査する。新しい updater もこの形で足す。
+- Renovate: グループ（`non-major` / `github-actions` / `nixpkgs`）と依存ごとのブランチを同じ規則で使い回し、新しい版が出たら既存 PR を更新する。メジャーは版ごとにブランチ名が変わるが、新しいメジャーが出ると古いブランチは stale として Renovate が自動で閉じる（既定の `pruneStaleBranches`）。
 
 定期監査はスキル集合だけを対象とし、リポジトリ全体をスキャナーへ渡さない。PR の差分検証と週次の全件監査を分けることで、変更がなくても週次には固定済み依存を監査できる。
 
@@ -42,7 +51,7 @@ GitHub の Actions 設定は、Actions を有効にし、使用する外部 Acti
 
 ## ルールセット
 
-`.github/rulesets/main.json` が main 保護の保存版。削除・force push を禁止し、PR と署名と GitHub Actions 発行の `build` を必須にする。レビュー必須人数は 0、bypass は空。個人運用の自己承認待ちを作らず、Bot にも同じチェックを要求する。
+`.github/rulesets/main.json` が main 保護の保存版。削除・force push を禁止し、PR と署名と GitHub Actions 発行の `build` を必須にする。レビュー必須人数は 0、bypass は空。`require_extra_approval_for_unattributed_changes` は `false`（`true` だと人間が関与しない Bot PR に承認 1 件が追加で要求され、必須人数 0 でも BLOCKED のまま止まる）。個人運用の自己承認待ちを作らず、Bot にも同じチェックを要求する。
 
 `nix` / `sisakulint` / `skills-verify` はパスによって起動しないため、現在の名前のまま必須チェックへ追加しない。追加する場合は `build` と同様に対象外にも結果を返す集約チェックを先に用意する。
 
