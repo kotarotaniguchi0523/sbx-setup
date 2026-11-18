@@ -7,10 +7,11 @@ Docker Sandboxes (sbx) のテンプレートと共通設定。Skill はすべて
 
 ```
 sbx-setup/
-├── sbxenv.yaml             # 入口（共通 = Windows 版）。agent / template / lifecycle（ビルド＋取り込み）
+├── sbxenv.yaml             # 入口（共通 = Windows 版）。agent / template（GHCR）
+├── sbxenv.claude.yaml      # Claude Code 用の追加レイヤー（GHCR の claude テンプレート＋会話保持 mixin）
 ├── sbxenv.mac.yaml         # macOS 版の追加レイヤー（ホスト専用の MCP など）。sbxenv.yaml の後に重ねる
 ├── kits/ssh-agent/         # ホストの SSH エージェント（1Password）を転送する mixin kit（macOS 版で使用）
-├── docker-bake.hcl         # ローカル並列ビルド
+├── docker-bake.hcl         # ローカル並列ビルド（テンプレート開発時のみ）
 ├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node.js 26）
 ├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
 ├── common-codex/           # Codex 用 kit
@@ -33,7 +34,7 @@ sbx-setup/
 
 | 項目 | 決定 |
 |------|------|
-| 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`） |
+| 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`。Claude Code は `sbxenv.claude.yaml` を重ねる） |
 | エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code` 同梱のもの） |
 | MCP | context7 / **artifactshare**（リモート, OAuth）/ **repo-knowledge**（ホストで stdio 実行）。いずれも sbx MCP gateway 経由で全サンドボックス共通 |
 | CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node.js 26（公式ビルド）+ npm 12**） |
@@ -41,7 +42,7 @@ sbx-setup/
 | Skill | すべて APM 経由（sbx skills ストアは使わない） |
 | pstack | ビルド時に本家 `cursor/plugins/pstack` を OpenCode 向けに変換（opencode のみ） |
 | 変換の実行 | **sbx テンプレートのビルド内**（Dockerfile 内で `node tools/convert.mjs`） |
-| ビルド/取り込み | `lifecycle.initialize`（host コマンド）で buildx → image save → `sbx template load` |
+| ビルド/取り込み | CI（`build.yml`）が GHCR に公開し、sbx が作成時に直接 pull（`pullPolicy: always`）。ローカルでは build しない |
 | CI | **GitHub Actions**（build[必須] / sisakulint / nix / nix-lock / nix-tools-update / pstack-update cron） |
 | routing | `~/.config/opencode/AGENTS.md`（常設指示） |
 | サイト許可 | 現状維持 + brew/nix/cloudflare |
@@ -94,7 +95,7 @@ sbx env run
 ```
 
 `~/.sbxenv.yaml`（ユーザー既定）を読み、**カレントディレクトリをワークスペースにマウント**して、
-テンプレートのビルド（並列 bake）→ save → load → サンドボックス作成 までを1コマンドで行う。
+GHCR の最新テンプレートを pull してサンドボックスを作成するまでを1コマンドで行う（ローカルでは build しない）。
 サンドボックス名は自動（`<agent>-<workspace-basename>`）。
 
 opencode / codex / Claude Code を切り替えたい場合は、リポジトリ同梱のパラメータ付きファイルを使う:
@@ -102,9 +103,9 @@ opencode / codex / Claude Code を切り替えたい場合は、リポジトリ�
 ```bat
 sbx env run sbx-setup\sbxenv.yaml --name common-opencode --env-arg workspace=%USERPROFILE%\projects
 sbx env run sbx-setup\sbxenv.yaml --name common-codex ^
-  --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=%USERPROFILE%\projects
-sbx env run sbx-setup\sbxenv.yaml --name common-claude ^
-  --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=%USERPROFILE%\projects
+  --env-arg agent=codex --env-arg template=ghcr.io/kotarotaniguchi0523/common-codex:dev --env-arg workspace=%USERPROFILE%\projects
+sbx env run sbx-setup\sbxenv.yaml sbx-setup\sbxenv.claude.yaml --name common-claude ^
+  --env-arg workspace=%USERPROFILE%\projects
 ```
 
 macOS は共通ファイルの**後に** `sbxenv.mac.yaml` を重ねる（sbx がファイル順にマージし、`mcp.servers` などのリストは追記される）。
@@ -115,9 +116,9 @@ macOS は共通ファイルの**後に** `sbxenv.mac.yaml` を重ねる（sbx �
 sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-opencode \
   --env-arg workspace=$HOME/projects
 sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-codex \
-  --env-arg agent=codex --env-arg template=common-codex:dev --env-arg workspace=$HOME/projects
-sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-claude \
-  --env-arg agent=claude --env-arg template=common-claude:dev --env-arg workspace=$HOME/projects
+  --env-arg agent=codex --env-arg template=ghcr.io/kotarotaniguchi0523/common-codex:dev --env-arg workspace=$HOME/projects
+sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml sbx-setup/sbxenv.claude.yaml \
+  --name common-claude --env-arg workspace=$HOME/projects
 ```
 
 `create` / `exec` / `rm` も同じファイルを同じ順で渡す。
@@ -125,22 +126,15 @@ sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-claude
 未アタッチで作成だけなら `sbx env create --force ...`、削除は `sbx env rm ...`。
 
 - いずれのファイルも `sandboxOptions.skills: off`（sbx の共有 skills ストアを使わない。APM で焼き込んだ skills と衝突するため）。
-- lifecycle があるため既定では毎回プラン承認が必要。`sbx settings set env.rememberHostCommands true` か `--force` で省略可。
+- イメージ更新は `sbx env rm` → `sbx env run`（同じファイル・同じ `--name`）で作り直す。既存のサンドボックスには反映されない。
 
-## `lifecycle.initialize` が行うこと
+## 会話の保持（Claude Code）
 
-サンドボックスの作成前に **host 側**で実行される:
+`sbxenv.claude.yaml` を重ねると公式 mixin `docker.io/sbx/claude-sessions:1.0.0` が付き、`~/.claude/{projects,sessions,todos,shell-snapshots,statsig}` が sbx 管理のホスト側ディレクトリに保存される。作り直しても `/resume` で続きから再開できる。mixin は claude エージェントを要求するため共通ファイルには置かない。Codex / OpenCode は未対応（作り直すと会話は消える）。
 
-1. `docker buildx bake`（`docker-bake.hcl`）で `common-opencode` / `common-codex` / `common-claude` を**並列ビルド**
-   （**opencode はこの中で本家 pstack の変換も実行**）
-2. `docker image save` で**全イメージを1つの tar** に保存
-3. `sbx template load` **1回**で sbx のランタイムへ取り込み
+## 手動でビルド / 取り込みする場合（テンプレート開発時）
 
-> `lifecycle.initialize` のコマンドは**順次実行**（並列不可）なので、並列化は `docker buildx bake`
-> の複数ターゲットで行う。`sbx template load` は複数イメージ入りの tar を一括で読み込めるため、
-> save/load は各1回にまとめている。
-
-## 手動でビルド / 取り込みする場合
+通常は不要。ローカルで作ったテンプレートを試すときだけ使い、`--env-arg template=common-claude:dev --env-arg pullPolicy=never` で指定する。
 
 ```bat
 cd sbx-setup
@@ -168,10 +162,10 @@ sbx template ls
 `sbx env` 以外の入口:
 
 ```bat
-REM 既にロード済みテンプレートで直接起動（ビルドしない）
-sbx run --pull never -t common-opencode:dev opencode %USERPROFILE%\projects
-sbx run --pull never -t common-codex:dev    codex    %USERPROFILE%\projects
-sbx run --pull never -t common-claude:dev   claude   %USERPROFILE%\projects
+REM GHCR のテンプレートで直接起動（ビルドしない。会話保持 kit は付かない）
+sbx run -t ghcr.io/kotarotaniguchi0523/common-opencode:dev opencode %USERPROFILE%\projects
+sbx run -t ghcr.io/kotarotaniguchi0523/common-codex:dev    codex    %USERPROFILE%\projects
+sbx run -t ghcr.io/kotarotaniguchi0523/common-claude:dev   claude   %USERPROFILE%\projects
 
 REM TUI ダッシュボード（作成/一覧/attach）。テンプレート選択が出れば上記の :dev を選ぶ
 sbx tui
@@ -179,9 +173,9 @@ sbx tui
 
 ```zsh
 # macOS
-sbx run --pull never -t common-opencode:dev opencode $HOME/projects
-sbx run --pull never -t common-codex:dev    codex    $HOME/projects
-sbx run --pull never -t common-claude:dev   claude   $HOME/projects
+sbx run -t ghcr.io/kotarotaniguchi0523/common-opencode:dev opencode $HOME/projects
+sbx run -t ghcr.io/kotarotaniguchi0523/common-codex:dev    codex    $HOME/projects
+sbx run -t ghcr.io/kotarotaniguchi0523/common-claude:dev   claude   $HOME/projects
 sbx tui
 ```
 
@@ -396,7 +390,7 @@ lefthook install
 
 ## 更新
 
-- 本家 pstack: `pstack-update` workflow（毎日）が検知して PR。手元では `sbx env run` の再ビルドでも再変換
+- 本家 pstack: `pstack-update` workflow（毎日）が検知して PR。手元で試すときは `docker buildx bake` で再変換
 - 外部 skill（explainer / yomiyasu / agent-browser / ax / waza / apm-usage）: **`apm-update` workflow（毎日）が `apm update` で `pstack-opencode/apm.lock.yaml` を更新して PR**（lock で exact SHA ＋ content_hash 固定）
 - Nix のツール（uv / gh / apm-cli / agent-browser ほか）: `flake.lock`（Renovate が nixpkgs を追従）
 - 自前固定 CLI（waza / ax / sisakulint / depgraph）とイメージの Node.js（v26 系の最新）: `nix-tools-update` workflow が version＋hash を更新（PR。depgraph は asset ごとの `.sha256`、Node.js は `SHASUMS256.txt` を読む）

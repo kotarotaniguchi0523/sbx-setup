@@ -1,9 +1,9 @@
 schemaVersion: "1"
 
-# Common sbx environment (Windows and macOS). One command builds the template
-# images (the pstack conversion runs inside the opencode image build) and
-# creates the sandbox. This file alone is the Windows setup. On macOS, layer
-# sbxenv.mac.yaml on top for the host-only extras (see that file), e.g.:
+# Common sbx environment (Windows and macOS). The template images are built
+# and published by CI (.github/workflows/build.yml -> ghcr.io); sbx pulls them
+# directly, so nothing is built on the host. This file alone is the Windows
+# setup. On macOS, layer sbxenv.mac.yaml on top for the host-only extras, e.g.:
 #   sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml \
 #     --name common-opencode --env-arg workspace=$HOME/projects
 # The examples below use the Windows workspace path.
@@ -14,26 +14,28 @@ schemaVersion: "1"
 #
 #   Codex:
 #     sbx env run sbx-setup/sbxenv.yaml --name common-codex \
-#       --env-arg agent=codex --env-arg template=common-codex:dev \
+#       --env-arg agent=codex \
+#       --env-arg template=ghcr.io/kotarotaniguchi0523/common-codex:dev \
 #       --env-arg workspace=%USERPROFILE%\projects
 #
-#   Claude Code:
-#     sbx env run sbx-setup/sbxenv.yaml --name common-claude \
-#       --env-arg agent=claude --env-arg template=common-claude:dev \
-#       --env-arg workspace=%USERPROFILE%\projects
+#   Claude Code (sbxenv.claude.yaml also keeps conversations across recreate):
+#     sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.claude.yaml \
+#       --name common-claude --env-arg workspace=%USERPROFILE%\projects
 #
-# lifecycle.initialize runs on the host before the sandbox is created, so the
-# build + load happen as part of the same command. sbx has no build verb and
-# its runtime does not share the host Docker image store, so the images are
-# built with buildx, exported with `docker image save`, and imported with
-# `sbx template load`.
+# To try a locally built template instead, build and load it yourself
+# (`docker buildx bake`, `docker image save`, `sbx template load`; see README)
+# and pass `--env-arg template=common-claude:dev --env-arg pullPolicy=never`.
 
 args:
   agent:
     default: opencode
     enum: [opencode, codex, claude]
   template:
-    default: common-opencode:dev
+    default: ghcr.io/kotarotaniguchi0523/common-opencode:dev
+  pullPolicy:
+    default: always
+    enum: [always, missing, never]
+    description: always picks up the latest CI build when the sandbox is created
   workspace:
     default: "."
     description: Host directory to mount as the sandbox workspace
@@ -43,7 +45,7 @@ workspace: ${{ env.args.workspace }}
 
 sandboxOptions:
   template: ${{ env.args.template }}
-  pullPolicy: never
+  pullPolicy: ${{ env.args.pullPolicy }}
   skills: off
 
 # 自作 kit（common-opencode / common-codex / common-claude）が credential@1 で github を
@@ -79,13 +81,3 @@ mcp:
   servers:
     - name: artifactshare
       url: https://artifactshare.com/mcp
-
-lifecycle:
-  initialize:
-    - name: Build templates (parallel via bake; opencode conversion runs inside)
-      command: docker buildx bake
-      workdir: ${{ env.fileDir }}
-    - name: Save templates (single tar)
-      command: docker image save common-opencode:dev common-codex:dev common-claude:dev -o "${{ env.fileDir }}/templates.tar"
-    - name: Load templates into sbx (single tar)
-      command: sbx template load "${{ env.fileDir }}/templates.tar"

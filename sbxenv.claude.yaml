@@ -1,0 +1,20 @@
+schemaVersion: "1"
+
+# Claude Code overlay. Layer it after sbxenv.yaml (and sbxenv.mac.yaml on
+# macOS); sbx merges the files in order and appends lists such as kits:
+#   sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml \
+#     sbx-setup/sbxenv.claude.yaml --name <name> --env-arg workspace=<dir>
+#
+# docker.io/sbx/claude-sessions keeps ~/.claude/{projects,sessions,todos,
+# shell-snapshots,statsig} in a host directory managed by sbx, so the
+# conversations survive `sbx env rm` + recreate (resume with /resume). It
+# requires the claude agent, which is why it lives in this overlay rather than
+# in the shared file.
+
+agent: claude
+
+sandboxOptions:
+  template: ghcr.io/kotarotaniguchi0523/common-claude:dev
+
+kits:
+  - docker.io/sbx/claude-sessions:1.0.0
