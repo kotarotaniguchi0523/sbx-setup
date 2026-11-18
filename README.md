@@ -372,9 +372,9 @@ lefthook install
 - `.github/workflows/nix.yml` … `flake.nix` の devShell を検証
 - `.github/workflows/skills-audit.yml` … **週次（月曜 09:00 JST）＋手動**で全 skills を監査。SkillSpector は **APM の外部スキャナ統合**（`apm audit --external skillspector`。APM がオフライン＝`--no-llm` で実行し SARIF を取り込む。API キー・OpenCode ログインは**不要**）。**毎 push では走らせない**。結果は **GitHub Issue「Skill security audit」を毎回更新**（人間向け）＋ **`audit/skills` ブランチに日付付きで保存** ＋ SARIF を Code Scanning へ
 - `.github/workflows/skills-verify.yml` … PR で **skill / lock の差分だけ**を APM 経由で検証し、結果を **PR にコメント**（upsert）。**Changelog 形式**（日付・バージョン・変更・**検出箇所**＝ファイル:行＋パーマリンク）で出力し、誤検知は **`tools/skillspector-baseline.yaml`** で抑制、**残った error のみゲート**
-- `.github/workflows/apm-update.yml` … 週次で `apm update`（外部 skill の ref を更新）→ 差分検証 → PR
+- `.github/workflows/apm-update.yml` … 毎日 `apm update`（外部 skill の ref を更新）→ 差分検証 → PR
 - `.github/workflows/pstack-update.yml` … 毎日 03:17 UTC に本家 `cursor/plugins` の `pstack/` の tree 変化を検知し PR を作成
-- `renovate.json` … Dependabot alerts 連携（`vulnerabilityAlerts`）／**非メジャーを1PRに集約**／Actions を `GitHub Actions` でまとめ／**リリース後3日待ってから PR**（`minimumReleaseAge: "3 days"` + `internalChecksFilter: strict`）。security 修正のみ即時
+- `renovate.json` … Dependabot alerts 連携（`vulnerabilityAlerts`）／**非メジャーを1PRに集約**／Actions を `GitHub Actions` でまとめ／**毎日実行（同じ更新元の PR は常に最新1本）**／**リリース後3日待ってから PR**（`minimumReleaseAge: "3 days"` + `internalChecksFilter: strict`）。security 修正のみ即時
 - base イメージは **digest ピン**。pstack / base / npm / sisakulint / Go / waza / ax / depgraph / repo-knowledge-mcp を追従
 - 署名: コミットは **SSH 署名**（`gpg.format=ssh`）。GitHub の Signing Key に `id_ed25519.pub` を登録すると Verified 表示
 
@@ -397,7 +397,7 @@ lefthook install
 ## 更新
 
 - 本家 pstack: `pstack-update` workflow（毎日）が検知して PR。手元では `sbx env run` の再ビルドでも再変換
-- 外部 skill（explainer / yomiyasu / agent-browser / ax / waza / apm-usage）: **`apm-update` workflow（週次）が `apm update` で `pstack-opencode/apm.lock.yaml` を更新して PR**（lock で exact SHA ＋ content_hash 固定）
+- 外部 skill（explainer / yomiyasu / agent-browser / ax / waza / apm-usage）: **`apm-update` workflow（毎日）が `apm update` で `pstack-opencode/apm.lock.yaml` を更新して PR**（lock で exact SHA ＋ content_hash 固定）
 - Nix のツール（uv / gh / apm-cli / agent-browser ほか）: `flake.lock`（Renovate が nixpkgs を追従）
 - 自前固定 CLI（waza / ax / sisakulint / depgraph）とイメージの Node.js（v26 系の最新）: `nix-tools-update` workflow が version＋hash を更新（PR。depgraph は asset ごとの `.sha256`、Node.js は `SHASUMS256.txt` を読む）
 - repo-knowledge-mcp: `sbxenv.mac.yaml` の `npx` 固定版を Renovate が更新

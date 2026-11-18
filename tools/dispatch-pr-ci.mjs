@@ -5,7 +5,7 @@
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
-const branches = {
+export const updateBranches = {
   'chore/apm-update': 'skills',
   'chore/pstack-upstream': 'skills',
   'chore/nix-flake-lock': 'nix',
@@ -13,7 +13,7 @@ const branches = {
 };
 
 export function checksFor(branch, kind) {
-  if (!Object.hasOwn(branches, branch) || branches[branch] !== kind) {
+  if (!Object.hasOwn(updateBranches, branch) || updateBranches[branch] !== kind) {
     throw new Error('Unexpected automation branch or check group');
   }
   return [
