@@ -56,6 +56,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
+      actions: read
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     outputs:
@@ -65,9 +66,27 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      # Pushes to main cancel the previous in-progress build, so diffing only
+      # against the previous push would drop images that a cancelled run never
+      # published. Diff against the last successful push build instead.
+      - name: Find the last published commit
+        id: base
+        if: ${{ github.event_name == 'push' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BEFORE: ${{ github.event.before }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha=$(gh api "repos/$REPO/actions/workflows/build.yml/runs?branch=main&event=push&status=success&per_page=1" \
+            -q '.workflow_runs[0].head_sha // empty')
+          if [[ -z "$sha" ]] || ! git cat-file -e "$sha^{commit}" 2>/dev/null; then sha="$BEFORE"; fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
       - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: filter
         with:
+          base: ${{ steps.base.outputs.sha }}
           filters: |
             opencode:
               - 'common-opencode/**'
