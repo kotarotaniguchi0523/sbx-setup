@@ -1,0 +1,26 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: "3"
+kind: mixin
+displayName: T3 Code server state
+description: Keeps the T3 Code server's data (~/.t3 - threads, projects,
+  settings, environment id, worktrees) in a host directory, so recreating
+  the sandbox keeps T3 Code's threads and its environment registration.
+provides: ["t3-state"]
+version: "1.0.0"
+
+# Bind a host directory per sandbox when you use this kit:
+#   sbxenv:  mounts: { /home/agent/.t3: <host dir for this sandbox> }
+#   CLI:     sbx create --mount <host dir>:/home/agent/.t3 ...
+# Without that, sbx uses one managed directory shared by every sandbox that
+# selects this kit, and those sandboxes would share one T3 server identity.
+# Only one T3 server may use a directory at a time (SQLite databases).
+capabilities:
+  - type: com.docker.sandbox/host-mount@1
+    description: T3 Code server data (~/.t3) kept on the host
+    config:
+      path: /home/agent/.t3
+      mode: "0755"
+
+# Capability-only mixin: it adds no files to the workload.
+build: |
+  FROM scratch
