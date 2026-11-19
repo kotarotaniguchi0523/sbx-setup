@@ -40,7 +40,7 @@ sbx-setup/
 | CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node.js 26（公式ビルド）+ npm 12**） |
 | 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |
 | Skill | すべて APM 経由（sbx skills ストアは使わない） |
-| pstack | ビルド時に本家 `cursor/plugins/pstack` を OpenCode 向けに変換（opencode のみ） |
+| pstack | OpenCode: ビルド時に本家 `cursor/plugins/pstack` を変換。Claude Code（macOS）: ホストの mac-host-setup が入れたプラグインを読み取り専用でマウント（`sbxenv.mac.yaml`） |
 | 変換の実行 | **sbx テンプレートのビルド内**（Dockerfile 内で `node tools/convert.mjs`） |
 | ビルド/取り込み | CI（`build.yml`）が GHCR に公開し、sbx が作成時に直接 pull（`pullPolicy: always`）。ローカルでは build しない |
 | CI | **GitHub Actions**（build[必須] / sisakulint / nix / nix-lock / nix-tools-update / pstack-update cron） |
@@ -404,7 +404,7 @@ lefthook install
 
 - Nix 由来ツールとサンドボックス内 `nix` の動作はローカル/CI で確認済み（単一ユーザー install は `/nix` を agent 所有にして解決）。
 - 本家 poteto-mode は Cursor 前提部分があり、OpenCode でマルチモデル連携の挙動は未検証。
-- pstack は OpenCode のみ（codex / claude には未導入）。
+- pstack は OpenCode（イメージに変換して同梱）と、macOS の Claude Code（`sbxenv.mac.yaml` がホストの `~/.local/share/mac-host-setup/claude-plugins` を `/opt/host-claude-plugins` に読み取り専用でマウントし、`CLAUDE_CODE_PLUGIN_DIRS` で読ませる。版はホストの mac-host-setup の宣言に従う）。codex と Windows の Claude Code には未導入。
 - Claude Code はサンドボックス内で `claude --dangerously-skip-permissions` で起動する（base テンプレートと同じ。隔離はサンドボックスが担う）。Claude Code 本体のバージョンは base イメージの digest ピンに従い、Renovate が更新する。
 - 自動更新 PR は `sign-commits: true` で GitHub に署名させ、main の署名必須ルールに対応する。
 
