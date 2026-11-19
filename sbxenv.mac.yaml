@@ -35,6 +35,7 @@ kits:
   - ./kits/ssh-agent
 
 env:
+  CLAUDE_CODE_PLUGIN_DIRS: /opt/host-claude-plugins
   GIT_CONFIG_COUNT: "3"
   GIT_CONFIG_KEY_0: gpg.format
   GIT_CONFIG_VALUE_0: ssh
@@ -42,6 +43,21 @@ env:
   GIT_CONFIG_VALUE_1: ssh-add -L
   GIT_CONFIG_KEY_2: commit.gpgsign
   GIT_CONFIG_VALUE_2: "true"
+
+# Claude Code plugins from the host. mac-host-setup installs the declared
+# plugins (pstack, pinned to a commit) and copies each one to
+# ~/.local/share/mac-host-setup/claude-plugins/<name>. That folder is mounted
+# read-only and Claude Code loads every plugin in it (CLAUDE_CODE_PLUGIN_DIRS,
+# a folder of plugins), so nothing is installed or updated inside the sandbox
+# and the version follows the host. The variable is ignored by other agents.
+# The path is relative to this file: repositories live under
+# ~/ghq/github.com/<owner>/<repo>, four levels below the home directory
+# (environment files have no home-directory reference). Run mac-host-setup's
+# tools/update.sh before creating a sandbox, or the mount source is missing.
+additionalWorkspaces:
+  - path: ../../../../.local/share/mac-host-setup/claude-plugins
+    target: /opt/host-claude-plugins
+    readOnly: true
 
 # (2) API keys — use a 1Password reference as the secret source. The host's
 #     `op` (an absolute PATH entry, e.g. /usr/local/bin) resolves it and the

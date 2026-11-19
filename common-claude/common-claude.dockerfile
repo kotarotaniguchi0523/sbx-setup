@@ -111,8 +111,8 @@ RUN touch /etc/sandbox-persistent.sh \
       'export AGENT_BROWSER_ENGINE=obscura' \
       >> /etc/sandbox-persistent.sh
 
-# Shared skills via APM (claude target -> ~/.claude/skills). No pstack here
-# (the pstack conversion targets OpenCode only).
+# Shared skills via APM (claude target -> ~/.claude/skills). No pstack here:
+# on macOS, sbxenv.mac.yaml mounts the host's pstack plugin read-only.
 RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH" \
  && cd /home/agent \
  && apm install -g --target claude --parallel-downloads 8 \
