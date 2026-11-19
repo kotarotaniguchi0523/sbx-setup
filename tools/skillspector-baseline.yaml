@@ -90,6 +90,9 @@
 - rule: YR4
   path: "apm-usage/commands.md"
   reason: "YARA 'hidden instructions' matches CLI reference prose"
+- rule: PE3
+  path: "apm-usage/authentication.md"
+  reason: "documents APM's credential chain (`git credential fill`, an unrelated `~/.netrc` entry is ignored); no credential is read by the skill"
 
 # ax: a CLI for fetching pages. It documents flags (`--fresh`, bare `curl`) and
 # explicitly forbids SSRF targets; both prohibitions are read as the risk itself.
