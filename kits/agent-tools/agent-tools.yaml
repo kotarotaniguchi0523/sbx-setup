@@ -1,0 +1,22 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: "3"
+kind: mixin
+displayName: Agent research tools network policy
+description: Lets the agent reach the Context7 and Exa MCP servers and APIs
+  (claude.ai connectors and CLI use). No credentials are involved.
+provides: ["agent-tools-network"]
+version: "1.0.0"
+
+capabilities:
+  - type: com.docker.sandbox/network-policy@1
+    config:
+      runtime:
+        allow:
+          - context7.com:443
+          - mcp.context7.com:443
+          - api.exa.ai:443
+          - mcp.exa.ai:443
+
+# Capability-only mixin: it adds no files to the workload.
+build: |
+  FROM scratch

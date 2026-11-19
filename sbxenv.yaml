@@ -71,6 +71,11 @@ bindings:
       domains:
         - api.doppler.com
 
+# 全 sandbox 共通の通信許可（Context7・Exa の MCP と API）。
+# sbx policy allow で足した許可はここへ移す（sandbox を作るたびに入る）。
+kits:
+  - ./kits/agent-tools
+
 # MCP servers shared by every sandbox through the sbx MCP gateway. Credentials
 # stay on the host: nothing below puts a token inside a sandbox.
 #   artifactshare … remote server (OAuth). Host-global registration, so it is

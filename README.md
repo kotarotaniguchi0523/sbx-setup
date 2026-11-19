@@ -35,7 +35,7 @@ sbx-setup/
 | 項目 | 決定 |
 |------|------|
 | 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`。Claude Code は `sbxenv.claude.yaml` を重ねる） |
-| エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code` 同梱のもの） |
+| エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code-docker` 同梱のもの。中で Docker が動く） |
 | MCP | context7 / **artifactshare**（リモート, OAuth）/ **repo-knowledge**（ホストで stdio 実行）。いずれも sbx MCP gateway 経由で全サンドボックス共通 |
 | CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node.js 26（公式ビルド）+ npm 12**） |
 | 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |

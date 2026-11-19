@@ -18,7 +18,11 @@ RUN set -eux; \
 
 # Claude Code itself comes from the base template (installed there with the
 # official native installer into ~/.local/bin); this kit does not reinstall it.
-FROM docker/sandbox-templates:claude-code@sha256:30ec2b1bb76e3993aff912c553a5c249ad95b595249a32fde7158eafb71bda25
+# The -docker variant carries the com.docker.sandboxes.start-docker=true label:
+# sbx then runs the sandbox privileged (inside the microVM only) and starts a
+# private dockerd, so `docker build` / `docker compose` work in the sandbox.
+# (sbx 0.51 ignores the dockerd@1 kit capability, so the label is the switch.)
+FROM docker/sandbox-templates:claude-code-docker@sha256:4a94d9144a70df744fd9247e0c365a14cfb97024afab8db7597c8ba3e0637642
 
 USER root
 RUN apt-get update \
