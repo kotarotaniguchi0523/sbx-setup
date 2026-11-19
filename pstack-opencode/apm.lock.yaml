@@ -19,7 +19,7 @@ dependencies:
 - repo_url: microsoft/apm
   name: apm-usage
   host: github.com
-  resolved_commit: 511a80177c4ac277e0b1375384bfb3069d05074c
+  resolved_commit: ba0a0ca30fc78562f2b7e34b76dba1f2126f2e08
   version: unknown
   virtual_path: packages/apm-guide/.apm/skills/apm-usage
   is_virtual: true
@@ -38,18 +38,18 @@ dependencies:
   deployed_file_hashes:
     .agents/skills/apm-usage/SKILL.md: sha256:3382cf6e27fe86677afc228a344ecacc5e8028ea57aad38d5df5521a1087ed2a
     .agents/skills/apm-usage/authentication.md: sha256:d2fae651fd0a77825b171fb2c936484cb5d9ee8324337a7d18302b16420f53e0
-    .agents/skills/apm-usage/commands.md: sha256:523c132b2ac53b0d6931d9365de6ba0290faf8e650e1f8730044327894889ad5
-    .agents/skills/apm-usage/dependencies.md: sha256:a3f416cc2d556ae998aff538d209a6e1b1444bd17e64f761d3aed1f4ba68969f
-    .agents/skills/apm-usage/governance.md: sha256:f55f0f00cdeb420b1655f42924f1e42c71cebcad16026a50126af99685b11efc
+    .agents/skills/apm-usage/commands.md: sha256:3a71983b728b85dfba9647fb7736f2413096868d67200d382ddb41866f90c3b8
+    .agents/skills/apm-usage/dependencies.md: sha256:3ed9c482678a7bdbe5d977ef5a1fbbc0c9ada4d7db1da085e014d66d00ced57c
+    .agents/skills/apm-usage/governance.md: sha256:11b18e055124d93be4c66761d8aad87d70a32ffd63ca0ed229e5ef4f8b72fad6
     .agents/skills/apm-usage/installation.md: sha256:a8d33ceeb41626d809ed07e0cdd16ba74f0510b5842bab64b7f6dc3e3fdb1057
-    .agents/skills/apm-usage/package-authoring.md: sha256:5c71a30fb21f660fa2f777552bafa33baac6c273b508f7dda6ae9971b0b53159
+    .agents/skills/apm-usage/package-authoring.md: sha256:32512b3057ddb45009a21189df0daa48fbce439928a8428e7ab86c1d9a97f62b
     .agents/skills/apm-usage/troubleshooting.md: sha256:65cbab06c5da7931c8b24ac4d87193201f5c19b5a479ae6abd8a45b919af1949
     .agents/skills/apm-usage/workflow.md: sha256:1bbb710fa9fd710aa2258aea52f6d905c6a2b3d366a1fdc723b028b4bfd2dbae
-  content_hash: sha256:7c2ea2f2ba1808faef4c294cf2036d141e80e7100c3f291482e716df6332c544
+  content_hash: sha256:eb9007595ab6246e843cd81b52c1cc5d901b5020e71f389e00644926cf974b55
 - repo_url: microsoft/waza
   name: waza
   host: github.com
-  resolved_commit: b307c72a959b67c6f55beb55760aa72bedcab1ac
+  resolved_commit: 0df44e1596000934037942195570d5314cb4188f
   version: unknown
   package_type: skill_bundle
   deployed_files:
@@ -65,7 +65,7 @@ dependencies:
     .agents/skills/waza-interactive/SKILL.md: sha256:6976d7c90efce2fa934871265085abaceb59bc722d6218307c7a1d962838be71
     .agents/skills/waza-interactive/tests/eval.yaml: sha256:fdb84af4a57da4ad360f1bbf35d34b7ae786586f3c73f8abff2a5ff63ced8e00
     .agents/skills/waza/SKILL.md: sha256:e7ef60562bbf3535d7ca4b8b8b9d5c65bd210a37a03ef00e19e43be16b4f960e
-  content_hash: sha256:f38a23c71ee7a599796bf1951cfa56f907fa3e021d301b78197058edfec139ec
+  content_hash: sha256:82e153399bffe26fa424d336b00b34923bc67d613804553b58480e50cdcad092
 - repo_url: mizchi/explainer
   name: explainer
   host: github.com
@@ -160,8 +160,8 @@ dependencies:
 - repo_url: nanaism/yomiyasu
   name: yomiyasu
   host: github.com
-  resolved_commit: 3042154ee537c1b7093eefed00a97b40aae9446d
-  version: 3.2.0
+  resolved_commit: c9b9a6d1bb0795356c0e34dc50f501424069d837
+  version: 3.2.1
   package_type: marketplace_plugin
   deployed_files:
   - .agents/skills/yomiyasu
@@ -209,7 +209,7 @@ dependencies:
   - .agents/skills/yomiyasu/scripts/yomiyasu_lint.py
   deployed_file_hashes:
     .agents/skills/yomiyasu/LICENSE: sha256:79d802f15bc8caf67f1a83c1bdbe214ccb41a0a0275f9046b329b89c65ee1fca
-    .agents/skills/yomiyasu/SKILL.md: sha256:e2aa73ae3bf4bd938cd0ef8b512eb6bd46339f9c87d0beda71c0512867bfda7f
+    .agents/skills/yomiyasu/SKILL.md: sha256:6ce123ed08e487d131d0a992e7ffd20d1a3b5c80054d0cf9df6275fc0f462c75
     .agents/skills/yomiyasu/UNICODE-LICENSE.txt: sha256:e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96
     .agents/skills/yomiyasu/assets/algo-artis.png: sha256:57c7c204d43d0e2873e3b61221db3ac4ba75a7ce29271a6deaeb3bd09f26fdec
     .agents/skills/yomiyasu/references/audience.md: sha256:fedae4ffbcd808ea2a3900b1dfccdfaed7cfbb74e2b5b1ca3f82966826d6b60c
@@ -245,12 +245,12 @@ dependencies:
     .agents/skills/yomiyasu/references/rephrase-test.md: sha256:1086593de2fbcbcc577ca68c155d441f9fbe3bb72a229340cb639b4538207304
     .agents/skills/yomiyasu/references/review-points.md: sha256:ec1f7ff6bdf0095db2b3f683e7acee6cc62d203975c28de9e6d515ff37caa0f5
     .agents/skills/yomiyasu/references/slop-catalog.md: sha256:35e1f2b0178c156ad037fcf7c1d364cfa214d102630a796e87b782f5db5ae9a5
-    .agents/skills/yomiyasu/scripts/markdown_visibility.py: sha256:ef092c329dc2fc4006a13045513baa2f888dc95c41b4f89aa828ffaf3cc58a12
-    .agents/skills/yomiyasu/scripts/yomiyasu_check.py: sha256:d959ccf93539b37a69c9166f5fa5ddf3a427eda2ee0236d72846fa6e7d3e1b1d
-    .agents/skills/yomiyasu/scripts/yomiyasu_diff.py: sha256:c78fdc402e27c86b78b84cf39e9b5d0aae2bc7f153107f91373d0a6db1da224e
-    .agents/skills/yomiyasu/scripts/yomiyasu_hook.py: sha256:a8f600766baeafc57afbe9f2b81d35070e2c36a5c097d930f02cbaacef8a5e89
-    .agents/skills/yomiyasu/scripts/yomiyasu_lint.py: sha256:0070dfa58ec427872e52c8255b195c3e53d4bee676bc9f8125c270ed0dc35e9d
-  content_hash: sha256:0a421ff0fe07db2ab5ccfcf82a80462f515fe6d64dc686a477a86facf573141f
+    .agents/skills/yomiyasu/scripts/markdown_visibility.py: sha256:a82bfc5885f060e010d9e3077e109bd2b693deba6729d1d62a984bcac1bf884a
+    .agents/skills/yomiyasu/scripts/yomiyasu_check.py: sha256:e01f1a17575a505888f8bed3b6a415e9285dd7f4316743462d0d15875ef5fe10
+    .agents/skills/yomiyasu/scripts/yomiyasu_diff.py: sha256:e187d9f97b90c7e64d961f628662e92f58714de68d5392765e510a085ba9021d
+    .agents/skills/yomiyasu/scripts/yomiyasu_hook.py: sha256:90d2eb8b228bd0c6640e459846b0d0c91a87c4b04dd74e3083fb100df6233d30
+    .agents/skills/yomiyasu/scripts/yomiyasu_lint.py: sha256:187f6499b94a41edb676e92cc6d4bddf4b0f61f15b5be858a2d5d9b60178e2a4
+  content_hash: sha256:b899662cb3cb5d74d9580a3081a97446957ce9b33b23ab381eef8ed7c7c2f32d
   declared_license: MIT
 - repo_url: yusukebe/ax
   name: ax
@@ -5817,7 +5817,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:523c132b2ac53b0d6931d9365de6ba0290faf8e650e1f8730044327894889ad5
+  content_hash: sha256:3a71983b728b85dfba9647fb7736f2413096868d67200d382ddb41866f90c3b8
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/dependencies.md
@@ -5826,7 +5826,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:a3f416cc2d556ae998aff538d209a6e1b1444bd17e64f761d3aed1f4ba68969f
+  content_hash: sha256:3ed9c482678a7bdbe5d977ef5a1fbbc0c9ada4d7db1da085e014d66d00ced57c
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/governance.md
@@ -5835,7 +5835,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:f55f0f00cdeb420b1655f42924f1e42c71cebcad16026a50126af99685b11efc
+  content_hash: sha256:11b18e055124d93be4c66761d8aad87d70a32ffd63ca0ed229e5ef4f8b72fad6
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/installation.md
@@ -5853,7 +5853,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:5c71a30fb21f660fa2f777552bafa33baac6c273b508f7dda6ae9971b0b53159
+  content_hash: sha256:32512b3057ddb45009a21189df0daa48fbce439928a8428e7ab86c1d9a97f62b
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/troubleshooting.md
@@ -6366,7 +6366,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:e2aa73ae3bf4bd938cd0ef8b512eb6bd46339f9c87d0beda71c0512867bfda7f
+  content_hash: sha256:6ce123ed08e487d131d0a992e7ffd20d1a3b5c80054d0cf9df6275fc0f462c75
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/UNICODE-LICENSE.txt
@@ -6690,7 +6690,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:ef092c329dc2fc4006a13045513baa2f888dc95c41b4f89aa828ffaf3cc58a12
+  content_hash: sha256:a82bfc5885f060e010d9e3077e109bd2b693deba6729d1d62a984bcac1bf884a
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/yomiyasu_check.py
@@ -6699,7 +6699,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:d959ccf93539b37a69c9166f5fa5ddf3a427eda2ee0236d72846fa6e7d3e1b1d
+  content_hash: sha256:e01f1a17575a505888f8bed3b6a415e9285dd7f4316743462d0d15875ef5fe10
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/yomiyasu_diff.py
@@ -6708,7 +6708,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:c78fdc402e27c86b78b84cf39e9b5d0aae2bc7f153107f91373d0a6db1da224e
+  content_hash: sha256:e187d9f97b90c7e64d961f628662e92f58714de68d5392765e510a085ba9021d
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/yomiyasu_hook.py
@@ -6717,7 +6717,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:a8f600766baeafc57afbe9f2b81d35070e2c36a5c097d930f02cbaacef8a5e89
+  content_hash: sha256:90d2eb8b228bd0c6640e459846b0d0c91a87c4b04dd74e3083fb100df6233d30
 - kind: project-relative
   target: opencode
   value: .agents/skills/yomiyasu/scripts/yomiyasu_lint.py
@@ -6726,7 +6726,7 @@ deployments:
   owners:
   - nanaism/yomiyasu
   active_owner: nanaism/yomiyasu
-  content_hash: sha256:0070dfa58ec427872e52c8255b195c3e53d4bee676bc9f8125c270ed0dc35e9d
+  content_hash: sha256:187f6499b94a41edb676e92cc6d4bddf4b0f61f15b5be858a2d5d9b60178e2a4
 - kind: project-relative
   target: opencode
   value: .opencode/agents/comment-sicko.md
