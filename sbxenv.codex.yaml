@@ -1,0 +1,20 @@
+schemaVersion: "1"
+
+# Codex overlay. Layer it after sbxenv.yaml (and sbxenv.mac.yaml on macOS);
+# sbx merges the files in order and appends lists such as kits:
+#   sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml \
+#     sbx-setup/sbxenv.codex.yaml --name <name> --env-arg workspace=<dir>
+#
+# docker.io/sbx/codex-sessions keeps ~/.codex/{sessions,archived_sessions} in
+# a host directory managed by sbx, so the conversations survive `sbx env rm` +
+# recreate (codex resume). Only the session logs move: auth and config stay in
+# the sandbox. It requires the codex agent, which is why it lives in this
+# overlay rather than in the shared file.
+
+agent: codex
+
+sandboxOptions:
+  template: ghcr.io/kotarotaniguchi0523/common-codex:dev
+
+kits:
+  - docker.io/sbx/codex-sessions:1.1.0

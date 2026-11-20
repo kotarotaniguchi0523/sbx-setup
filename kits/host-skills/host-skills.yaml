@@ -1,0 +1,85 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: "3"
+kind: mixin
+displayName: Host global skills (read-only)
+description: Links the host's global skills, mounted read-only by the
+  environment file, into the agent skill directories at every boot. Skills
+  baked into the template keep priority; nothing is copied or written back.
+provides: ["host-skills"]
+version: "1.0.0"
+
+# The environment file mounts the host directories read-only, keeping their
+# home-relative layout so relative symlinks between them still resolve:
+#   additionalWorkspaces:
+#     - { path: <host>/.claude/skills, target: /opt/host-skills/.claude/skills, readOnly: true }
+#     - { path: <host>/.agents/skills, target: /opt/host-skills/.agents/skills, readOnly: true }
+# (host-mount@1 is not used: it has no read-only mode, so sandbox writes would
+# reach the host.) Without those mounts the hook links nothing.
+#
+# Why not the sbx skills store (sandboxOptions.skills: readonly): sbx mounts
+# the store over ~/.claude/skills, which hides the skills baked into the
+# template, and the store is a copy made by `sbx skills import`, so it goes
+# stale when the host updates its skills.
+args:
+  exclude:
+    # Host-only skills: they drive macOS apps or host tools that the sandbox
+    # does not have, or (artifactshare) would make the agent log in to a CLI
+    # inside the sandbox instead of using the MCP server through the gateway.
+    default: "agent-desktop agent-desktop-macos artifactshare kanary nushell openpath"
+    pattern: '^[A-Za-z0-9._ -]*$'
+    description: Space-separated host skill names that are not linked
+    env: HOST_SKILLS_EXCLUDE
+
+capabilities:
+  - type: com.docker.sandbox/lifecycle@1
+    config:
+      startup:
+        # Every boot, as the agent user. Links are rebuilt each time, so a
+        # skill removed or renamed on the host disappears after a restart.
+        # Precedence: an entry the template already has (in any of the agent
+        # skill directories) wins over the host's skill of the same name,
+        # because the template's skills match the CLIs installed in it.
+        - description: Link host skills into ~/.claude/skills and ~/.agents/skills
+          env: [HOST_SKILLS_EXCLUDE]
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              src=/opt/host-skills
+              dirs=".claude/skills .agents/skills"
+              for d in $dirs; do
+                for l in "$HOME/$d"/*; do
+                  if [ -L "$l" ]; then
+                    case "$(readlink "$l")" in "$src"/*) rm -f "$l" ;; esac
+                  fi
+                done
+              done
+              baked() {
+                for b in "$HOME/.claude/skills" "$HOME/.agents/skills" "$HOME/.config/opencode/skills"; do
+                  if [ -L "$b/$1" ]; then
+                    case "$(readlink "$b/$1")" in "$src"/*) continue ;; esac
+                    return 0
+                  fi
+                  if [ -e "$b/$1" ]; then return 0; fi
+                done
+                return 1
+              }
+              for d in $dirs; do
+                [ -d "$src/$d" ] || continue
+                linked=""
+                for s in "$src/$d"/*; do
+                  name="$(basename "$s")"
+                  case " ${HOST_SKILLS_EXCLUDE:-} " in *" $name "*) continue ;; esac
+                  [ -f "$s/SKILL.md" ] || continue
+                  baked "$name" && continue
+                  mkdir -p "$HOME/$d"
+                  ln -s "$s" "$HOME/$d/$name"
+                  linked="$linked $name"
+                done
+                echo "host-skills: ~/$d:${linked:- (none)}"
+              done
+
+# Capability-only mixin: it adds no files to the workload.
+build: |
+  FROM scratch

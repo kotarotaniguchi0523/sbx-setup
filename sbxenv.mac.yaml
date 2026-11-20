@@ -33,6 +33,7 @@ mcp:
 #     of going out unsigned (main requires signed commits).
 kits:
   - ./kits/ssh-agent
+  - ./kits/host-skills
 
 env:
   CLAUDE_CODE_PLUGIN_DIRS: /opt/host-claude-plugins
@@ -54,9 +55,25 @@ env:
 # ~/ghq/github.com/<owner>/<repo>, four levels below the home directory
 # (environment files have no home-directory reference). Run mac-host-setup's
 # tools/update.sh before creating a sandbox, or the mount source is missing.
+#
+# Global skills from the host. mac-host-setup deploys them to ~/.claude/skills
+# (Claude Code) and ~/.agents/skills (Codex). Both are mounted read-only under
+# /opt/host-skills, keeping the home-relative layout so relative symlinks
+# between them (e.g. ~/.claude/skills/x -> ../../.agents/skills/x) resolve.
+# kits/host-skills links each one into the sandbox's ~/.claude/skills and
+# ~/.agents/skills at every boot (OpenCode reads both), skipping skills the
+# template already bakes in and the host-only ones listed in that kit. Edits
+# on the host show up live; added or removed skills after a sandbox restart.
+# A missing host directory is created empty by sbx.
 additionalWorkspaces:
   - path: ../../../../.local/share/mac-host-setup/claude-plugins
     target: /opt/host-claude-plugins
+    readOnly: true
+  - path: ../../../../.claude/skills
+    target: /opt/host-skills/.claude/skills
+    readOnly: true
+  - path: ../../../../.agents/skills
+    target: /opt/host-skills/.agents/skills
     readOnly: true
 
 # (2) API keys — use a 1Password reference as the secret source. The host's
