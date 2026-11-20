@@ -1,0 +1,23 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: "3"
+kind: mixin
+displayName: Host Git identity
+description: Sets the sandbox's global git user.name / user.email from the
+  host's Git identity. Identity only; no credentials, signing keys, aliases,
+  hooks or other host Git settings.
+provides: ["git-identity"]
+version: "1.0.0"
+
+capabilities:
+  # The runtime reads the pair from the host and writes it to the agent's
+  # global Git config; the host config itself is not shared, and a
+  # repository-local identity still wins. Optional, so a host without
+  # user.name / user.email still starts the sandbox (git then asks for an
+  # identity on commit, as before).
+  - type: com.docker.sandbox/git-identity@1
+    optional: true
+    description: Attribute commits made in the sandbox to the host Git identity
+
+# Capability-only mixin: it adds no files to the workload.
+build: |
+  FROM scratch

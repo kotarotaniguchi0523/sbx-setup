@@ -9,8 +9,12 @@ Docker Sandboxes (sbx) のテンプレートと共通設定。Skill はすべて
 sbx-setup/
 ├── sbxenv.yaml             # 入口（共通 = Windows 版）。agent / template（GHCR）
 ├── sbxenv.claude.yaml      # Claude Code 用の追加レイヤー（GHCR の claude テンプレート＋会話保持 mixin）
-├── sbxenv.mac.yaml         # macOS 版の追加レイヤー（ホスト専用の MCP など）。sbxenv.yaml の後に重ねる
+├── sbxenv.codex.yaml       # Codex 用の追加レイヤー（GHCR の codex テンプレート＋会話保持 mixin）
+├── sbxenv.mac.yaml         # macOS 版の追加レイヤー（ホスト専用の MCP・ホストのスキルなど）。sbxenv.yaml の後に重ねる
 ├── kits/ssh-agent/         # ホストの SSH エージェント（1Password）を転送する mixin kit（macOS 版で使用）
+├── kits/host-skills/       # ホストのグローバル Skill（読み取り専用マウント）を起動時にリンクする mixin kit（macOS 版で使用）
+├── kits/git-identity/      # ホストの Git の user.name / user.email だけを渡す mixin kit（共通）
+├── kits/agent-tools/       # Context7・Exa の通信許可だけの mixin kit（共通）
 ├── docker-bake.hcl         # ローカル並列ビルド（テンプレート開発時のみ）
 ├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node.js 26）
 ├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
@@ -34,12 +38,12 @@ sbx-setup/
 
 | 項目 | 決定 |
 |------|------|
-| 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`。Claude Code は `sbxenv.claude.yaml` を重ねる） |
+| 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`。Claude Code は `sbxenv.claude.yaml`、Codex は `sbxenv.codex.yaml` を重ねる） |
 | エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code-docker` 同梱のもの。中で Docker が動く） |
-| MCP | context7 / **artifactshare**（リモート, OAuth）/ **repo-knowledge**（ホストで stdio 実行）。いずれも sbx MCP gateway 経由で全サンドボックス共通 |
+| MCP | context7 / **artifactshare**・**exa**（リモート, OAuth）/ **repo-knowledge**（ホストで stdio 実行）。いずれも sbx MCP gateway 経由で全サンドボックス共通 |
 | CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node.js 26（公式ビルド）+ npm 12**） |
 | 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |
-| Skill | すべて APM 経由（sbx skills ストアは使わない） |
+| Skill | テンプレートには APM で焼き込み。macOS ではホストのグローバル Skill も読み取り専用で読み込む（`kits/host-skills`。sbx skills ストアは使わない） |
 | pstack | OpenCode: ビルド時に本家 `cursor/plugins/pstack` を変換。Claude Code（macOS）: ホストの mac-host-setup が入れたプラグインを読み取り専用でマウント（`sbxenv.mac.yaml`） |
 | 変換の実行 | **sbx テンプレートのビルド内**（Dockerfile 内で `node tools/convert.mjs`） |
 | ビルド/取り込み | CI（`build.yml`）が GHCR に公開し、sbx が作成時に直接 pull（`pullPolicy: always`）。ローカルでは build しない |
@@ -102,21 +106,21 @@ opencode / codex / Claude Code を切り替えたい場合は、リポジトリ�
 
 ```bat
 sbx env run sbx-setup\sbxenv.yaml --name common-opencode --env-arg workspace=%USERPROFILE%\projects
-sbx env run sbx-setup\sbxenv.yaml --name common-codex ^
-  --env-arg agent=codex --env-arg template=ghcr.io/kotarotaniguchi0523/common-codex:dev --env-arg workspace=%USERPROFILE%\projects
+sbx env run sbx-setup\sbxenv.yaml sbx-setup\sbxenv.codex.yaml --name common-codex ^
+  --env-arg workspace=%USERPROFILE%\projects
 sbx env run sbx-setup\sbxenv.yaml sbx-setup\sbxenv.claude.yaml --name common-claude ^
   --env-arg workspace=%USERPROFILE%\projects
 ```
 
 macOS は共通ファイルの**後に** `sbxenv.mac.yaml` を重ねる（sbx がファイル順にマージし、`mcp.servers` などのリストは追記される）。
-`sbxenv.mac.yaml` にはホストでしか動かないもの（repo-knowledge MCP）だけを置き、テンプレートイメージには何も足さない。
+`sbxenv.mac.yaml` にはホストでしか動かないもの（repo-knowledge MCP・1Password・ホストのプラグインとスキルの読み取り専用マウント）だけを置き、テンプレートイメージには何も足さない。
 
 ```zsh
 # macOS
 sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-opencode \
   --env-arg workspace=$HOME/projects
-sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml --name common-codex \
-  --env-arg agent=codex --env-arg template=ghcr.io/kotarotaniguchi0523/common-codex:dev --env-arg workspace=$HOME/projects
+sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml sbx-setup/sbxenv.codex.yaml \
+  --name common-codex --env-arg workspace=$HOME/projects
 sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml sbx-setup/sbxenv.claude.yaml \
   --name common-claude --env-arg workspace=$HOME/projects
 ```
@@ -125,12 +129,42 @@ sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml sbx-setup/sbxenv.cla
 
 未アタッチで作成だけなら `sbx env create --force ...`、削除は `sbx env rm ...`。
 
-- いずれのファイルも `sandboxOptions.skills: off`（sbx の共有 skills ストアを使わない。APM で焼き込んだ skills と衝突するため）。
+- いずれのファイルも `sandboxOptions.skills: off`（sbx の共有 skills ストアを使わない。sbx v0.51 はストアを `~/.claude/skills` の上に読み取り専用でマウントし、APM で焼き込んだ skills が見えなくなるため。ホストの Skill は下記「ホストのグローバル Skill」の方法で読み込む）。
 - イメージ更新は `sbx env rm` → `sbx env run`（同じファイル・同じ `--name`）で作り直す。既存のサンドボックスには反映されない。
 
-## 会話の保持（Claude Code）
+## 会話の保持（Claude Code / Codex）
 
-`sbxenv.claude.yaml` を重ねると公式 mixin `docker.io/sbx/claude-sessions:1.0.0` が付き、`~/.claude/{projects,sessions,todos,shell-snapshots,statsig}` が sbx 管理のホスト側ディレクトリに保存される。作り直しても `/resume` で続きから再開できる。mixin は claude エージェントを要求するため共通ファイルには置かない。Codex / OpenCode は未対応（作り直すと会話は消える）。
+`sbxenv.claude.yaml` を重ねると公式 mixin `docker.io/sbx/claude-sessions:1.0.0` が付き、`~/.claude/{projects,sessions,todos,shell-snapshots,statsig}` が sbx 管理のホスト側ディレクトリに保存される。作り直しても `/resume` で続きから再開できる。
+`sbxenv.codex.yaml` も同様に公式 mixin `docker.io/sbx/codex-sessions:1.1.0` で `~/.codex/{sessions,archived_sessions}` をホスト側に保存する（認証・設定は移さない）。
+どちらの mixin もそのエージェントを要求するため共通ファイルには置かない。OpenCode は未対応（作り直すと会話は消える）。
+
+## ホストのグローバル Skill（macOS 版のみ）
+
+ホストの mac-host-setup が配置したグローバル Skill（`~/.claude/skills` = Claude Code、`~/.agents/skills` = Codex）を、サンドボックスから**読み取り専用**で使う。
+
+- `sbxenv.mac.yaml` の `additionalWorkspaces` が2つのディレクトリを `/opt/host-skills/.claude/skills` / `/opt/host-skills/.agents/skills` に `readOnly: true` でマウントする（ホームからの相対配置を保つので、`~/.claude/skills/x -> ../../.agents/skills/x` のような相対 symlink も解決する）。サンドボックスからホストの Skill は書き換えられない。
+- `kits/host-skills`（mixin）の起動フック（毎回の起動時、agent ユーザー）が、各 Skill をサンドボックスの `~/.claude/skills` と `~/.agents/skills` に symlink する。Claude Code・Codex・OpenCode（両方を互換パスとして読む）がそのまま見つける。
+- **テンプレートに焼き込んだ Skill が優先**（同じ名前のホスト Skill はリンクしない）。焼き込み版はイメージ内の CLI（agent-browser など）の版と対応しているため。
+- ホスト専用の Skill はリンクしない（kit の `exclude` 引数。既定: `agent-desktop agent-desktop-macos artifactshare kanary nushell openpath`）。macOS アプリ・ホストのツールが前提のもの、`nu` がイメージに無いもの、サンドボックス内で CLI ログインを促す artifactshare（中では MCP を使う）。`SKILL.md` の無いディレクトリ（Claude の `synced` など）も対象外。変えるときは `kits: - source: ./kits/host-skills` に `args: { exclude: "..." }` を付ける。
+- ホストでの編集はすぐ見える。追加・削除はサンドボックスの再起動（`sbx stop` → 再接続）でリンクが作り直される。
+- sbx の skills ストア（`sandboxOptions.skills: readonly` + `sbx skills import`）は使わない。ストアが `~/.claude/skills` 全体を覆って焼き込み Skill を隠し、中身も import 時点のコピーで古くなるため。`host-mount@1` も読み取り専用にできないため使わない。
+- Windows（`sbxenv.yaml` 単体）には影響しない。Antigravity 用（`~/.gemini/antigravity-cli/skills`）はこのリポジトリに Antigravity のサンドボックスが無いのでマウントしない。
+
+## ホストと共有するもの / しないもの
+
+| 項目 | 状態 | 理由 |
+|---|---|---|
+| グローバル Skill | macOS: 読み取り専用で共有（上記） | |
+| Claude Code プラグイン（pstack） | macOS: 読み取り専用で共有（`/opt/host-claude-plugins`） | |
+| Git の user.name / user.email | 共有（`kits/git-identity`、`git-identity@1`） | 名前とメールだけ。`.gitconfig` 本体・認証・署名鍵は渡らない。未設定のホストでは付かずに起動 |
+| SSH エージェント | macOS: git の署名と `git@github.com` だけ | 鍵はホストに残る |
+| GitHub / Cloudflare / Doppler のトークン | ホストのプロキシが注入 | 値はサンドボックスに入らない |
+| MCP（artifactshare / exa / repo-knowledge） | sbx MCP gateway | 認証はホスト側 |
+| 会話（Claude Code / Codex） | 公式 sessions mixin | |
+| sbx skills ストア | 使わない | 焼き込み Skill を隠す・コピーが古くなる |
+| ホストの `~/.claude/settings.json` / `CLAUDE.md` / `~/.codex/config.toml` | 共有しない | ホスト専用のパス・hook・権限設定を含み、中で壊れるか権限を広げる |
+| パッケージキャッシュ（npm / uv / nix） | 共有しない | 共有できるのは書き込み可能な `host-mount@1` だけで、別のサンドボックスへの汚染経路になる |
+| クリップボード（`clipboard.imagePaste` / `textCopy`） | 既定の off のまま | ホストのクリップボードの秘密を読める・ホストへ書ける。ホスト全体の設定（`sbx settings`）なのでこのリポジトリでは変えない |
 
 ## 手動でビルド / 取り込みする場合（テンプレート開発時）
 
@@ -241,13 +275,14 @@ MCP サーバーは **sbx の MCP gateway** に登録し、opencode / codex / cl
 認証情報はホスト側に置かれ、**サンドボックスにはトークンを入れない**。
 
 ```bat
-sbx mcp ls   REM context7 / artifactshare / repo-knowledge が並ぶこと
+sbx mcp ls   REM context7 / artifactshare / exa / repo-knowledge が並ぶこと
 ```
 
 | サーバー | 実行場所 | 認証 | 宣言 |
 |---|---|---|---|
 | context7 | リモート | API キーを `sbx secret set`（平文保存しない） | 手動登録 |
 | artifactshare | リモート（`https://artifactshare.com/mcp`） | OAuth。**ホストで1回だけ** `sbx mcp auth artifactshare` | `sbxenv.yaml`（共通） |
+| exa | リモート（`https://mcp.exa.ai/mcp`） | OAuth。**ホストで1回だけ** `sbx mcp auth exa` | `sbxenv.yaml`（共通） |
 | repo-knowledge | **ホスト**（`npx -y @tamat-llc/repo-knowledge-mcp@<ver>`） | ホストの `gh` ログインをそのまま使う（追加の秘密情報なし） | `sbxenv.mac.yaml`（**macOS のみ**） |
 
 ### Artifact Share
