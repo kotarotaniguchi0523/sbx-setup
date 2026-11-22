@@ -6,9 +6,9 @@
     "cursor-team-kit/skills/control-cli/**",
     "cursor-team-kit/skills/control-ui/**"
   ],
-  "ref": "e1cc03121a0e71129a4fb730d7c5528a0a3e43c8",
+  "ref": "7a583913eb1b8d1a0ee76753d1a2cf072e7b54f9",
   "trees": {
-    "pstack": "71d8e1d1d718e2149dc43b2535618064f29cba6b",
+    "pstack": "b47cf6d63625b48fd77893233044849935cdae3d",
     "cursor-team-kit/skills/deslop": "ac9ba043f9dd3b3a8850de6624ec5bc12e375599",
     "cursor-team-kit/skills/control-cli": "21f3eee2663ae7c78464bfc2a69f6a8cc6c4f7ed",
     "cursor-team-kit/skills/control-ui": "797e6d20a029b2ae757a97951278d308f3b53026"
