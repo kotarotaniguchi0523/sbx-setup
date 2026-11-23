@@ -1,0 +1,10 @@
+{
+  "total": 116,
+  "active": 14,
+  "suppressed": 102,
+  "byLevel": {
+    "warning": 6,
+    "note": 8
+  },
+  "effectiveExit": 2
+}
