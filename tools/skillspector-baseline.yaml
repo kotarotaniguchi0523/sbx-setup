@@ -51,7 +51,8 @@
 # tools/skills-verify.mjs stage every deployed skill, and SkillSpector then reads
 # upstream docs, CLI references and helper scripts as if they were agent
 # instructions. Every entry below was reviewed by hand on the 2026-10-26 lock
-# update and is a false positive. Each one is scoped to a single file and rule,
+# update (and again on 2026-11-24) and is a false positive. Each one is scoped
+# to a single file and rule,
 # so a finding in SKILL.md, a new file, or another rule still gates.
 
 # apm-usage: the APM CLI reference. It documents APM's own `config`,
@@ -69,6 +70,9 @@
 - rule: RA1
   path: "apm-usage/troubleshooting.md"
   reason: "troubleshooting APM config, not agent self-modification"
+- rule: RA1
+  path: "apm-usage/authentication.md"
+  reason: "proxy docs name `apm self-update` as the one direct request; documents APM, does not modify the agent"
 - rule: AS1
   path: "apm-usage/commands.md"
   reason: "documents APM-managed config directories"
@@ -87,9 +91,15 @@
 - rule: AR2
   path: "apm-usage/governance.md"
   reason: "quotes an anti-refusal policy as guidance, not as an instruction to the agent"
+- rule: AR3
+  path: "apm-usage/governance.md"
+  reason: "policy-violation table states which flag does not bypass a rule, not an anti-refusal instruction"
 - rule: YR4
   path: "apm-usage/commands.md"
   reason: "YARA 'hidden instructions' matches CLI reference prose"
+- rule: YR4
+  path: "apm-usage/governance.md"
+  reason: "YARA 'hidden instructions' matches the restrict-only external-scanner policy prose"
 - rule: PE3
   path: "apm-usage/authentication.md"
   reason: "documents APM's credential chain (`git credential fill`, an unrelated `~/.netrc` entry is ignored); no credential is read by the skill"
