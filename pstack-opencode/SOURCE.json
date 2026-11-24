@@ -6,9 +6,9 @@
     "cursor-team-kit/skills/control-cli/**",
     "cursor-team-kit/skills/control-ui/**"
   ],
-  "ref": "7a583913eb1b8d1a0ee76753d1a2cf072e7b54f9",
+  "ref": "ca782ed8b3c2c521cead8e1720d55c3a5dbf2347",
   "trees": {
-    "pstack": "b47cf6d63625b48fd77893233044849935cdae3d",
+    "pstack": "971573532de6714a4ddff8ec39b52d021ebf161a",
     "cursor-team-kit/skills/deslop": "ac9ba043f9dd3b3a8850de6624ec5bc12e375599",
     "cursor-team-kit/skills/control-cli": "21f3eee2663ae7c78464bfc2a69f6a8cc6c4f7ed",
     "cursor-team-kit/skills/control-ui": "797e6d20a029b2ae757a97951278d308f3b53026"
@@ -64,6 +64,7 @@
     "principle-type-system-discipline",
     "recall",
     "reflect",
+    "reframe",
     "setup-pstack",
     "sharpen",
     "show-me-your-work",
