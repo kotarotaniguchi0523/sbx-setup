@@ -132,11 +132,16 @@ sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml sbx-setup/sbxenv.cla
 - いずれのファイルも `sandboxOptions.skills: off`（sbx の共有 skills ストアを使わない。sbx v0.51 はストアを `~/.claude/skills` の上に読み取り専用でマウントし、APM で焼き込んだ skills が見えなくなるため。ホストの Skill は下記「ホストのグローバル Skill」の方法で読み込む）。
 - イメージ更新は `sbx env rm` → `sbx env run`（同じファイル・同じ `--name`）で作り直す。既存のサンドボックスには反映されない。
 
-## 会話の保持（Claude Code / Codex）
+## 会話の保持（Claude Code / Codex / Antigravity）
 
 `sbxenv.claude.yaml` を重ねると公式 mixin `docker.io/sbx/claude-sessions:1.0.0` が付き、`~/.claude/{projects,sessions,todos,shell-snapshots,statsig}` が sbx 管理のホスト側ディレクトリに保存される。作り直しても `/resume` で続きから再開できる。
 `sbxenv.codex.yaml` も同様に公式 mixin `docker.io/sbx/codex-sessions:1.1.0` で `~/.codex/{sessions,archived_sessions}` をホスト側に保存する（認証・設定は移さない）。
-どちらの mixin もそのエージェントを要求するため共通ファイルには置かない。OpenCode は未対応（作り直すと会話は消える）。
+どちらの公式 mixin もそのエージェントを要求するため共通ファイルには置かない。
+
+- `common-claude` イメージには `common-claude/mise.toml` で **Codex (`codex`)** と **Antigravity (`agy`)** も `mise`（`aqua` バックエンド）経由で同梱しており、1 つのサンドボックス内の T3 Code から Claude / Codex / Antigravity を併用できる（`~/.local/bin/{codex,agy}` が mise shim へリンクされているため、サンドボックス内で `mise upgrade codex agy` すれば再ビルドなしで更新できる）。
+- `agent: claude` のサンドボックスで Codex の会話ログも残したい場合は、ローカル mixin [`kits/codex-sessions`](kits/codex-sessions/codex-sessions.yaml) とサンドボックスごとの `mounts: { /home/agent/codex-history: <host dir> }` を重ねる（公式 `codex-sessions` と同じく `sessions` / `archived_sessions` のみ永続化し、認証・設定は残さない）。
+- T3 Code 経由の Antigravity は会話ログ・認証とも `~/.t3/userdata/providers/antigravity/` に保存されるため、[`kits/t3-state`](kits/t3-state/t3-state.yaml)（`/home/agent/.t3`）でそのまま永続化される。
+- OpenCode は未対応（作り直すと会話は消える）。
 
 ## ホストのグローバル Skill（macOS 版のみ）
 

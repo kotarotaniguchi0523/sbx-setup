@@ -1,0 +1,7 @@
+# Global mise tools baked into the common-claude image so T3 Code (or a shell)
+# inside a single sandbox can run Codex and Antigravity alongside Claude Code.
+# Renovate's mise manager keeps these versions current; inside a running
+# sandbox you can also bump ahead with `mise upgrade codex agy`.
+[tools]
+codex = "0.172.0"
+agy = "1.5.16"
