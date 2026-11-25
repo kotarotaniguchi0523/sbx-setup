@@ -113,16 +113,16 @@ RUN touch /etc/sandbox-persistent.sh \
       >> /etc/sandbox-persistent.sh
 
 # Codex and Antigravity (`agy`) via mise (aqua backend -> upstream GitHub
-# Releases directly, tracking faster than nixpkgs). Symlink the mise shims
-# into ~/.local/bin (already first on PATH in non-login shells / T3 Code) so
-# `mise upgrade codex agy` inside a running sandbox takes effect immediately.
+# Releases directly, tracking faster than nixpkgs). Symlink the resolved
+# binaries directly into ~/.local/bin (already first on PATH in non-login
+# shells / T3 Code) rather than mise shims, so project workspaces with
+# untrusted or `locked = true` mise.toml files never block `codex` / `agy`.
 COPY --chown=agent:agent common-claude/mise.toml /home/agent/.config/mise/config.toml
 RUN mkdir -p /home/agent/.local/bin \
  && mise trust /home/agent/.config/mise/config.toml \
  && mise install \
- && mise reshim \
- && ln -sf /home/agent/.local/share/mise/shims/codex /home/agent/.local/bin/codex \
- && ln -sf /home/agent/.local/share/mise/shims/agy /home/agent/.local/bin/agy \
+ && ln -sf "$(mise -C /home/agent which codex)" /home/agent/.local/bin/codex \
+ && ln -sf "$(mise -C /home/agent which agy)" /home/agent/.local/bin/agy \
  && /home/agent/.local/bin/codex --version \
  && AGY_CLI_DISABLE_AUTO_UPDATE=true /home/agent/.local/bin/agy --version
 
