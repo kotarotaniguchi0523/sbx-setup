@@ -1,0 +1,58 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: "3"
+kind: mixin
+displayName: Codex host sessions (agent-agnostic)
+description: >-
+  Keeps ~/.codex/{sessions,archived_sessions} in a host directory so Codex
+  conversations survive `sbx env rm` + recreate even in sandboxes whose
+  primary agent is not codex (e.g. claude with T3 Code). Auth and config
+  stay inside the sandbox.
+provides: ["codex-sessions-local"]
+version: "1.0.0"
+
+# Bind a host directory per sandbox when you use this kit:
+#   sbxenv:  mounts: { /home/agent/codex-history: <host dir for this sandbox> }
+#   CLI:     sbx create --mount <host dir>:/home/agent/codex-history ...
+# Without that, sbx uses one managed directory shared by every sandbox that
+# selects this kit.
+capabilities:
+  - type: com.docker.sandbox/host-mount@1
+    description: Codex session logs (~/.codex/{sessions,archived_sessions}) kept on the host
+    config:
+      path: /home/agent/codex-history
+      mode: "0755"
+  - type: com.docker.sandbox/lifecycle@1
+    config:
+      startup:
+        - description: Link Codex session state to this sandbox's host-mounted directory
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              state="/home/agent/.codex"
+              history="/home/agent/codex-history"
+              mkdir -p "$state"
+              for name in sessions archived_sessions; do
+                link="$state/$name"
+                target="$history/$name"
+                mkdir -p "$target"
+                if [ -L "$link" ]; then
+                  if [ "$(readlink "$link")" != "$target" ]; then
+                    printf 'Refusing to replace unexpected symlink: %s\n' "$link" >&2
+                    exit 1
+                  fi
+                  continue
+                fi
+                if [ -e "$link" ]; then
+                  if ! rmdir "$link"; then
+                    printf 'Cannot replace %s; move existing state to the host directory first.\n' "$link" >&2
+                    exit 1
+                  fi
+                fi
+                ln -s "$target" "$link"
+              done
+
+# Capability-only mixin: it adds no files to the workload.
+build: |
+  FROM scratch

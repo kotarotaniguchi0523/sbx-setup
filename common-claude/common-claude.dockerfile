@@ -109,10 +109,27 @@ RUN touch /etc/sandbox-persistent.sh \
  && printf '%s\n' \
       'export PATH="/home/agent/.local/share/mise/shims:/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH"' \
       'export AGENT_BROWSER_ENGINE=obscura' \
+      'export AGY_CLI_DISABLE_AUTO_UPDATE=true' \
       >> /etc/sandbox-persistent.sh
 
-# Shared skills via APM (claude target -> ~/.claude/skills). No pstack here:
-# on macOS, sbxenv.mac.yaml mounts the host's pstack plugin read-only.
+# Codex and Antigravity (`agy`) via mise (aqua backend -> upstream GitHub
+# Releases directly, tracking faster than nixpkgs). Symlink the mise shims
+# into ~/.local/bin (already first on PATH in non-login shells / T3 Code) so
+# `mise upgrade codex agy` inside a running sandbox takes effect immediately.
+COPY --chown=agent:agent common-claude/mise.toml /home/agent/.config/mise/config.toml
+RUN mkdir -p /home/agent/.local/bin \
+ && mise trust /home/agent/.config/mise/config.toml \
+ && mise install \
+ && mise reshim \
+ && ln -sf /home/agent/.local/share/mise/shims/codex /home/agent/.local/bin/codex \
+ && ln -sf /home/agent/.local/share/mise/shims/agy /home/agent/.local/bin/agy \
+ && /home/agent/.local/bin/codex --version \
+ && AGY_CLI_DISABLE_AUTO_UPDATE=true /home/agent/.local/bin/agy --version
+
+# Shared skills via APM (claude -> ~/.claude/skills, codex -> ~/.agents/skills).
+# Point Antigravity at ~/.agents/skills too so it shares the same sandbox-safe
+# skills (baked + filtered host-skills). No pstack here: on macOS,
+# sbxenv.mac.yaml mounts the host's pstack plugin read-only.
 RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH" \
  && cd /home/agent \
  && apm install -g --target claude --parallel-downloads 8 \
@@ -121,9 +138,19 @@ RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH" \
       vercel-labs/agent-browser \
       yusukebe/ax \
       microsoft/waza \
-      microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
+      microsoft/apm/packages/apm-guide/.apm/skills/apm-usage \
+ && apm install -g --target codex --parallel-downloads 8 \
+      mizchi/explainer \
+      nanaism/yomiyasu \
+      vercel-labs/agent-browser \
+      yusukebe/ax \
+      microsoft/waza \
+      microsoft/apm/packages/apm-guide/.apm/skills/apm-usage \
+ && mkdir -p /home/agent/.gemini/config \
+ && printf '{"entries":[{"path":"~/.agents/skills"}]}\n' > /home/agent/.gemini/config/skills.json
 
-ENV BASH_ENV=/etc/sandbox-persistent.sh
+ENV BASH_ENV=/etc/sandbox-persistent.sh \
+    AGY_CLI_DISABLE_AUTO_UPDATE=true
 
 # Keep the base image's ENTRYPOINT (["tini","--"]); only set the launch command.
 # Same as the base template: the sandbox is the isolation boundary.
