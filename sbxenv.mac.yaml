@@ -16,7 +16,7 @@ mcp:
   servers:
     - name: repo-knowledge
       command: npx
-      args: ["-y", "@tamat-llc/repo-knowledge-mcp@0.4.4"]
+      args: ["-y", "@tamat-llc/repo-knowledge-mcp@0.4.4", "serve"]
 
 # 1Password, without putting `op` or any key into the images:
 #
