@@ -19,7 +19,7 @@ dependencies:
 - repo_url: microsoft/apm
   name: apm-usage
   host: github.com
-  resolved_commit: e441ceeda564f42cc7b053b1b1ac0d8ce6950cd1
+  resolved_commit: bc0380d1de28d25ba034c9173d968791c745159b
   version: unknown
   virtual_path: packages/apm-guide/.apm/skills/apm-usage
   is_virtual: true
@@ -38,14 +38,14 @@ dependencies:
   deployed_file_hashes:
     .agents/skills/apm-usage/SKILL.md: sha256:ea6d9154469f0a482f5dbfa84e7cee83683653fb62735f566cb51bcb44afade7
     .agents/skills/apm-usage/authentication.md: sha256:8b6f6e4eb6ee7d8360beadf1a166a6225c53a1488274cc502623d281069e38ae
-    .agents/skills/apm-usage/commands.md: sha256:01228e80fce16718ddfefeaeca9b8b8c242a759a764ad1dd5ca455383703b1ae
-    .agents/skills/apm-usage/dependencies.md: sha256:66554928026e18f05529195f5bd5e7072ffdf3ba9cef0efd23f115182face5a6
+    .agents/skills/apm-usage/commands.md: sha256:02ddaff446010bb8fe9b3c4979c89d546b680e96822643f04cb5ee8c123dac3f
+    .agents/skills/apm-usage/dependencies.md: sha256:3d9a059e7c88df79a510471b48b0539be22c78fbf17cc31fbc73beef3da3936d
     .agents/skills/apm-usage/governance.md: sha256:1691a749bc3afdcdcb8e0a1df5783e44038381bcb682d67cc38e60a7943f56c6
     .agents/skills/apm-usage/installation.md: sha256:a8d33ceeb41626d809ed07e0cdd16ba74f0510b5842bab64b7f6dc3e3fdb1057
     .agents/skills/apm-usage/package-authoring.md: sha256:e6612788640aa234098a4c3a38aeb0859b5ce3a5984e7bc5f474f2893d817b98
     .agents/skills/apm-usage/troubleshooting.md: sha256:26eaafcebbffa717f8795a42786699b084532b3d9d045fd9f01316f530597a9f
     .agents/skills/apm-usage/workflow.md: sha256:3fd38f78fe8efdd085fe7d82b3f7117c3cb065bf1a722bfa82ee348b7f25cc23
-  content_hash: sha256:6d38db2121be63ce82a20766aae4b3aa09e98e4b612cd3ee2a42621202736e83
+  content_hash: sha256:0ad425aa8a3692d657a8ceb4bfef741a424783f4a0acc83d7425da733d14f257
 - repo_url: microsoft/waza
   name: waza
   host: github.com
@@ -5853,7 +5853,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:01228e80fce16718ddfefeaeca9b8b8c242a759a764ad1dd5ca455383703b1ae
+  content_hash: sha256:02ddaff446010bb8fe9b3c4979c89d546b680e96822643f04cb5ee8c123dac3f
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/dependencies.md
@@ -5862,7 +5862,7 @@ deployments:
   owners:
   - microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
   active_owner: microsoft/apm/packages/apm-guide/.apm/skills/apm-usage
-  content_hash: sha256:66554928026e18f05529195f5bd5e7072ffdf3ba9cef0efd23f115182face5a6
+  content_hash: sha256:3d9a059e7c88df79a510471b48b0539be22c78fbf17cc31fbc73beef3da3936d
 - kind: project-relative
   target: opencode
   value: .agents/skills/apm-usage/governance.md
