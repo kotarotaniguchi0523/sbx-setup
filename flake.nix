@@ -29,7 +29,7 @@
 
           wazaVersion = "0.42.0";
           axVersion = "0.1.25";
-          sisakulintVersion = "0.4.0";
+          sisakulintVersion = "0.4.1";
           depgraphVersion = "0.7.4";
           nodeVersion = "26.13.1";
 
@@ -46,10 +46,10 @@
             aarch64-darwin = { name = "ax-darwin-arm64"; sha256 = "94633f9d61c743cffcf51e5338289d974c21428efb70bd2995e6c6ec13e062c1"; };
           };
           sisakulintAssets = {
-            x86_64-linux = { name = "sisakulint_${sisakulintVersion}_linux_amd64.tar.gz"; sha256 = "e6d80959646fce8a17ff5a5b9eddf35a770a22b867383ca1e823f421084b18b9"; };
-            aarch64-linux = { name = "sisakulint_${sisakulintVersion}_linux_arm64.tar.gz"; sha256 = "45e1aa5600c926df120ecad127dc82f36659ae3008eba9e359a5b0832120b0f8"; };
-            x86_64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_amd64.tar.gz"; sha256 = "22410ee7f1ea1546d1a4553f033b3479957d11ea3502ef377f56d18a09f5e000"; };
-            aarch64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_arm64.tar.gz"; sha256 = "31533521565b79056ff5fb738c71ff31c36e6cef561353cc82e71e1438e912e3"; };
+            x86_64-linux = { name = "sisakulint_${sisakulintVersion}_linux_amd64.tar.gz"; sha256 = "e5f0d6aa5d4633941e0d1fcad5595a6c40da09fb0c8d7b5b1fd6f4ac42a112a6"; };
+            aarch64-linux = { name = "sisakulint_${sisakulintVersion}_linux_arm64.tar.gz"; sha256 = "74f5552fccfe6549b4f8d5862bf055793c9957552a5ffcaf8abd5a5bd7dfe7a4"; };
+            x86_64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_amd64.tar.gz"; sha256 = "258e28cd9c536f2f302f849913902d2cafe06754523bbd9001af60a77d573241"; };
+            aarch64-darwin = { name = "sisakulint_${sisakulintVersion}_darwin_arm64.tar.gz"; sha256 = "141038f28baf63f181625e3b3af2e78205949aed1b141e64a7f4ce65f92d5607"; };
           };
           # TamaT-LLC/depgraph-cli ships no Intel macOS build; the images only need
           # the Linux ones. Hashes come from each asset's own .sha256 file.
