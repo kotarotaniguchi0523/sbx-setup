@@ -91,7 +91,7 @@ jobs:
             opencode:
               - 'common-opencode/**'
               - 'pstack-opencode/**'
-              - 'tools/npm/opencode/**'
+              - 'tools/opencode.version'
             codex:
               - 'common-codex/**'
             claude:

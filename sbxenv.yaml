@@ -74,9 +74,14 @@ bindings:
 # git-identity … ホストの Git の user.name / user.email だけを sandbox の global
 #   設定に入れる（ホストの .gitconfig そのものや認証・署名鍵は渡さない）。
 #   ホストに未設定なら付かずに起動する（optional）。
+# opencode-sessions … OpenCode v2 の会話（opencode.db + WAL/SHM と
+#   storage/session_diff）をホスト側ディレクトリに保持する。公式の
+#   claude-sessions / codex-sessions と同じ発想のローカル mixin（公式の
+#   opencode-sessions はまだ無い）。`sbx env rm` → 再作成でも会話が残る。
 kits:
   - ./kits/agent-tools
   - ./kits/git-identity
+  - ./kits/opencode-sessions
 
 # MCP servers shared by every sandbox through the sbx MCP gateway. Credentials
 # stay on the host: nothing below puts a token inside a sandbox.

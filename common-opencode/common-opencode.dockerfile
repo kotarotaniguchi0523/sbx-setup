@@ -3,7 +3,8 @@
 # lefthook, betterleaks, waza, ax, depgraph and Node.js 26 (official nodejs.org build, + its npm) all come from
 # ./flake.nix.
 # The bundle closure is copied into the image so no npm -g / brew / curl|bash
-# installers run (cf / difit / opencode stay on npm; see below).
+# installers run (cf / difit stay on npm; opencode uses the official v2
+# installer, see below).
 # mise and pnpm come from their vendors' official images instead: both ship a
 # single static binary and track upstream releases faster than nixpkgs does
 # (mise 2026.10.3 vs 2026.10.13, pnpm 12.9.0 vs 12.14.0 when this was written).
@@ -97,13 +98,11 @@ RUN cd /opt/npm-cli \
  && for f in node_modules/.bin/*; do ln -sf "/opt/npm-cli/$f" "/usr/local/bin/$(basename "$f")"; done \
  && cf --version && difit --help >/dev/null
 
-# opencode = v2 @opencode/cli (nixpkgs ships a different v1 project).
-COPY tools/npm/opencode /opt/npm-opencode
-RUN npm uninstall -g opencode-ai \
- && cd /opt/npm-opencode \
- && npm ci --omit=dev \
- && for f in node_modules/.bin/*; do ln -sf "/opt/npm-opencode/$f" "/usr/local/bin/$(basename "$f")"; done \
- && opencode --version
+# OpenCode: drop the base image's v1 (`opencode-ai`). v2 is installed after the
+# USER switch below by the official installer — the same path Docker's own
+# `sbx/opencode` v3 workload uses (sbx 0.54+), so the CLI is no longer
+# maintained through npm packaging here.
+RUN npm uninstall -g opencode-ai
 
 # The /nix dir was created root-owned when we unpacked the bundle closure; give
 # the agent ownership so the single-user Nix install below can proceed.
@@ -113,9 +112,20 @@ USER agent
 
 RUN curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 
+# OpenCode v2 via the official installer, version pinned in tools/opencode.version
+# (Renovate keeps it current). Running as the agent user puts the binary in
+# /home/agent/.opencode/bin, which is on PATH via ENV below and the persistent
+# shell setup — sbx's `agent: opencode` runs `opencode` with no shell rc.
+COPY --chown=agent:agent tools/opencode.version /tmp/opencode.version
+ENV PATH="/home/agent/.opencode/bin:${PATH}"
+RUN curl -fsSL https://opencode.ai/v2/install -o /tmp/opencode-install \
+ && bash /tmp/opencode-install --version "$(cat /tmp/opencode.version)" --no-modify-path \
+ && rm -f /tmp/opencode-install /tmp/opencode.version \
+ && opencode --version
+
 RUN touch /etc/sandbox-persistent.sh \
  && printf '%s\n' \
-      'export PATH="/home/agent/.local/share/mise/shims:/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH"' \
+      'export PATH="/home/agent/.local/share/mise/shims:/home/agent/.local/bin:/home/agent/.nix-profile/bin:/home/agent/.opencode/bin:$PATH"' \
       'export AGENT_BROWSER_ENGINE=obscura' \
       >> /etc/sandbox-persistent.sh
 
@@ -146,5 +156,6 @@ RUN export PATH="/home/agent/.local/bin:/home/agent/.nix-profile/bin:$PATH" \
 ENV BASH_ENV=/etc/sandbox-persistent.sh
 
 # Keep the base image's ENTRYPOINT (["tini","--"]) so the sandbox init runs;
-# only set the launch command. `opencode` here is the v2 binary installed above.
+# only set the launch command. `opencode` here is the v2 binary the official
+# installer put on PATH.
 CMD ["opencode"]

@@ -15,6 +15,8 @@ sbx-setup/
 ├── kits/host-skills/       # ホストのグローバル Skill（読み取り専用マウント）を起動時にリンクする mixin kit（macOS 版で使用）
 ├── kits/git-identity/      # ホストの Git の user.name / user.email だけを渡す mixin kit（共通）
 ├── kits/agent-tools/       # Context7・Exa の通信許可だけの mixin kit（共通）
+├── kits/codex-sessions/    # Codex の会話ログをホストに置く mixin kit（claude agent で Codex を併用する場合）
+├── kits/opencode-sessions/ # OpenCode v2 の会話（opencode.db）をホストに置く mixin kit（共通。公式の無い分の代替）
 ├── docker-bake.hcl         # ローカル並列ビルド（テンプレート開発時のみ）
 ├── flake.nix / flake.lock  # 依存を Nix 管理（CLI 一式・Node.js 26）
 ├── common-opencode/        # OpenCode 用 kit（Dockerfile 内で pstack 変換）
@@ -24,7 +26,7 @@ sbx-setup/
 │   ├── tools/convert.mjs            # git（sparse・shallow）で本家を取得し .apm/ を生成
 │   ├── tools/templates/AGENTS.md    # routing（opencode/AGENTS.md の元）
 │   └── opencode/AGENTS.md           # routing（生成物）
-├── tools/                  # sisakulint / portable Go / npm 固定 / flake 更新スクリプト
+├── tools/                  # sisakulint / portable Go / npm・OpenCode 固定 / flake 更新スクリプト
 ├── docs/nix.md             # Nix 方針と sbx への影響
 ├── .github/workflows/      # build / sisakulint / nix / nix-lock / nix-tools-update / pstack-update
 ├── lefthook.yml            # ローカル Git hooks（betterleaks / sisakulint）
@@ -39,7 +41,7 @@ sbx-setup/
 | 項目 | 決定 |
 |------|------|
 | 入口 | `sbx env run` / `sbx env create`（Windows: `sbxenv.yaml` / macOS: `sbxenv.yaml` + `sbxenv.mac.yaml`。Claude Code は `sbxenv.claude.yaml`、Codex は `sbxenv.codex.yaml` を重ねる） |
-| エージェント | **OpenCode v2**（beta, `@opencode/cli`）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code-docker` 同梱のもの。中で Docker が動く） |
+| エージェント | **OpenCode v2**（公式インストーラ。Docker 自身の `sbx/opencode` workload と同じ配布経路。sbx 0.54+ は v2 が標準）既定 / codex（`--env-arg agent=codex`）/ Claude Code（`--env-arg agent=claude`。本体は base テンプレート `docker/sandbox-templates:claude-code-docker` 同梱のもの。中で Docker が動く） |
 | MCP | context7 / **artifactshare**・**exa**（リモート, OAuth）/ **repo-knowledge**（ホストで stdio 実行）。いずれも sbx MCP gateway 経由で全サンドボックス共通 |
 | CLI | git/gh, uv, mise, nix, cf, difit, waza, apm, agent-browser, ax, depgraph, node/npm（**Node.js 26（公式ビルド）+ npm 12**） |
 | 依存管理 | **Nix**（`flake.nix` の `bundle`）＋ npm のみ `package-lock`（`npm ci`） |
@@ -132,16 +134,16 @@ sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml sbx-setup/sbxenv.cla
 - いずれのファイルも `sandboxOptions.skills: off`（sbx の共有 skills ストアを使わない。sbx v0.51 はストアを `~/.claude/skills` の上に読み取り専用でマウントし、APM で焼き込んだ skills が見えなくなるため。ホストの Skill は下記「ホストのグローバル Skill」の方法で読み込む）。
 - イメージ更新は `sbx env rm` → `sbx env run`（同じファイル・同じ `--name`）で作り直す。既存のサンドボックスには反映されない。
 
-## 会話の保持（Claude Code / Codex / Antigravity）
+## 会話の保持（Claude Code / Codex / OpenCode / Antigravity）
 
 `sbxenv.claude.yaml` を重ねると公式 mixin `docker.io/sbx/claude-sessions:1.0.0` が付き、`~/.claude/{projects,sessions,todos,shell-snapshots,statsig}` が sbx 管理のホスト側ディレクトリに保存される。作り直しても `/resume` で続きから再開できる。
 `sbxenv.codex.yaml` も同様に公式 mixin `docker.io/sbx/codex-sessions:1.1.0` で `~/.codex/{sessions,archived_sessions}` をホスト側に保存する（認証・設定は移さない）。
 どちらの公式 mixin もそのエージェントを要求するため共通ファイルには置かない。
+OpenCode 用の公式 sessions mixin はまだ無いので、共通ファイルにローカル mixin [`kits/opencode-sessions`](kits/opencode-sessions/opencode-sessions.yaml) を入れてある。OpenCode v2 の会話 DB（`~/.local/share/opencode/opencode.db` + WAL/SHM）と `storage/session_diff` をホスト側に symlink で保持し、作り直しても会話が消えない（認証 `auth.json` と設定 `opencode.json` は sandbox 内に留める）。
 
 - `common-claude` イメージには `common-claude/mise.toml` で **Codex (`codex`)** と **Antigravity (`agy`)** も `mise`（`aqua` バックエンド）経由で同梱しており、1 つのサンドボックス内の T3 Code から Claude / Codex / Antigravity を併用できる（`~/.local/bin/{codex,agy}` が mise shim へリンクされているため、サンドボックス内で `mise upgrade codex agy` すれば再ビルドなしで更新できる）。
 - `agent: claude` のサンドボックスで Codex の会話ログも残したい場合は、ローカル mixin [`kits/codex-sessions`](kits/codex-sessions/codex-sessions.yaml) とサンドボックスごとの `mounts: { /home/agent/codex-history: <host dir> }` を重ねる（公式 `codex-sessions` と同じく `sessions` / `archived_sessions` のみ永続化し、認証・設定は残さない）。
 - T3 Code 経由の Antigravity は会話ログ・認証とも `~/.t3/userdata/providers/antigravity/` に保存されるため、[`kits/t3-state`](kits/t3-state/t3-state.yaml)（`/home/agent/.t3`）でそのまま永続化される。
-- OpenCode は未対応（作り直すと会話は消える）。
 
 ## ホストのグローバル Skill（macOS 版のみ）
 
@@ -166,6 +168,7 @@ sbx env run sbx-setup/sbxenv.yaml sbx-setup/sbxenv.mac.yaml sbx-setup/sbxenv.cla
 | GitHub / Cloudflare / Doppler のトークン | ホストのプロキシが注入 | 値はサンドボックスに入らない |
 | MCP（artifactshare / exa / repo-knowledge） | sbx MCP gateway | 認証はホスト側 |
 | 会話（Claude Code / Codex） | 公式 sessions mixin | |
+| 会話（OpenCode v2） | ローカル mixin（[`kits/opencode-sessions`](kits/opencode-sessions/opencode-sessions.yaml)）。DB（opencode.db + WAL/SHM）と session_diff のみ | 公式の opencode-sessions が無いため。認証（`auth.json`）は移さない |
 | sbx skills ストア | 使わない | 焼き込み Skill を隠す・コピーが古くなる |
 | ホストの `~/.claude/settings.json` / `CLAUDE.md` / `~/.codex/config.toml` | 共有しない | ホスト専用のパス・hook・権限設定を含み、中で壊れるか権限を広げる |
 | パッケージキャッシュ（npm / uv / nix） | 共有しない | 共有できるのは書き込み可能な `host-mount@1` だけで、別のサンドボックスへの汚染経路になる |

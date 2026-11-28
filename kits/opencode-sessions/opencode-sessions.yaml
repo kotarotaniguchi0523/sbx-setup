@@ -1,0 +1,84 @@
+# syntax=docker/sandbox-kit:3
+schemaVersion: "3"
+kind: mixin
+displayName: OpenCode sessions (host-persistent)
+description: >-
+  Keeps OpenCode v2's session database (opencode.db + WAL/SHM) and
+  storage/session_diff in a host directory so conversations survive
+  `sbx env rm` + recreate. auth.json / opencode.json and the rest of the
+  config stay inside the sandbox, like the official claude-sessions /
+  codex-sessions mixins keep authentication out.
+provides: ["opencode-sessions-local"]
+version: "1.0.0"
+
+# Bind a host directory per sandbox when you use this kit:
+#   sbxenv:  mounts: { /home/agent/opencode-history: <host dir for this sandbox> }
+#   CLI:     sbx create --mount <host dir>:/home/agent/opencode-history ...
+# Without that, sbx uses one managed directory shared by every sandbox that
+# selects this kit.
+capabilities:
+  - type: com.docker.sandbox/host-mount@1
+    description: OpenCode v2 session state (opencode.db + storage/session_diff) kept on the host
+    config:
+      path: /home/agent/opencode-history
+      mode: "0755"
+  - type: com.docker.sandbox/lifecycle@1
+    config:
+      startup:
+        - description: Link OpenCode v2 session state to this sandbox's host-mounted directory
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              data="$HOME/.local/share/opencode"
+              history="/home/agent/opencode-history"
+              mkdir -p "$data"
+
+              # --- session database: opencode.db plus the WAL/SHM siblings ---
+              # SQLite opens the file through the symlink, so every target must
+              # already exist on the host mount (an empty file is a fresh DB).
+              for name in opencode.db opencode.db-wal opencode.db-shm; do
+                link="$data/$name"
+                target="$history/$name"
+                if [ -L "$link" ]; then
+                  if [ "$(readlink "$link")" != "$target" ]; then
+                    printf 'Refusing to replace unexpected symlink: %s\n' "$link" >&2
+                    exit 1
+                  fi
+                  continue
+                fi
+                if [ -e "$link" ]; then
+                  if [ -s "$link" ]; then
+                    printf 'Cannot replace %s; move existing state to the host directory first.\n' "$link" >&2
+                    exit 1
+                  fi
+                  rm -f "$link"
+                fi
+                : >> "$target"
+                ln -s "$target" "$link"
+              done
+
+              # --- per-session diffs written beside the database ---
+              link="$data/storage/session_diff"
+              target="$history/session_diff"
+              mkdir -p "$data/storage" "$target"
+              if [ -L "$link" ]; then
+                if [ "$(readlink "$link")" != "$target" ]; then
+                  printf 'Refusing to replace unexpected symlink: %s\n' "$link" >&2
+                  exit 1
+                fi
+              else
+                if [ -e "$link" ]; then
+                  if [ -n "$(ls -A "$link")" ]; then
+                    printf 'Cannot replace %s; move existing state to the host directory first.\n' "$link" >&2
+                    exit 1
+                  fi
+                  rmdir "$link"
+                fi
+                ln -s "$target" "$link"
+              fi
+
+# Capability-only mixin: it adds no files to the workload.
+build: |
+  FROM scratch
