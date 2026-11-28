@@ -4,4 +4,4 @@
 # sandbox you can also bump ahead with `mise upgrade codex agy`.
 [tools]
 codex = "0.172.0"
-agy = "1.5.16"
+agy = "1.5.17"
