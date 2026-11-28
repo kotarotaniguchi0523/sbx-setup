@@ -257,14 +257,14 @@ jobs:
 
       - name: Upload APM audit SARIF to Code Scanning
         if: always()
-        uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
+        uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
         with:
           sarif_file: apm-audit.sarif
           category: apm-audit
 
       - name: Upload SkillSpector SARIF to Code Scanning
         if: always()
-        uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
+        uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
         with:
           sarif_file: skillspector.sarif
           category: skillspector
