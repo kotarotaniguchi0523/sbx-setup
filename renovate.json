@@ -50,6 +50,14 @@
       "matchStrings": ["(?<currentValue>[\\d.]+)"],
       "datasourceTemplate": "golang-version",
       "depNameTemplate": "golang"
+    },
+    {
+      "customType": "regex",
+      "description": "OpenCode v2 pinned in tools/opencode.version (official installer)",
+      "fileMatch": ["(^|/)tools/opencode\\.version$"],
+      "matchStrings": ["(?<currentValue>[\\d.]+)"],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "@opencode/cli"
     }
   ],
   "packageRules": [

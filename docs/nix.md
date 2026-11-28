@@ -17,9 +17,12 @@
     - **公式イメージ由来**（`flake.nix` には無い）: `mise`（`jdxcode/mise`）/ `pnpm`（`ghcr.io/pnpm/pnpm`）
       - どちらも単体バイナリを配っており、nixpkgs の収録より上流の追随が速い（実測: mise 2026.10.3 → 2026.10.13、pnpm 12.9.0 → 12.14.0）
       - Dockerfile の `COPY --from=<image>@sha256:...` で取り込み、digest は Renovate（docker datasource）が更新
-  - 例外（**npm 固定版**）: `@opencode/cli`(v2) / `cf`(Cloudflare 公式) / `difit`
+  - 例外（**npm 固定版**）: `cf`(Cloudflare 公式) / `difit`
     - これらの npm パッケージは自己完結せず実行時依存（`minisearch`/`commander` 等）を import するため tarball ラップでは動作せず、Nix 化しない（nixpkgs の `opencode` は別プロジェクト v1）
-    - **完全固定**は `tools/npm/cli`（cf, difit）と `tools/npm/opencode`（@opencode/cli）の `package.json` ＋ `package-lock.json` を **`npm ci`**（integrity 付き）で導入。Renovate が lock ごと更新
+    - **完全固定**は `tools/npm/cli`（cf, difit）の `package.json` ＋ `package-lock.json` を **`npm ci`**（integrity 付き）で導入。Renovate が lock ごと更新
+  - 例外（**公式インストーラ版**）: `@opencode/cli`(OpenCode v2)
+    - sbx 0.54 以降はエージェントを OpenCode v2 で動かすのが標準のため、npm 固定（`tools/npm/opencode`）をやめて公式インストーラ（`https://opencode.ai/v2/install`）に一本化。Docker 自身の `sbx/opencode` v3 workload も同じ配布経路
+    - バージョンは `tools/opencode.version` で固定（Renovate の regex manager が追従）
     - **Node は Nix 管理**: bundle の `nodejs-official`（nodejs.org の公式ビルド v26 系の最新。nixpkgs の v26 は版が遅れるため。devShell は引き続き nixpkgs の `nodejs_24`）
     - **npm は `12.2.0`（最新）** を Node.js 26 上に**レジストリから導入**（npm 12 は nixpkgs 未収録。Node 26 同梱は 11 系のため。Renovate 追従）
   - イメージは `nix build .#bundle` の**クロージャを tar 化して `COPY`** し、`/usr/local/bin` にリンク（`npm -g` / `brew` / `curl\|bash` を撤去）
